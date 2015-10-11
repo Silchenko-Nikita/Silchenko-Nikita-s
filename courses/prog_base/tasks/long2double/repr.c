@@ -10,7 +10,7 @@ double long2double(long long a){
         bin[0] = '1';
         for (i = 63; i > 0; i--){
             bin[i] = a1 % 2 ? '1' : '0';
-            a /= 2;
+            a1 /= 2;
         }
     }else {
         bin[0] = '0';
