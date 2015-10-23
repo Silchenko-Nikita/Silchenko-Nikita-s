@@ -7,7 +7,7 @@ void fillRand(int mat[4][4]){
     for(i = 0; i < 4; i++){
         for(j = 0; j < 4; j++){
             rand1 = (rand()*999)/RAND_MAX;
-            mat[i][j] = ((rand()*999)/RAND_MAX >= 500) ? rand1 : -rand1;
+            mat[i][j] = ((rand()*2)/RAND_MAX == 1) ? rand1 : -rand1;
         }
     }
 }
