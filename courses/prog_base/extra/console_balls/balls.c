@@ -30,39 +30,30 @@ void update(Ball *ball, int count_balls, Ball * ballsList) {
     int i;
     Ball * pointer;
     float someX, someY;
-    int cx, cy;
-
-    ball->Pos.X += ball->Vel.X;
-    ball->Pos.Y += ball->Vel.Y;
-
-    if(ball->Pos.X >= SCREEN_WIDTH || ball->Pos.X <= 0) {
-        ball->Vel.X = -ball->Vel.X;
-        ball->Pos.X += ball->Vel.X;
-    }
-    if(ball->Pos.Y >= SCREEN_HEIGHT || ball->Pos.Y <= 0) {
-        ball->Vel.Y = -ball->Vel.Y;
-        ball->Pos.Y += ball->Vel.Y;
-    }
+    int cx, cy, cx1, cy1, isRepulsed;
+    isRepulsed = 0;
 
     cx = ball->Pos.X / SCREEN_WIDTH * CONSOLE_COLUMNS;
     cy = ball->Pos.Y / SCREEN_HEIGHT * CONSOLE_ROWS;
+    cx1 = (ball->Pos.X + ball->Vel.X) / SCREEN_WIDTH * CONSOLE_COLUMNS;
+    cy1 = (ball->Pos.Y + ball->Vel.Y) / SCREEN_HEIGHT * CONSOLE_ROWS;
 
-    if(abs(cx - PARTITION_X) < 2|| abs(cx - (PARTITION_X + PARTITION_WIDTH)) < 2) {
-        if(cy >= PARTITION_Y && cy <= PARTITION_Y + PARTITION_HEIGHT){
+    if(((cx <= (PARTITION_X - 1)) && (cx1 > (PARTITION_X - 1))) || (cx >= (PARTITION_X + PARTITION_WIDTH) && cx1 < (PARTITION_X + PARTITION_WIDTH))) {
+        if((cy >= PARTITION_Y - 1 && cy <= PARTITION_Y + PARTITION_HEIGHT)){
             ball->Vel.X = -ball->Vel.X;
             ball->Pos.X += ball->Vel.X;
+            isRepulsed = 1;
         }
     }
-
-
-    if(abs(cy - PARTITION_Y) < 2 || abs(cy - (PARTITION_Y + PARTITION_HEIGHT)) < 2) {
-        if(cx >= PARTITION_X && cx <= PARTITION_X + PARTITION_WIDTH){
+    if(((cy <= (PARTITION_Y - 1)) && (cy1 > (PARTITION_Y - 1))) || (cy >= (PARTITION_Y + PARTITION_HEIGHT) && cy1 < (PARTITION_Y + PARTITION_HEIGHT))) {
+        if(cx >= PARTITION_X - 1 && cx <= PARTITION_X + PARTITION_WIDTH ){
             ball->Vel.Y = -ball->Vel.Y;
             ball->Pos.Y += ball->Vel.Y;
+            isRepulsed = 1;
         }
     }
 
-    for(i = 0; i < count_balls; i++) {
+    for(i = 0; i < count_balls && !isRepulsed; i++) {
         pointer = (ballsList + i);
         if(pointer == ball) continue;
         if(abs((pointer->Pos.X) - (ball->Pos.X)) < 15 && abs((pointer->Pos.Y) - (ball->Pos.Y)) < 15){
@@ -79,6 +70,18 @@ void update(Ball *ball, int count_balls, Ball * ballsList) {
             pointer->Pos.X += ball->Vel.X;
             pointer->Pos.Y += ball->Vel.Y;
         }
+    }
+
+    ball->Pos.X += ball->Vel.X;
+    ball->Pos.Y += ball->Vel.Y;
+
+    if(ball->Pos.X >= SCREEN_WIDTH || ball->Pos.X <= 0) {
+        ball->Vel.X = -ball->Vel.X;
+        ball->Pos.X += ball->Vel.X;
+    }
+    if(ball->Pos.Y >= SCREEN_HEIGHT || ball->Pos.Y <= 0) {
+        ball->Vel.Y = -ball->Vel.Y;
+        ball->Pos.Y += ball->Vel.Y;
     }
 }
 
@@ -117,23 +120,23 @@ void drawRect(int count_balls, Ball * ballsList) {
     int i;
     setBackgroundColor(64);
 
-    for(i = 0; i < PARTITION_HEIGHT; i++) {
+    for(i = 0; i < PARTITION_HEIGHT - 1; i++) {
         moveCursor(PARTITION_X, PARTITION_Y + i);
         printf(" ");
     }
 
-    for(i = 0; i < PARTITION_WIDTH; i++) {
+    for(i = 0; i < PARTITION_WIDTH - 1; i++) {
         moveCursor(PARTITION_X + i, PARTITION_Y);
         printf(" ");
     }
 
-    for(i = 0; i < PARTITION_HEIGHT; i++) {
-        moveCursor(PARTITION_X + PARTITION_WIDTH, PARTITION_Y + i);
+    for(i = 0; i < PARTITION_HEIGHT - 1; i++) {
+        moveCursor(PARTITION_X + PARTITION_WIDTH - 1, PARTITION_Y + i);
         printf(" ");
     }
 
-    for(i = 0; i < PARTITION_WIDTH + 1; i++) {
-        moveCursor(PARTITION_X + i, PARTITION_Y + PARTITION_HEIGHT);
+    for(i = 0; i < PARTITION_WIDTH; i++) {
+        moveCursor(PARTITION_X + i, PARTITION_Y + PARTITION_HEIGHT - 1);
         printf(" ");
     }
 }
