@@ -30,7 +30,7 @@ void update(Ball *ball, int count_balls, Ball * ballsList) {
     int i;
     Ball * pointer;
     float someX, someY;
-    int cx, cy, cx1, cy1, isRepulsed;
+    int cx, cy, cx1, cy1, isRepulsed, bool1, bool2;
     isRepulsed = 0;
 
     cx = ball->Pos.X / SCREEN_WIDTH * CONSOLE_COLUMNS;
@@ -38,19 +38,28 @@ void update(Ball *ball, int count_balls, Ball * ballsList) {
     cx1 = (ball->Pos.X + ball->Vel.X) / SCREEN_WIDTH * CONSOLE_COLUMNS;
     cy1 = (ball->Pos.Y + ball->Vel.Y) / SCREEN_HEIGHT * CONSOLE_ROWS;
 
-    if(((cx <= (PARTITION_X - 1)) && (cx1 > (PARTITION_X - 1))) || (cx >= (PARTITION_X + PARTITION_WIDTH) && cx1 < (PARTITION_X + PARTITION_WIDTH))) {
-        if((cy >= PARTITION_Y - 1 && cy <= PARTITION_Y + PARTITION_HEIGHT)){
+    if(((cx <= PARTITION_X) && (cx1 >= PARTITION_X )) || (cx >= (PARTITION_X + PARTITION_WIDTH) && cx1 <= (PARTITION_X + PARTITION_WIDTH))) {
+        if((cy >= PARTITION_Y  && cy <= PARTITION_Y + PARTITION_HEIGHT)){
             ball->Vel.X = -ball->Vel.X;
             ball->Pos.X += ball->Vel.X;
             isRepulsed = 1;
         }
     }
-    if(((cy <= (PARTITION_Y - 1)) && (cy1 > (PARTITION_Y - 1))) || (cy >= (PARTITION_Y + PARTITION_HEIGHT) && cy1 < (PARTITION_Y + PARTITION_HEIGHT))) {
-        if(cx >= PARTITION_X - 1 && cx <= PARTITION_X + PARTITION_WIDTH ){
+    if(((cy <= PARTITION_Y) && (cy1 >= PARTITION_Y )) || (cy >= (PARTITION_Y + PARTITION_HEIGHT) && cy1 <= (PARTITION_Y + PARTITION_HEIGHT))) {
+        if(cx >= PARTITION_X && cx <= PARTITION_X + PARTITION_WIDTH ){
             ball->Vel.Y = -ball->Vel.Y;
             ball->Pos.Y += ball->Vel.Y;
             isRepulsed = 1;
         }
+    }
+    bool1 = ((cx <= PARTITION_X) && (cx1 >= PARTITION_Y)) || (cx >= (PARTITION_X + PARTITION_WIDTH) && cx1 <= (PARTITION_X + PARTITION_WIDTH));
+    bool2 = ((cy <= PARTITION_Y) && (cy1 >= PARTITION_Y)) || (cy >= (PARTITION_Y + PARTITION_HEIGHT) && cy1 <= (PARTITION_Y + PARTITION_HEIGHT));
+    if(bool1 && bool2 && !isRepulsed) {
+        ball->Vel.Y = -ball->Vel.Y;
+        ball->Pos.Y += ball->Vel.Y;
+        ball->Vel.X = -ball->Vel.X;
+        ball->Pos.X += ball->Vel.X;
+        isRepulsed = 1;
     }
 
     for(i = 0; i < count_balls && !isRepulsed; i++) {
