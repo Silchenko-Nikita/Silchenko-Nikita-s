@@ -6,7 +6,7 @@
 #include "console.h"
 
 void init(Ball *ball) {
-    const int MAX_VEL = 30;
+    const int MAX_VEL = 40;
     const int MIN_VEL = 2;
     int cx, cy;
 
@@ -30,42 +30,13 @@ void update(Ball *ball, int count_balls, Ball * ballsList) {
     int i;
     Ball * pointer;
     float someX, someY;
-    int cx, cy, cx1, cy1, isRepulsed, bool1, bool2;
+    int cx, cy, cx1, cy1, isRepulsed, bool1, bool2, bool3, bool4;
     isRepulsed = 0;
 
-    cx = ball->Pos.X / SCREEN_WIDTH * CONSOLE_COLUMNS;
-    cy = ball->Pos.Y / SCREEN_HEIGHT * CONSOLE_ROWS;
-    cx1 = (ball->Pos.X + ball->Vel.X) / SCREEN_WIDTH * CONSOLE_COLUMNS;
-    cy1 = (ball->Pos.Y + ball->Vel.Y) / SCREEN_HEIGHT * CONSOLE_ROWS;
-
-    if(((cx <= PARTITION_X) && (cx1 >= PARTITION_X )) || (cx >= (PARTITION_X + PARTITION_WIDTH) && cx1 <= (PARTITION_X + PARTITION_WIDTH))) {
-        if((cy >= PARTITION_Y  && cy <= PARTITION_Y + PARTITION_HEIGHT)){
-            ball->Vel.X = -ball->Vel.X;
-            ball->Pos.X += ball->Vel.X;
-            isRepulsed = 1;
-        }
-    }
-    if(((cy <= PARTITION_Y) && (cy1 >= PARTITION_Y )) || (cy >= (PARTITION_Y + PARTITION_HEIGHT) && cy1 <= (PARTITION_Y + PARTITION_HEIGHT))) {
-        if(cx >= PARTITION_X && cx <= PARTITION_X + PARTITION_WIDTH ){
-            ball->Vel.Y = -ball->Vel.Y;
-            ball->Pos.Y += ball->Vel.Y;
-            isRepulsed = 1;
-        }
-    }
-    bool1 = ((cx <= PARTITION_X) && (cx1 >= PARTITION_Y)) || (cx >= (PARTITION_X + PARTITION_WIDTH) && cx1 <= (PARTITION_X + PARTITION_WIDTH));
-    bool2 = ((cy <= PARTITION_Y) && (cy1 >= PARTITION_Y)) || (cy >= (PARTITION_Y + PARTITION_HEIGHT) && cy1 <= (PARTITION_Y + PARTITION_HEIGHT));
-    if(bool1 && bool2 && !isRepulsed) {
-        ball->Vel.Y = -ball->Vel.Y;
-        ball->Pos.Y += ball->Vel.Y;
-        ball->Vel.X = -ball->Vel.X;
-        ball->Pos.X += ball->Vel.X;
-        isRepulsed = 1;
-    }
-
-    for(i = 0; i < count_balls && !isRepulsed; i++) {
+    for(i = 0; i < count_balls ; i++) {
         pointer = (ballsList + i);
         if(pointer == ball) continue;
-        if(abs((pointer->Pos.X) - (ball->Pos.X)) < 15 && abs((pointer->Pos.Y) - (ball->Pos.Y)) < 15){
+        if(abs((pointer->Pos.X) - (ball->Pos.X)) <= 12 && abs((pointer->Pos.Y) - (ball->Pos.Y)) <= 12){
             someX = ball->Vel.X;
             someY = ball->Vel.Y;
 
@@ -79,6 +50,47 @@ void update(Ball *ball, int count_balls, Ball * ballsList) {
             pointer->Pos.X += ball->Vel.X;
             pointer->Pos.Y += ball->Vel.Y;
         }
+    }
+
+    cx = ball->Pos.X / SCREEN_WIDTH * CONSOLE_COLUMNS;
+    cy = ball->Pos.Y / SCREEN_HEIGHT * CONSOLE_ROWS;
+    cx1 = (ball->Pos.X + ball->Vel.X) / SCREEN_WIDTH * CONSOLE_COLUMNS;
+    cy1 = (ball->Pos.Y + ball->Vel.Y) / SCREEN_HEIGHT * CONSOLE_ROWS;
+
+    if(((cx < PARTITION_X) && (cx1 >= PARTITION_X )) || (cx >= (PARTITION_X + PARTITION_WIDTH) && cx1 < (PARTITION_X + PARTITION_WIDTH))) {
+        if((cy1 >= PARTITION_Y - 1  && cy1 <= PARTITION_Y + PARTITION_HEIGHT)){
+            ball->Vel.X = -(ball->Vel.X);
+            ball->Pos.X += ball->Vel.X;
+            isRepulsed = 1;
+        }
+    }
+    if(((cy < PARTITION_Y) && (cy1 >= PARTITION_Y )) || (cy >= (PARTITION_Y + PARTITION_HEIGHT) && cy1 < (PARTITION_Y + PARTITION_HEIGHT))) {
+        if(cx1 >= PARTITION_X - 1 && cx1 <= PARTITION_X + PARTITION_WIDTH ){
+            ball->Vel.Y = -(ball->Vel.Y);
+            ball->Pos.Y += ball->Vel.Y;
+            isRepulsed = 1;
+        }
+    }
+    /* Щоб вже точно не було курйозів. Погано зробив, але цей рект мене зовсім змучив*/
+    bool1 = (cx1 >= PARTITION_X  && cx1 < (PARTITION_X + PARTITION_WIDTH));
+    bool2 = ((cy1 >= PARTITION_Y) && cy1 < (PARTITION_Y + PARTITION_HEIGHT));
+    if(!isRepulsed && bool1 && bool2) {
+            if(bool1 && bool2 && cx <= PARTITION_X + 2){
+                ball->Pos.X -= 25;
+            }
+            if(bool1 && bool2 && cx >= PARTITION_X + PARTITION_WIDTH - 3){
+                ball->Pos.X += 25;
+            }
+            if(bool1 && bool2 && cy <= PARTITION_Y + 2){
+                ball->Pos.Y -= 25;
+            }
+            if(bool1 && bool2 && cy >= PARTITION_Y + PARTITION_HEIGHT - 3){
+                ball->Pos.Y += 25;
+            }
+            ball->Vel.X = -ball->Vel.X;
+            ball->Pos.X += ball->Vel.X;
+            ball->Vel.Y = -ball->Vel.Y;
+            ball->Pos.Y += ball->Vel.Y;
     }
 
     ball->Pos.X += ball->Vel.X;

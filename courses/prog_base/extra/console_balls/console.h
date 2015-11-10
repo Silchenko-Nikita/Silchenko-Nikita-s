@@ -3,10 +3,10 @@
 
 #define CONSOLE_COLUMNS 80
 #define CONSOLE_ROWS 25
-#define PARTITION_X 10
-#define PARTITION_Y 5
-#define PARTITION_WIDTH 10
-#define PARTITION_HEIGHT 7
+#define PARTITION_X 15
+#define PARTITION_Y 8
+#define PARTITION_WIDTH 40
+#define PARTITION_HEIGHT 10
 
 void setTextColor(short);
 void moveCursor(int, int);
