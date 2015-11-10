@@ -1,4 +1,5 @@
 #include<string.h>
+#include <stdlib.h>
 
 char *morse_encode(char *signal, const char *message, int unit_len, int pad_len) {
     int i, j;
@@ -92,25 +93,23 @@ char *morse_encode(char *signal, const char *message, int unit_len, int pad_len)
 	map[28].eng = '.';
 	map[28].morse = ".-.-.-";
 
-	char morse[10000] = "", result[1000000] = "";
-	for (i = 0; message[i + 1] != '\0'; i++) {
+	char morse[1000] = "", result[100000] = "";
+	for (i = 0; message[i] != '\0'; i++) {
 		for (j = 0; j < n; j++) {
 			if (message[i] == map[j].eng){
                 strncat(morse, map[j].morse, 10);
-                strncat(morse, " ", 1);
+                if(message[i + 1] != '\0'){
+                    strncat(morse, " ", 1);
+                } else strncat(morse, "\0", 1);
                 break;
             }
 		}
 	}
-	for (j = 0; j < n; j++) {
-			if (message[i] == map[j].eng){
-                strncat(morse, map[j].morse, 10);
-                break;
-            }
-		}
+
 	for (i = 0; i < pad_len; i++) {
         strncat(result, "0", 1);
     }
+
 	for (i = 0; morse[i] != '\0'; i++) {
         if (morse[i] == '.') {
             for (j = 0; j < unit_len; j++) {
@@ -144,6 +143,8 @@ char *morse_encode(char *signal, const char *message, int unit_len, int pad_len)
 	for (i = 0; i < pad_len; i++) {
         strncat(result, "0", 1);
     }
-    strncpy(signal, result, len);
+    strncat(result, "\0", 1);
+    strcpy(signal, "");
+    strcat(signal, result);
 	return signal;
 }
