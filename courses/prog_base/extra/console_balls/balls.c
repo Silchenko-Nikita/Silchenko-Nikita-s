@@ -6,7 +6,7 @@
 #include "console.h"
 
 void init(Ball *ball) {
-    const int MAX_VEL = 40;
+    const int MAX_VEL = 30;
     const int MIN_VEL = 2;
     int cx, cy;
 
