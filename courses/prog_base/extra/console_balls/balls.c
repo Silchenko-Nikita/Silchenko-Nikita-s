@@ -4,18 +4,25 @@
 
 #include "balls.h"
 #include "console.h"
+#include "rect.h"
 
-void init(Ball *ball) {
+void init(Ball *ball, int count_rects, Rect* rectsList) {
     const int MAX_VEL = 30;
     const int MIN_VEL = 2;
-    int cx, cy;
-
+    int cx, cy, check;
+    Rect * rect;
+    int i;
     do{
-    ball->Pos.X = rand() % SCREEN_WIDTH;
-    ball->Pos.Y = rand() % SCREEN_HEIGHT;
-    cx = ball->Pos.X / SCREEN_WIDTH * CONSOLE_COLUMNS;
-    cy = ball->Pos.Y / SCREEN_HEIGHT * CONSOLE_ROWS;
-    } while(cx >= PARTITION_X && cx <= PARTITION_X + PARTITION_WIDTH && cy >= PARTITION_Y && cy <= PARTITION_Y + PARTITION_HEIGHT);
+        check = 0;
+        ball->Pos.X = rand() % SCREEN_WIDTH;
+        ball->Pos.Y = rand() % SCREEN_HEIGHT;
+        cx = ball->Pos.X / SCREEN_WIDTH * CONSOLE_COLUMNS;
+        cy = ball->Pos.Y / SCREEN_HEIGHT * CONSOLE_ROWS;
+        for(i = 0; i < count_rects; i++){
+            rect = rectsList + i;
+            if(cx >= rect->X && cx < rect->X + rect->Width && cy >= rect->Y && cy < rect->Y + rect->Height) check = 1;
+        }
+   } while(check);
 
     ball->Vel.X = rand() % MAX_VEL - MAX_VEL / 2;
     if(abs(ball->Vel.X) < MIN_VEL)
@@ -26,17 +33,17 @@ void init(Ball *ball) {
     ball->Color = (rand() % 7) + 1;
 }
 
-void update(Ball *ball, int count_balls, Ball * ballsList) {
+void update(Ball *ball, int count_balls, Ball * ballsList, int count_rects, Rect *rectsList) {
     int i;
     Ball * pointer;
     float someX, someY;
-    int cx, cy, cx1, cy1, isRepulsed, bool1, bool2, bool3, bool4;
+    int cx, cy, cx1, cy1, cxB, cyB, isRepulsed, bool1, bool2, bool3, bool4;
     isRepulsed = 0;
 
     for(i = 0; i < count_balls ; i++) {
         pointer = (ballsList + i);
         if(pointer == ball) continue;
-        if(abs((pointer->Pos.X) - (ball->Pos.X)) <= 12 && abs((pointer->Pos.Y) - (ball->Pos.Y)) <= 12){
+        if(abs((pointer->Pos.X) - (ball->Pos.X)) <= 15 && abs((pointer->Pos.Y) - (ball->Pos.Y)) <= 15){
             someX = ball->Vel.X;
             someY = ball->Vel.Y;
 
@@ -56,51 +63,56 @@ void update(Ball *ball, int count_balls, Ball * ballsList) {
     cy = ball->Pos.Y / SCREEN_HEIGHT * CONSOLE_ROWS;
     cx1 = (ball->Pos.X + ball->Vel.X) / SCREEN_WIDTH * CONSOLE_COLUMNS;
     cy1 = (ball->Pos.Y + ball->Vel.Y) / SCREEN_HEIGHT * CONSOLE_ROWS;
+    Rect *rect;
 
-    if(((cx < PARTITION_X) && (cx1 >= PARTITION_X )) || (cx >= (PARTITION_X + PARTITION_WIDTH) && cx1 < (PARTITION_X + PARTITION_WIDTH))) {
-        if((cy1 >= PARTITION_Y - 1  && cy1 <= PARTITION_Y + PARTITION_HEIGHT)){
-            ball->Vel.X = -(ball->Vel.X);
-            ball->Pos.X += ball->Vel.X;
-            isRepulsed = 1;
+    for(i = 0; i < count_rects; i++){
+        rect = rectsList + i;
+
+        if(((cx < rect->X) && (cx1 >= rect->X )) || (cx >= (rect->X + rect->Width) && cx1 < (rect->X + rect->Width))) {
+            if((cy1 >= rect->Y - 1  && cy1 <= rect->Y + rect->Height)){
+                ball->Vel.X = -(ball->Vel.X);
+                ball->Pos.X += ball->Vel.X;
+                isRepulsed = 1;
+            }
         }
-    }
-    if(((cy < PARTITION_Y) && (cy1 >= PARTITION_Y )) || (cy >= (PARTITION_Y + PARTITION_HEIGHT) && cy1 < (PARTITION_Y + PARTITION_HEIGHT))) {
-        if(cx1 >= PARTITION_X - 1 && cx1 <= PARTITION_X + PARTITION_WIDTH ){
-            ball->Vel.Y = -(ball->Vel.Y);
-            ball->Pos.Y += ball->Vel.Y;
-            isRepulsed = 1;
+        if(((cy < rect->Y) && (cy1 >= rect->Y )) || (cy >= (rect->Y + rect->Height) && cy1 < (rect->Y + rect->Height))) {
+            if(cx1 >= rect->X - 1 && cx1 <= rect->X + rect->Width ){
+                ball->Vel.Y = -(ball->Vel.Y);
+                ball->Pos.Y += ball->Vel.Y;
+                isRepulsed = 1;
+            }
         }
-    }
-    /* Щоб вже точно не було курйозів. Погано зробив, але цей рект мене зовсім змучив*/
-    bool1 = (cx1 >= PARTITION_X  && cx1 < (PARTITION_X + PARTITION_WIDTH));
-    bool2 = ((cy1 >= PARTITION_Y) && cy1 < (PARTITION_Y + PARTITION_HEIGHT));
-    if(!isRepulsed && bool1 && bool2) {
-            if(bool1 && bool2 && cx <= PARTITION_X + 2){
-                ball->Pos.X -= 25;
-            }
-            if(bool1 && bool2 && cx >= PARTITION_X + PARTITION_WIDTH - 3){
-                ball->Pos.X += 25;
-            }
-            if(bool1 && bool2 && cy <= PARTITION_Y + 2){
-                ball->Pos.Y -= 25;
-            }
-            if(bool1 && bool2 && cy >= PARTITION_Y + PARTITION_HEIGHT - 3){
-                ball->Pos.Y += 25;
-            }
-            ball->Vel.X = -ball->Vel.X;
-            ball->Pos.X += ball->Vel.X;
-            ball->Vel.Y = -ball->Vel.Y;
-            ball->Pos.Y += ball->Vel.Y;
+        /* Щоб вже точно не було курйозів. Погано зробив, але цей рект мене зовсім змучив*/
+        bool1 = (cx1 >= rect->X  && cx1 < (rect->X + rect->Width));
+        bool2 = ((cy1 >= rect->Y) && cy1 < (rect->Y + rect->Height));
+        if(!isRepulsed && bool1 && bool2) {
+                if(bool1 && bool2 && cx <= rect->X + 1){
+                    ball->Pos.X -= 25;
+                }
+                if(bool1 && bool2 && cx >= rect->X + rect->Width - 2){
+                    ball->Pos.X += 25;
+                }
+                if(bool1 && bool2 && cy <= rect->Y + 1){
+                    ball->Pos.Y -= 25;
+                }
+                if(bool1 && bool2 && cy >= rect->Y + rect->Height - 2){
+                    ball->Pos.Y += 25;
+                }
+                ball->Vel.X = -ball->Vel.X;
+                ball->Pos.X += ball->Vel.X;
+                ball->Vel.Y = -ball->Vel.Y;
+                ball->Pos.Y += ball->Vel.Y;
+        }
     }
 
     ball->Pos.X += ball->Vel.X;
     ball->Pos.Y += ball->Vel.Y;
 
-    if(ball->Pos.X >= SCREEN_WIDTH || ball->Pos.X <= 0) {
+    if(ball->Pos.X >= SCREEN_WIDTH - 1 || ball->Pos.X <= 0) {
         ball->Vel.X = -ball->Vel.X;
         ball->Pos.X += ball->Vel.X;
     }
-    if(ball->Pos.Y >= SCREEN_HEIGHT || ball->Pos.Y <= 0) {
+    if(ball->Pos.Y >= SCREEN_HEIGHT - 1 || ball->Pos.Y <= 0) {
         ball->Vel.Y = -ball->Vel.Y;
         ball->Pos.Y += ball->Vel.Y;
     }
@@ -116,51 +128,29 @@ void draw(Ball *b) {
     clearFormat();
 }
 
-void initBalls(int count_balls, Ball * ballsList) {
+void initAll(int count_balls, Ball * ballsList, int count_rects, Rect* rectsList) {
     int i;
     for(i = 0; i < count_balls; i++) {
-        init(&ballsList[i]);
+        init(ballsList + i, count_rects, rectsList);
     }
 }
 
-void updateBalls(int count_balls, Ball * ballsList) {
+void updateBalls(int count_balls, Ball * ballsList, int count_rects, Rect *rectsList) {
     int i;
     for(i = 0; i < count_balls; i++) {
-        update(&ballsList[i], count_balls, ballsList);
+        update(ballsList + i, count_balls, ballsList, count_rects, rectsList);
     }
+
 }
 
 void drawBalls(int count_balls, Ball * ballsList) {
     int i;
     for(i = 0; i < count_balls; i++) {
-        draw(&ballsList[i]);
+        draw(ballsList + i);
     }
 }
 
-void drawRect(int count_balls, Ball * ballsList) {
-    int i;
-    setBackgroundColor(64);
 
-    for(i = 0; i < PARTITION_HEIGHT - 1; i++) {
-        moveCursor(PARTITION_X, PARTITION_Y + i);
-        printf(" ");
-    }
-
-    for(i = 0; i < PARTITION_WIDTH - 1; i++) {
-        moveCursor(PARTITION_X + i, PARTITION_Y);
-        printf(" ");
-    }
-
-    for(i = 0; i < PARTITION_HEIGHT - 1; i++) {
-        moveCursor(PARTITION_X + PARTITION_WIDTH - 1, PARTITION_Y + i);
-        printf(" ");
-    }
-
-    for(i = 0; i < PARTITION_WIDTH; i++) {
-        moveCursor(PARTITION_X + i, PARTITION_Y + PARTITION_HEIGHT - 1);
-        printf(" ");
-    }
-}
 
 void print(Ball *b) {
     printf("Position: %f %f\n", b->Pos.X, b->Pos.Y);

@@ -1,3 +1,4 @@
+#include "rect.h"
 #ifndef BALLS_H
 #define BALLS_H
 
@@ -14,10 +15,10 @@ typedef struct Ball {
 } Ball;
 
 void print(Ball *);
-void init(Ball *);
-void initBalls(int, Ball *);
-void update(Ball *, int, Ball * );
-void updateBalls(int, Ball *);
+void init(Ball *, int, Rect *);
+void initAll(int, Ball *, int, Rect* );
+void update(Ball *, int, Ball *, int, Rect *);
+void updateBalls(int, Ball *, int, Rect *);
 void draw(Ball *);
 void drawBalls(int, Ball *);
 
