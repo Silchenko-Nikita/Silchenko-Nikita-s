@@ -1,0 +1,10 @@
+dsa 210
+CRYING_CAT 54
+SDA 29
+c 10
+NIKITOS 6
+* 0
+* 0
+* 0
+* 0
+* 0
