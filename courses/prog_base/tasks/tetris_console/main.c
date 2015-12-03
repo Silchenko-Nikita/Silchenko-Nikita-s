@@ -20,7 +20,7 @@ typedef struct Pos{int X, Y} Pos;
 typedef struct Figure{int statesNum; Pos pos[MAX_STATES][BLOCKS_NUMBER]; Color color} Figure;
 typedef struct ActingFigure{Figure figure; int state; Pos bias; bool isAccelerating} ActingFigure;
 typedef struct Stat{int level, linesDestroyed, score; char nickname[]} Stat;
-typedef struct ToGiveThread{bool *field; ActingFigure * curFigure; HANDLE hMutex; bool toStopThread} ToGiveThread;
+typedef struct ToGiveThread{bool *field; ActingFigure * curFigure; HANDLE hMutex} ToGiveThread;
 
 const short maxLevel = 9;
 const short toDestroyLinesBeforeRaise = 10;
@@ -128,7 +128,6 @@ void drawField(int x, int y, int width, int height, Color color){
     }
 }
 
-
 int compareStat(const void * a, const void * b){
     char a1[50], b1[50];
     int a2, b2;
@@ -169,13 +168,29 @@ void initStat(Stat * stat){
     stat->linesDestroyed = 0;
 }
 
+void initLeaderboardFile(){
+    FILE * f = fopen(leadersTableFile, "w");
+    if(NULL == f) exit(1);
+    int i;
+    for(i = 0; i < 10; i++){
+        fputs("* 0\n", f);
+    }
+    fclose(f);
+}
+
 void showScore(){
     char d[10][50];
-    FILE * f = fopen(leadersTableFile, "r");
-    if(NULL  == f) exit(1);
     int i;
-    for(i = 0; i < 10; i++)
+    FILE * f = fopen(leadersTableFile, "r");
+    if(NULL == f){
+        initLeaderboardFile();
+        fclose(f);
+        f = fopen(leadersTableFile, "r");
+        if(NULL == f) exit(1);
+    }
+    for(i = 0; i < 10; i++){
         fgets(d[i], 50, f);
+    }
     drawField(fieldX, 0, 40, 24, BACK_WHITE | BACKGROUND_INTENSITY);
     setTextColor(BACK_WHITE | BACKGROUND_INTENSITY);
     moveCursor(fieldX + 2, 0);
@@ -193,7 +208,7 @@ void showScore(){
 void updateScore(Stat * stat){
     char d[11][50];
     FILE * f = fopen(leadersTableFile, "r");
-    if(NULL  == f) exit(1);
+    if(NULL == f) exit(1);
     int i;
     for(i = 0; i < 10; i++){
         fgets(d[i], 50, f);
@@ -322,13 +337,11 @@ void tryGoRight(bool field[tetrFieldHeight][tetrFieldWidth], ActingFigure * curF
     drawFigure(curFigure);
 }
 
-
 void ReadThread(ToGiveThread * toGet){
     char ch;
     while(true){
         ch = getch();
         WaitForSingleObject(toGet->hMutex, INFINITE);
-        if(toGet->toStopThread) ExitThread(0);
         switch(ch){
             case LEFT_ARR:
                 tryGoLeft(toGet->field, toGet->curFigure);
@@ -345,29 +358,22 @@ void ReadThread(ToGiveThread * toGet){
             case DOWN_ARR:
                 ReleaseMutex(toGet->hMutex);
                 toGet->curFigure->isAccelerating = true;
-                Sleep(75);
+                Sleep(50);
                 toGet->curFigure->isAccelerating = false;
+                break;
+            default:
+                ReleaseMutex(toGet->hMutex);
                 break;
         }
     }
 }
 
 
-void checkIfGameOver(ActingFigure * curFigure, bool field[tetrFieldHeight][tetrFieldWidth], Stat * stat, ToGiveThread * givenThread){
+bool IsGameOver(ActingFigure * curFigure, bool field[tetrFieldHeight][tetrFieldWidth]){
     int i;
     for(i = 0; i < BLOCKS_NUMBER; i++){
         if(field[curFigure->figure.pos[0][i].Y + curFigure->bias.Y][curFigure->figure.pos[0][i].X + curFigure->bias.X] == IS_ENGAGED){
-            WaitForSingleObject(givenThread->hMutex, INFINITE);
-            givenThread->toStopThread = true;
-            ReleaseMutex(givenThread->hMutex);
-
-            updateScore(stat);
-            setTextColor(0);
-            system("cls");
-            showScore();
-            setTextColor(FORE_WHITE);
-            system("cls");
-            exit(0);
+            return true;
         }
     }
 }
@@ -696,8 +702,7 @@ int main()
     initFigures(figures);
     ActingFigure curFigure, nextFigure;
     HANDLE hMutex = CreateMutex(NULL, false, NULL);
-    bool toStopThread = false;
-    ToGiveThread toGiveThread = {field, &curFigure, hMutex, toStopThread};
+    ToGiveThread toGiveThread = {field, &curFigure, hMutex};
     HANDLE hReadThread = CreateThread(NULL, 0, ReadThread, &toGiveThread, 0, NULL);
     initActingFigure(&figures, &nextFigure);
     strcpy(stat.nickname, name);
@@ -706,12 +711,12 @@ int main()
         initActingFigure(&figures, &nextFigure);
         updateAds(&stat, &nextFigure);
         drawFigure(&curFigure);
-        checkIfGameOver(&curFigure, field, &stat, &toGiveThread);
+        if(IsGameOver(&curFigure, field)) break;
         do{
             ReleaseMutex(hMutex);
             int totalTime = 0;
             while(totalTime < 400 - stat.level*27){
-                Sleep((totalTime + 5 > 400 - stat.level*20) ? (400 - stat.level*27 - totalTime) : 50);
+                Sleep((totalTime + 50 > 400 - stat.level*27) ? (400 - stat.level*27 - totalTime) : 50);
                 totalTime += 50;
                 if(curFigure.isAccelerating)
                     break;
@@ -719,8 +724,14 @@ int main()
             WaitForSingleObject(hMutex, INFINITE);
         }while(!tryGoDown(field, fieldCol, &curFigure, &stat));
     }
-    WaitForSingleObject(hReadThread, INFINITE);
+    WaitForSingleObject(hMutex, INFINITE);
     CloseHandle(hReadThread);
     CloseHandle(hMutex);
+    updateScore(&stat);
+    setTextColor(0);
+    system("cls");
+    showScore();
+    setTextColor(FORE_WHITE);
+    system("cls");
     return 0;
 }
