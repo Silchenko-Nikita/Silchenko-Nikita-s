@@ -27,5 +27,9 @@ int main()
         return 1;
     }
     printf("Result: %d", *f - *l);
+    free(string);
+    free(f);
+    free(l);
+    free(i);
     return 0;
 }
