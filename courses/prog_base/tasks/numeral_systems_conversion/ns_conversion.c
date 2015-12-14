@@ -46,7 +46,10 @@ char* ns_convert(char* number, unsigned int sourceBase, unsigned int destBase){
         isNeg = 1;
         number++;
     }
-    if(!isValid(number, sourceBase, destBase)) return "";
+    if(!isValid(number, sourceBase, destBase)){
+        if(isNeg) number--;
+        return "";
+    }
 
     strNumLen = strlen(number);
     intLen = strcspn(number, ".");
