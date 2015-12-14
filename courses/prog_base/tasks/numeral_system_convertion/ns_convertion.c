@@ -50,7 +50,7 @@ char* ns_convert(char* number, unsigned int sourceBase, unsigned int destBase){
 
     strNumLen = strlen(number);
     intLen = strcspn(number, ".");
-    floatLen = strNumLen - intLen - 1;
+    floatLen = (intLen < strNumLen) ? strNumLen - intLen - 1 : 0;
     number[intLen] = '\0';
 
     decI = strtol(number, NULL, sourceBase);
