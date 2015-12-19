@@ -72,12 +72,13 @@ char* ns_convert(char* number, unsigned int sourceBase, unsigned int destBase){
         intStart = i + 1;
     }else{ intStart = intResLen - 2;}
 
+    long double decF1 = decF;
     int intP;
     for(i = 0; i < flResLen - 1; i++){
-        decF *= destBase;
-        intP = (int) decF;
+        decF1 *= destBase;
+        intP = (int) decF1;
         flRes[i] = charVal(intP);
-        decF -= intP;
+        decF1 -= intP;
     }
     flRes[i] = '\0';
 
