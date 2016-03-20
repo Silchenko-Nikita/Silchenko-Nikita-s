@@ -29,7 +29,7 @@ void procSequence(List_t worldsList, intCB intCb, doubleCB doubleCb){
     int listSize = List_getSize(worldsList);
     for(int i = 0; i < listSize; i++){
         char * word = List_get(worldsList, i, NULL);
-        if(isInt(word)) intCb(atoi(word));
-        if(isFloat(word)) doubleCb(atof(word));
+        if(isInt(word) && intCb != NULL) intCb(atoi(word));
+        if(isFloat(word) && intCb != NULL) doubleCb(atof(word));
     }
 }
