@@ -30,6 +30,6 @@ void procSequence(List_t worldsList, intCB intCb, doubleCB doubleCb){
     for(int i = 0; i < listSize; i++){
         char * word = List_get(worldsList, i, NULL);
         if(isInt(word) && intCb != NULL) intCb(atoi(word));
-        if(isFloat(word) && intCb != NULL) doubleCb(atof(word));
+        if(isFloat(word) && doubleCb != NULL) doubleCb(atof(word));
     }
 }
