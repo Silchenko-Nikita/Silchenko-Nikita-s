@@ -1,0 +1,13 @@
+# depslib dependency file v1.0
+1458842443 source:c:\users\Í\desktop\lab2\lab2_dll2\main.cpp
+	<stdio.h>
+	<stdbool.h>
+	"main.h"
+
+1458842458 c:\users\Í\desktop\lab2\lab2_dll2\main.h
+	<windows.h>
+	"queue.h"
+
+1458842443 c:\users\Í\desktop\lab2\lab2_dll2\queue.h
+	<stdbool.h>
+

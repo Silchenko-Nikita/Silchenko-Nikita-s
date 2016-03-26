@@ -1,0 +1,34 @@
+# depslib dependency file v1.0
+1458997835 source:c:\users\Í\desktop\lab3\main.c
+	<stdio.h>
+	<stdlib.h>
+	"tests.h"
+	"queue_pair.h"
+
+1458804456 c:\users\Í\desktop\lab3\queue.h
+	<stdbool.h>
+
+1458928343 source:c:\users\Í\desktop\lab3\queue.c
+	<stdlib.h>
+	"queue.h"
+
+1458941347 source:c:\users\Í\desktop\lab3\queue_pair.c
+	<stdio.h>
+	<stdlib.h>
+	<stdbool.h>
+	"queue_pair.h"
+
+1458941347 c:\users\Í\desktop\lab3\queue_pair.h
+	"queue.h"
+
+1458996312 source:c:\users\Í\desktop\lab3\tests.c
+	<stdlib.h>
+	<stdarg.h>
+	<stddef.h>
+	<setjmp.h>
+	<cmocka.h>
+	"tests.h"
+	"queue_pair.h"
+
+1458930083 c:\users\Í\desktop\lab3\tests.h
+
