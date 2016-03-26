@@ -43,7 +43,7 @@ void Printer_startPrintLoop(Printer_t self){
     self->thread = thread_create_args(startPrintLoop, self);
 }
 
-Printer_join(Printer_t self){
+void Printer_join(Printer_t self){
     if(self->thread != NULL)
         thread_join(self->thread);
 }
@@ -52,5 +52,4 @@ void Printer_delete(Printer_t self){
     mutex_free(self->mutex);
     thread_free(self->thread);
     free(self);
-
 }
