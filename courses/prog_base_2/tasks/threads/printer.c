@@ -8,14 +8,18 @@ static struct Printer{
     thread_t * thread
 };
 
-static void * startPrintLoop(Printer_t self){
+static void * startPrintLoop(void * args){
+    Printer_t self = (Printer_t)args;
     for(int i = 0; i < 5; i++){
         mutex_lock(self->mutex);
         for(int i = 0; i < 10; i++){
             puts(self->str);
         }
+        puts("");
         mutex_unlock(self->mutex);
     }
+
+    return NULL;
 }
 
 Printer_t Printer_new(const char * str, mutex_t * mutex){
