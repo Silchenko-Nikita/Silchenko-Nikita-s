@@ -126,7 +126,12 @@ int main(void) {
     buffer[numrcv] = '\0';
 
     printf(buffer);
-    closesocket(recvSocket);
-    WSACleanup();
+
+    status = closesocket(recvSocket);
+    if(status == SOCKET_ERROR)
+        printf("ERROR: closesocket unsuccessful\r\n");
+    status = WSACleanup();
+    if (status == SOCKET_ERROR)
+        printf("ERROR: WSACleanup unsuccessful\r\n");
     return 0;
 }
