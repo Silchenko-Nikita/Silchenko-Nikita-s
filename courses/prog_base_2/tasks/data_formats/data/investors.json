@@ -1,0 +1,35 @@
+[  
+   {  
+      "name":"Taras",
+      "surname":"Shevchenko",
+      "birthdate":"1975-03-09",
+      "corporation":{  
+         "country":"Finland",
+         "name":"Nokia"
+      },
+      "year":2014,
+      "investment":4.6
+   },
+   {  
+      "name":"Irina",
+      "surname":"Kuzmenko",
+      "birthdate":"1972-09-09",
+      "corporation":{  
+         "country":"USA",
+         "name":"Microsoft"
+      },
+      "year":2011,
+      "investment":4.3
+   },
+   {  
+      "name":"Ivan",
+      "surname":"Ivanov",
+      "birthdate":"1983-03-13",
+      "corporation":{  
+         "country":"Ukraine",
+         "name":"Roshen"
+      },
+      "year":2013,
+      "investment":3.2
+   }
+]

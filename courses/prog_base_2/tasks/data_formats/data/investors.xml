@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<investors>
+    <investor>
+        <name>Taras</name>
+        <surname>Shevchenko</surname>
+        <birthdate>1975-03-09</birthdate>
+        <corporation country='Finland'>Nokia</corporation>
+        <year>2014</year>
+        <investment>4.6</investment>
+    </investor>
+    <investor>
+        <name>Irina</name>
+        <surname>Kuzmenko</surname>
+        <birthdate>1972-09-09</birthdate>
+        <corporation country='USA'>Microsoft</corporation>
+        <year>2011</year>
+        <investment>4.3</investment>
+    </investor>
+    <investor>
+        <name>Ivan</name>
+        <surname>Ivanov</surname>
+        <birthdate>1983-03-13</birthdate>
+        <corporation country='Ukraine'>Roshen</corporation>
+        <year>2013</year>
+        <investment>3.2</investment>
+    </investor>
+</investors>
