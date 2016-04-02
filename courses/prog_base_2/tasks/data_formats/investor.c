@@ -44,18 +44,15 @@ Investor_t Investor_new(xmlDocPtr doc, xmlNodePtr investorNode){
             free(birthdate);
         }else if (!xmlStrcmp(cur->name, (const xmlChar *)"corporation")) {
             xmlChar * country = xmlGetProp(cur, "country");
-            xmlChar * name = xmlNodeListGetString(doc, cur->xmlChildrenNode, 1);
+            for(xmlNodePtr cur1 = cur->xmlChildrenNode; cur1 != NULL; cur1 = cur1->next){
+                if(!xmlStrcmp(cur1->name, (const xmlChar *)"name")){
+                    xmlChar * name = xmlNodeListGetString(doc, cur1->xmlChildrenNode, 1);
+                    strcpy(self->corporationData.name, (const char *) name);
+                    free(name);
+                }
+            }
             strcpy(self->corporationData.country, (const char *) country);
-            strcpy(self->corporationData.name, (const char *) name);
             free(country);
-            free(name);
-        }else if (!xmlStrcmp(cur->name, (const xmlChar *)"corporation")) {
-            xmlChar * country = xmlGetProp(cur, "country");
-            xmlChar * name = xmlNodeListGetString(doc, cur->xmlChildrenNode, 1);
-            strcpy(self->corporationData.country, (const char *) country);
-            strcpy(self->corporationData.name, (const char *) name);
-            free(country);
-            free(name);
         }else if (!xmlStrcmp(cur->name, (const xmlChar *)"year")) {
             xmlChar * yearStr = xmlNodeListGetString(doc, cur->xmlChildrenNode, 1);
             self->year = atoi((const char *) yearStr);

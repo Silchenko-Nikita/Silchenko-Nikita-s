@@ -1,6 +1,7 @@
 #ifndef INVESTOR_H_INCLUDED
 #define INVESTOR_H_INCLUDED
 
+#include <libxml/parser.h>
 #include <libxml/tree.h>
 
 typedef struct Investor * Investor_t;

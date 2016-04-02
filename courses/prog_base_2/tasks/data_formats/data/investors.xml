@@ -4,7 +4,9 @@
         <name>Taras</name>
         <surname>Shevchenko</surname>
         <birthdate>1975-03-09</birthdate>
-        <corporation country='Finland'>Nokia</corporation>
+        <corporation country='Finland'>
+            <name>Nokia</name>
+        </corporation>
         <year>2014</year>
         <investment>4.6</investment>
     </investor>
@@ -12,7 +14,9 @@
         <name>Irina</name>
         <surname>Kuzmenko</surname>
         <birthdate>1972-09-09</birthdate>
-        <corporation country='USA'>Microsoft</corporation>
+        <corporation country='USA'>
+            <name>Microsoft</name>
+        </corporation>
         <year>2011</year>
         <investment>4.3</investment>
     </investor>
@@ -20,7 +24,9 @@
         <name>Ivan</name>
         <surname>Ivanov</surname>
         <birthdate>1983-03-13</birthdate>
-        <corporation country='Ukraine'>Roshen</corporation>
+        <corporation country='Ukraine'>
+            <name>Roshen</name>
+        </corporation>
         <year>2013</year>
         <investment>3.2</investment>
     </investor>

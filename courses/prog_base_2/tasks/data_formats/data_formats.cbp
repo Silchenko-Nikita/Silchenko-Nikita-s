@@ -30,10 +30,67 @@
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
+			<Add directory="libxml2-2.7.8.win32/include" />
 		</Compiler>
+		<Linker>
+			<Add library="libxml2-2.7.8.win32/lib/libxml2.lib" />
+		</Linker>
+		<Unit filename="investor.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="investor.h" />
+		<Unit filename="libxml/DOCBparser.h" />
+		<Unit filename="libxml/HTMLparser.h" />
+		<Unit filename="libxml/HTMLtree.h" />
+		<Unit filename="libxml/SAX.h" />
+		<Unit filename="libxml/SAX2.h" />
+		<Unit filename="libxml/c14n.h" />
+		<Unit filename="libxml/catalog.h" />
+		<Unit filename="libxml/chvalid.h" />
+		<Unit filename="libxml/debugXML.h" />
+		<Unit filename="libxml/dict.h" />
+		<Unit filename="libxml/encoding.h" />
+		<Unit filename="libxml/entities.h" />
+		<Unit filename="libxml/globals.h" />
+		<Unit filename="libxml/hash.h" />
+		<Unit filename="libxml/list.h" />
+		<Unit filename="libxml/nanoftp.h" />
+		<Unit filename="libxml/nanohttp.h" />
+		<Unit filename="libxml/parser.h" />
+		<Unit filename="libxml/parserInternals.h" />
+		<Unit filename="libxml/pattern.h" />
+		<Unit filename="libxml/relaxng.h" />
+		<Unit filename="libxml/schemasInternals.h" />
+		<Unit filename="libxml/schematron.h" />
+		<Unit filename="libxml/threads.h" />
+		<Unit filename="libxml/tree.h" />
+		<Unit filename="libxml/uri.h" />
+		<Unit filename="libxml/valid.h" />
+		<Unit filename="libxml/xinclude.h" />
+		<Unit filename="libxml/xlink.h" />
+		<Unit filename="libxml/xmlIO.h" />
+		<Unit filename="libxml/xmlautomata.h" />
+		<Unit filename="libxml/xmlerror.h" />
+		<Unit filename="libxml/xmlexports.h" />
+		<Unit filename="libxml/xmlmemory.h" />
+		<Unit filename="libxml/xmlmodule.h" />
+		<Unit filename="libxml/xmlreader.h" />
+		<Unit filename="libxml/xmlregexp.h" />
+		<Unit filename="libxml/xmlsave.h" />
+		<Unit filename="libxml/xmlschemas.h" />
+		<Unit filename="libxml/xmlschemastypes.h" />
+		<Unit filename="libxml/xmlstring.h" />
+		<Unit filename="libxml/xmlunicode.h" />
+		<Unit filename="libxml/xmlversion.h" />
+		<Unit filename="libxml/xmlwriter.h" />
+		<Unit filename="libxml/xpath.h" />
+		<Unit filename="libxml/xpathInternals.h" />
+		<Unit filename="libxml/xpointer.h" />
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="parser.h" />
+		<Unit filename="tree.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />
