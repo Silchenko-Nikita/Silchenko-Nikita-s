@@ -16,14 +16,16 @@ class SpaceObject
 {
 
 protected:
-	SpaceObjectTypes type;
+	SpaceObjectTypes type; // for convenience in getting obj's type
 
 	double mass;
 	double diameter;
 	
 	Vector3d color;
-	Vector3d position;
+	
+	Vector3d accel;
 	Vector3d speed;
+	Vector3d position;
 
 public:
 	SpaceObject(double mass, double diameter, Vector3d & color, Vector3d & position, Vector3d & speed);

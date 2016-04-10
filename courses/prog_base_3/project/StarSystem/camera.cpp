@@ -11,8 +11,18 @@ static double toRads(double dgr) {
 }
 
 namespace Camera {
+	double dist = 700.0;
 	Vector3d up(0.0, 1.0, 0.0);
 	Vector3d right(1.0, 0.0, 0.0);
+
+	void init() {
+		glTranslated(0.0, 0.0, -dist);
+	}
+
+	void move(double delta) {
+		dist += delta;
+		glTranslated(0.0, 0.0, delta);
+	}
 
 	void rotateRight(double angle) {
 		glMatrixMode(GL_PROJECTION);
@@ -46,9 +56,5 @@ namespace Camera {
 		up.z = (-(a*b + c*d) + sqrt(D)) / (b*b + d*d + 1);
 		up.y = a + b*up.z;
 		up.x = c + d*up.z;
-	}
-
-	void move(double dist) {
-		
 	}
 }

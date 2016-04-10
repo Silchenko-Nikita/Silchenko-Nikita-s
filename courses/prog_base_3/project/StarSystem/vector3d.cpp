@@ -17,10 +17,20 @@ Vector3d& operator+=(Vector3d& v1, const Vector3d& v2) {
 
 Vector3d::Vector3d() {}
 
-Vector3d::Vector3d(float x, float y, float z) {
+Vector3d::Vector3d(double x, double y, double z) {
 	this->x = x;
 	this->y = y;
 	this->z = z;
+}
+
+void Vector3d::set(double x, double y, double z) {
+	this->x = x;
+	this->y = y;
+	this->z = z;
+}
+
+void Vector3d::nullify() {
+	x = y = z = 0;
 }
 
 void Vector3d::add(const Vector3d & v) {

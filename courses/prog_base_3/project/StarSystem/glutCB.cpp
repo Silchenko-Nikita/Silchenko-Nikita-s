@@ -14,10 +14,21 @@ static constexpr double operator "" _rads(long double dgr) {
 }
 
 namespace GlutCB {
-	static double cameraDist = 700.0;
-
 	void Display()
 	{
+		/*static int sec = 0;
+		static int ml = glutGet(GLUT_ELAPSED_TIME);
+		static int fcounter = 0;
+
+		ml = glutGet(GLUT_ELAPSED_TIME) - 1000* sec;
+		fcounter++;
+		if (ml > 1000*(sec + 1)) {
+			fcounter = 0;
+			ml = 0;
+			sec++;
+		}
+		printf("%d %d\n", fcounter, sec);
+		*/ //for debug
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
@@ -33,8 +44,8 @@ namespace GlutCB {
 		glViewport(0, 0, w, h);
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		gluPerspective(60, ((float)w) / ((float)h), 10, 1000);
-		glTranslated(0, 0, -cameraDist);
+		gluPerspective(60, ((float)w) / ((float)h), 10, 2000);
+		Camera::init();
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 		
@@ -46,10 +57,10 @@ namespace GlutCB {
 
 		glMatrixMode(GL_PROJECTION);
 		if (button == 3) { // scroll up
-			glTranslatef(0.0f, 0.0f, 5.0f);
+			Camera::move(5.0);
 		}
 		else if (button == 4) { // scroll down
-			glTranslatef(0.0f, 0.0f, -5.0f);
+			Camera::move(-5.0);
 		}
 		glMatrixMode(GL_MODELVIEW);
 	}
@@ -102,10 +113,10 @@ namespace GlutCB {
 		glMatrixMode(GL_PROJECTION);
 		switch (key) {
 		case GLUT_KEY_UP:
-			glTranslatef(0.0f, 0.0f, 5.0f);
+			Camera::move(5.0);
 			break;
 		case GLUT_KEY_DOWN:
-			glTranslatef(0.0f, 0.0f, -5.0f);
+			Camera::move(-5.0);
 			break;
 		}
 		glMatrixMode(GL_MODELVIEW);
