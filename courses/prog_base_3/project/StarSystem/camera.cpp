@@ -1,14 +1,13 @@
 #include "stdafx.h"
+
 #include "math.h"
 #include <math.h>
 #include <GL/freeglut.h> 
 
+#include "utils.h"
 #include "camera.h"
 #include "constants.h"
 
-static double toRads(double dgr) {
-	return dgr / 180.0 * Constants::PI;
-}
 
 namespace Camera {
 	double dist = 700.0;
@@ -29,7 +28,7 @@ namespace Camera {
 		glRotated(angle, up.x, up.y, up.z);
 		glMatrixMode(GL_MODELVIEW);
 
-		double a = (cos(toRads(angle))*up.x) / (right.y*up.x - up.y*right.x);
+		double a = (cos(Utils::toRads(angle))*up.x) / (right.y*up.x - up.y*right.x);
 		double b = - (right.z*up.x - up.z*right.x) / (right.y*up.x - up.y*right.x);
 		double c = - a*up.y / up.x;
 		double d = - (b*up.y + up.z) / up.x;
@@ -46,7 +45,7 @@ namespace Camera {
 		glRotated(angle, right.x, right.y, right.z);
 		glMatrixMode(GL_MODELVIEW);
 
-		double a = (cos(toRads(angle))*right.x) / (up.y*right.x - right.y*up.x);
+		double a = (cos(Utils::toRads(angle))*right.x) / (up.y*right.x - right.y*up.x);
 		double b = -(up.z*right.x - right.z*up.x) / (up.y*right.x - right.y*up.x);
 		double c = -a*right.y / right.x;
 		double d = -(b*right.y + right.z) / right.x;

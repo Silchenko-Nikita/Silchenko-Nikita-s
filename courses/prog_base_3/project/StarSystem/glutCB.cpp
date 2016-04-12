@@ -5,13 +5,9 @@
 #include <iostream>
 
 #include "glutCB.h"
-#include "manager.h"
+#include "RenderManager.h"
 #include "constants.h"
 #include "camera.h"
-
-static constexpr double operator "" _rads(long double dgr) {
-	return dgr / 180.0 * CONST_PI;
-}
 
 namespace GlutCB {
 	void Display()
@@ -32,7 +28,7 @@ namespace GlutCB {
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
-		Manager::displaySpaceObjects();
+		RenderManager::displaySpaceObjects();
 		
 		TwDraw();
 
@@ -123,7 +119,7 @@ namespace GlutCB {
 	}
 
 	void Timer(int v) {
-		Manager::updateSpaceObjects();
+		RenderManager::updateSpaceObjects();
 
 		glutPostRedisplay();
 		glutTimerFunc(Constants::deltaTime, Timer, v);

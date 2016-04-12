@@ -11,7 +11,7 @@
 #include <stdlib.h>
 
 #include "glutCB.h"
-#include "manager.h"
+#include "RenderManager.h"
 #include "constants.h"
 #include "vector3d.h"
 #include "SpaceObjects.h"
@@ -54,33 +54,38 @@ int main(int argc, char ** argv)
 	glutTimerFunc(Constants::deltaTime, GlutCB::Timer, 1);
 		
 	TwDefine(" GLOBAL contained=true ");
-	TwBar * bar = TwNewBar("ControlPane");
-	TwDefine(" ControlPane size='300 400' color='100 200 200' ");
+	TwBar * bar = TwNewBar("Control pane");
+	TwDefine(" 'Control pane' size='300 400' color='100 200 200' ");
+	int d = 2;
+	//TwAddVarCB(bar, "mass", TW_TYPE_INT32, setCB, getCB, NULL, ""); //(bar, "dsa as", TW_TYPE_INT32, &d, NULL);
 
 	Vector3d color(1.0, 1.0, 0.0);
-	Vector3d speed(0.0, 0.0, 0.0);
+	Vector3d velocity(0.0, 0.0, 0.0);
 	Vector3d pos(0.0, 0.0, 0.0);
-	Star sun(2.0e30, 1.4e9, color, pos, speed);
-	Manager::addSpaceObjectForRendering(&sun);
+	Star sun("Sun", 2.0e30, 1.4e9, color, pos, velocity);
+	TwManager::addSpObjToTwBar(bar, &sun);
+	RenderManager::addSpaceObjectForRendering(&sun);
 
 	Vector3d color1(0.0, 0.0, 1.0);
-	Vector3d speed1(0.0, 3.0e4, 0.0);
+	Vector3d velocity1(0.0, 3.0e4, 0.0);
 	Vector3d pos1(1.5e11, 0.0, 0.0);
-	Planet earth(6.0e24, 1.2e7, color1, pos1, speed1);
-	earth.associateWithTwBar(bar);
-	Manager::addSpaceObjectForRendering(&earth);
+	Planet earth("Earth", 6.0e24, 1.2e7, color1, pos1, velocity1);
+	//TwManager::addSpObjToTwBar(bar, &earth);
+	RenderManager::addSpaceObjectForRendering(&earth);
 
-	/*Vector3d color2(0.7, 0.7, 0.7);
-	Vector3d speed2(0.0, 3.1e4, 0.0);
-	Vector3d pos2(1.504e11, 0.0, 0.0);
-	Sputnik moon(7.35e22, 3.4e6, color2, pos2, speed2);
-	Manager::addSpaceObjectForRendering(&moon);*/
+	Vector3d color2(0.7, 0.7, 0.7);
+	Vector3d velocity2(0.0, 1.0e3, 0.0);
+	Vector3d pos2(4.0e8, 0.0, 0.0);
+	Sputnik moon("Moon", 7.35e22, 3.4e6, color2, &earth, pos2, velocity2);
+	//TwManager::addSpObjToTwBar(bar, &earth);
+	RenderManager::addSpaceObjectForRendering(&moon);
 	
 	Vector3d color3(1.0, 0.0, 0.0);
-	Vector3d speed3(0.0, 1.0e4, 0.0);
+	Vector3d velocity3(0.0, 1.0e4, 0.0);
 	Vector3d pos3(5.0e11, 0.0, 0.0);
-	Planet tralfamadore(6.0e24, 1.2e7, color3, pos3, speed3);
-	Manager::addSpaceObjectForRendering(&tralfamadore);
+	Planet tralfamadore("Tralfamadore", 6.0e24, 1.2e7, color3, pos3, velocity3);
+	//TwManager::addSpObjToTwBar(bar, &earth);
+	RenderManager::addSpaceObjectForRendering(&tralfamadore);
 
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
