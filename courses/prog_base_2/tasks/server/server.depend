@@ -1,0 +1,189 @@
+# depslib dependency file v1.0
+1460910809 source:c:\users\Í\desktop\server\investor.c
+	<stdio.h>
+	<stdlib.h>
+	<strings.h>
+	"investor.h"
+
+1460906663 c:\users\Í\desktop\server\investor.h
+	<libxml/parser.h>
+	<libxml/tree.h>
+
+1288882724 c:\users\Í\desktop\server\libxml2-2.7.8.win32\include\libxml\parser.h
+	<stdarg.h>
+	<libxml/xmlversion.h>
+	<libxml/tree.h>
+	<libxml/dict.h>
+	<libxml/hash.h>
+	<libxml/valid.h>
+	<libxml/entities.h>
+	<libxml/xmlerror.h>
+	<libxml/xmlstring.h>
+	<libxml/encoding.h>
+	<libxml/xmlIO.h>
+	<libxml/globals.h>
+
+1308508838 c:\users\Í\desktop\server\libxml2-2.7.8.win32\include\libxml\xmlversion.h
+	<libxml/xmlexports.h>
+	<ansidecl.h>
+
+1286861132 c:\users\Í\desktop\server\libxml2-2.7.8.win32\include\libxml\xmlexports.h
+
+1286861132 c:\users\Í\desktop\server\libxml2-2.7.8.win32\include\libxml\tree.h
+	<stdio.h>
+	<libxml/xmlversion.h>
+	<libxml/xmlstring.h>
+	<libxml/xmlregexp.h>
+	<libxml/xmlmemory.h>
+
+1286861132 c:\users\Í\desktop\server\libxml2-2.7.8.win32\include\libxml\xmlstring.h
+	<stdarg.h>
+	<libxml/xmlversion.h>
+
+1286861132 c:\users\Í\desktop\server\libxml2-2.7.8.win32\include\libxml\xmlregexp.h
+	<libxml/xmlversion.h>
+	<libxml/tree.h>
+	<libxml/dict.h>
+
+1253802720 c:\users\Í\desktop\server\libxml2-2.7.8.win32\include\libxml\dict.h
+	<libxml/xmlversion.h>
+	<libxml/tree.h>
+
+1286861132 c:\users\Í\desktop\server\libxml2-2.7.8.win32\include\libxml\xmlmemory.h
+	<stdio.h>
+	<libxml/xmlversion.h>
+	<libxml/threads.h>
+	<libxml/globals.h>
+
+1286861132 c:\users\Í\desktop\server\libxml2-2.7.8.win32\include\libxml\threads.h
+	<libxml/xmlversion.h>
+	<libxml/globals.h>
+
+1286861132 c:\users\Í\desktop\server\libxml2-2.7.8.win32\include\libxml\globals.h
+	<libxml/xmlversion.h>
+	<libxml/parser.h>
+	<libxml/xmlerror.h>
+	<libxml/SAX.h>
+	<libxml/SAX2.h>
+	<libxml/xmlmemory.h>
+	<libxml/threads.h>
+
+1286861132 c:\users\Í\desktop\server\libxml2-2.7.8.win32\include\libxml\xmlerror.h
+	<libxml/parser.h>
+
+1253802720 c:\users\Í\desktop\server\libxml2-2.7.8.win32\include\libxml\sax.h
+	<stdio.h>
+	<stdlib.h>
+	<libxml/xmlversion.h>
+	<libxml/parser.h>
+	<libxml/xlink.h>
+
+1253802720 c:\users\Í\desktop\server\libxml2-2.7.8.win32\include\libxml\xlink.h
+	<libxml/xmlversion.h>
+	<libxml/tree.h>
+
+1253802720 c:\users\Í\desktop\server\libxml2-2.7.8.win32\include\libxml\sax2.h
+	<stdio.h>
+	<stdlib.h>
+	<libxml/xmlversion.h>
+	<libxml/parser.h>
+	<libxml/xlink.h>
+
+1253802720 c:\users\Í\desktop\server\libxml2-2.7.8.win32\include\libxml\hash.h
+	<libxml/xmlversion.h>
+	<libxml/parser.h>
+	<libxml/dict.h>
+
+1286861132 c:\users\Í\desktop\server\libxml2-2.7.8.win32\include\libxml\valid.h
+	<libxml/xmlversion.h>
+	<libxml/xmlerror.h>
+	<libxml/tree.h>
+	<libxml/list.h>
+	<libxml/xmlautomata.h>
+	<libxml/xmlregexp.h>
+
+1253802720 c:\users\Í\desktop\server\libxml2-2.7.8.win32\include\libxml\list.h
+	<libxml/xmlversion.h>
+
+1253802720 c:\users\Í\desktop\server\libxml2-2.7.8.win32\include\libxml\xmlautomata.h
+	<libxml/xmlversion.h>
+	<libxml/tree.h>
+	<libxml/xmlregexp.h>
+
+1286861132 c:\users\Í\desktop\server\libxml2-2.7.8.win32\include\libxml\entities.h
+	<libxml/xmlversion.h>
+	<libxml/tree.h>
+
+1288886032 c:\users\Í\desktop\server\libxml2-2.7.8.win32\include\libxml\encoding.h
+	<libxml/xmlversion.h>
+	<iconv.h>
+	<unicode/ucnv.h>
+	<libxml/tree.h>
+
+1146767014 c:\users\Í\desktop\server\iconv-1.9.2.win32\include\iconv.h
+	"iconv.h"
+	<stddef.h>
+	<errno.h>
+
+1253802720 c:\users\Í\desktop\server\libxml2-2.7.8.win32\include\libxml\xmlio.h
+	<stdio.h>
+	<libxml/xmlversion.h>
+	<libxml/globals.h>
+	<libxml/tree.h>
+	<libxml/parser.h>
+	<libxml/encoding.h>
+
+1460906971 source:c:\users\Í\desktop\server\main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"libsocket/socket.h"
+	"http.h"
+	"server.h"
+	"str_type.h"
+
+1460593386 c:\users\Í\desktop\server\socket.h
+
+1460593386 source:c:\users\Í\desktop\server\socket_win.c
+	<winsock2.h>
+	"socket.h"
+
+1460593386 source:c:\users\Í\desktop\server\libsocket\socket_win.c
+	<winsock2.h>
+	"socket.h"
+
+1460593386 c:\users\Í\desktop\server\libsocket\socket.h
+
+1460904370 source:c:\users\Í\desktop\server\http.c
+	<stdlib.h>
+	<string.h>
+	"http.h"
+
+1460901990 c:\users\Í\desktop\server\http.h
+
+1460847246 source:c:\users\Í\desktop\server\list.c
+	"list.h"
+
+1458333534 c:\users\Í\desktop\server\list.h
+	<stdlib.h>
+
+1460906971 c:\users\Í\desktop\server\server.h
+	"libsocket/socket.h"
+
+1460911207 source:c:\users\Í\desktop\server\server.c
+	<stdio.h>
+	<strings.h>
+	<libxml/parser.h>
+	<libxml/tree.h>
+	"server.h"
+	"str_type.h"
+	"list.h"
+	"investor.h"
+
+1460900144 c:\users\Í\desktop\server\str_type.h
+
+1460900501 source:c:\users\Í\desktop\server\str_type.c
+	<ctype.h>
+	<strings.h>
+	"str_type.h"
+
