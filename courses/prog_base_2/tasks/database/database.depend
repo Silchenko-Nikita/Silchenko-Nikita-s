@@ -1,0 +1,73 @@
+# depslib dependency file v1.0
+1461277208 source:c:\users\Í\desktop\database\main.c
+	<stdio.h>
+	<stdlib.h>
+	"db_manager.h"
+	"investor.h"
+	"list.h"
+
+1450774966 c:\users\Í\desktop\database\sqlite3.h
+	<stdarg.h>
+
+1450774966 c:\users\Í\desktop\database\sqlite\sqlite3.h
+	<stdarg.h>
+
+1450774966 c:\lib\sqlite3.h
+	<stdarg.h>
+
+1461277191 source:c:\users\Í\desktop\database\db_manager.c
+	<stdlib.h>
+	"db_manager.h"
+	"investor.h"
+	<sqlite3.h>
+
+1461277191 c:\users\Í\desktop\database\db_manager.h
+	"investor.h"
+	"list.h"
+
+1461266862 c:\users\Í\desktop\database\investor.h
+
+1461184164 source:c:\users\Í\desktop\database\investor.c
+	<stdlib.h>
+	<stdio.h>
+	"investor.h"
+
+1458333534 c:\users\Í\desktop\database\list.h
+	<stdlib.h>
+
+1458333534 source:c:\users\Í\desktop\database\list.c
+	"list.h"
+
+1461277191 source:c:\users\Í\documents\myrepos\silchenko-nikita-s\courses\prog_base_2\tasks\database\db_manager.c
+	<stdlib.h>
+	"db_manager.h"
+	"investor.h"
+	<sqlite3.h>
+
+1461277191 c:\users\Í\documents\myrepos\silchenko-nikita-s\courses\prog_base_2\tasks\database\db_manager.h
+	"investor.h"
+	"list.h"
+
+1461266862 c:\users\Í\documents\myrepos\silchenko-nikita-s\courses\prog_base_2\tasks\database\investor.h
+
+1458333534 c:\users\Í\documents\myrepos\silchenko-nikita-s\courses\prog_base_2\tasks\database\list.h
+	<stdlib.h>
+
+1450774966 c:\users\Í\documents\myrepos\silchenko-nikita-s\courses\prog_base_2\tasks\database\sqlite\sqlite3.h
+	<stdarg.h>
+
+1461184164 source:c:\users\Í\documents\myrepos\silchenko-nikita-s\courses\prog_base_2\tasks\database\investor.c
+	<stdlib.h>
+	<stdio.h>
+	"investor.h"
+
+1458333534 source:c:\users\Í\documents\myrepos\silchenko-nikita-s\courses\prog_base_2\tasks\database\list.c
+	"list.h"
+
+1461277208 source:c:\users\Í\documents\myrepos\silchenko-nikita-s\courses\prog_base_2\tasks\database\main.c
+	<stdio.h>
+	<stdlib.h>
+	"db_manager.h"
+	"investor.h"
+	"list.h"
+
