@@ -3,146 +3,154 @@
 #include <stddef.h>
 #include <setjmp.h>
 
-#include <cmocka.h>
+#include "cmocka.h"
 
 #include "tests.h"
-#include "queue_pair.h"
+#include "queue.h"
 
-static void new__void__queuesSizesEqueal3(void **state){
-    QueuePair_t queuePair = QueuePair_new(NULL, NULL, NULL);
+static void new__void__isEmpty(void **state){
+    Queue_t queue = Queue_new();
 
-    assert_int_equal(Queue_getSize(QueuePair_getFirst(queuePair)), 3);
-    assert_int_equal(Queue_getSize(QueuePair_getSecond(queuePair)), 3);
+    assert_true(Queue_isEmpty(queue));
 
-    QueuePair_delete(queuePair);
+    Queue_delete(queue);
 }
 
-static void enqueueFirst__val__increasedSize(void **state){
-    QueuePair_t queuePair = QueuePair_new(NULL, NULL, NULL);
+static void enqueue__val__increasedSize(void **state){
+    Queue_t queue = Queue_new();
 
-    assert_int_equal(Queue_getSize(QueuePair_getFirst(queuePair)), 3);
-    QueuePair_enqueueFirst(queuePair, 1);
-    assert_int_equal(Queue_getSize(QueuePair_getFirst(queuePair)), 4);
+    assert_int_equal(Queue_getSize(queue), 0);
+    Queue_enqueue(queue, 1);
+    assert_int_equal(Queue_getSize(queue), 1);
 
-    QueuePair_delete(queuePair);
+    Queue_delete(queue);
 }
 
-static void dequeueFirst__val__increasedSize(void **state){
-    QueuePair_t queuePair = QueuePair_new(NULL, NULL, NULL);
+static void dequeue__void__validRes_decreasedSize(void **state){
+    Queue_t queue = Queue_new();
 
-    assert_int_equal(Queue_getSize(QueuePair_getSecond(queuePair)), 3);
-    QueuePair_enqueueSecond(queuePair, 1);
-    assert_int_equal(Queue_getSize(QueuePair_getSecond(queuePair)), 4);
+    Queue_enqueue(queue, 1);
+    Queue_enqueue(queue, 2);
 
-    QueuePair_delete(queuePair);
+    assert_int_equal(Queue_dequeue(queue), 1);
+    assert_int_equal(Queue_getSize(queue), 1);
+
+    assert_int_equal(Queue_dequeue(queue), 2);
+    assert_int_equal(Queue_getSize(queue), 0);
+
+    Queue_delete(queue);
 }
 
-static void enqueueFirst__void__decreasedSize(void **state){
-    QueuePair_t queuePair = QueuePair_new(NULL, NULL, NULL);
+static void head__void__validRes(void **state){
+    Queue_t queue = Queue_new();
 
-    assert_int_equal(Queue_getSize(QueuePair_getFirst(queuePair)), 3);
-    QueuePair_dequeueFirst(queuePair);
-    assert_int_equal(Queue_getSize(QueuePair_getFirst(queuePair)), 2);
+    Queue_enqueue(queue, 1);
+    assert_int_equal(Queue_head(queue), 1);
+    Queue_enqueue(queue, 2);
+    assert_int_equal(Queue_head(queue), 1);
 
-    QueuePair_delete(queuePair);
+    Queue_delete(queue);
 }
 
-static void dequeueFirst__void__decreasedSize(void **state){
-    QueuePair_t queuePair = QueuePair_new(NULL, NULL, NULL);
+static void subscribeSingleOverflowEvent__callback_data__callbackCalled(void **state){
+    Queue_t queue = Queue_new();
+    int callbackIsCalled = 0;
 
-    assert_int_equal(Queue_getSize(QueuePair_getSecond(queuePair)), 3);
-    QueuePair_dequeueSecond(queuePair);
-    assert_int_equal(Queue_getSize(QueuePair_getSecond(queuePair)), 2);
+    void callback(Queue_t caller, void * callerData){
+        callbackIsCalled = 1;
 
-    QueuePair_delete(queuePair);
-}
-
-static void enqueueFirst__val__singleOverflow(void **state){
-    int overflowed = 0;
-
-    void singleOverflow(Queue_t queue){
-        overflowed = 1;
+        assert_true(caller == queue);
+        assert_string_equal((char *)callerData, "test string");
     }
 
-    QueuePair_t queuePair = QueuePair_new(NULL, singleOverflow, NULL);
+    Queue_subscribeSingleOverflowEvent(queue, callback, "test string");
 
-    for(int i = 0; i < QUEUE_PAIR_MAX_SIZE; i++){
-        QueuePair_enqueueFirst(queuePair, 1);
+    for(int i = 0; i < 11; i++){
+        Queue_enqueue(queue, 1);
     }
 
-    assert_int_equal(1, overflowed);
+    assert_true(callbackIsCalled);
 
-    QueuePair_delete(queuePair);
+    Queue_delete(queue);
 }
 
-static void enquequeSecond__val__singleOverflow(void **state){
-    int overflowed = 0;
 
-    void singleOverflow(Queue_t queue){
-        overflowed = 1;
-    }
-
-    QueuePair_t queuePair = QueuePair_new(NULL, singleOverflow, NULL);
-
-    for(int i = 0; i < QUEUE_PAIR_MAX_SIZE; i++){
-        QueuePair_enqueueSecond(queuePair, 1);
-    }
-
-    assert_int_equal(1, overflowed);
-
-    QueuePair_delete(queuePair);
-}
-
-static void enqueueFirst_enqueueSecond__val__fullOverflow(void **state){
-    int overflowed = 0;
-
-    void fullOverflow(Queue_t queue1, Queue_t queue2){
-        overflowed = 1;
-    }
-
-    QueuePair_t queuePair = QueuePair_new(NULL, NULL, fullOverflow);
-
-    for(int i = 0; i < QUEUE_PAIR_MAX_SIZE; i++){
-        QueuePair_enqueueFirst(queuePair, 1);
-        QueuePair_enqueueSecond(queuePair, 1);
-    }
-
-    assert_int_equal(1, overflowed);
-
-    QueuePair_delete(queuePair);
-}
-
-static void dequeueFirst_dequeueSecond__void__empty(void **state){
-    int isEmpty = 0;
-
-    void empty(Queue_t queue1, Queue_t queue2){
-        isEmpty = 1;
-    }
-
-    QueuePair_t queuePair = QueuePair_new(empty, NULL, NULL);
+static void subscribePairOverflowEvent__callback_data__callbackCalled(void **state){
+    Queue_t queue1 = Queue_new();
+    Queue_t queue2 = Queue_new();
 
     for(int i = 0; i < 3; i++){
-        QueuePair_dequeueFirst(queuePair);
-        QueuePair_dequeueSecond(queuePair);
+        Queue_enqueue(queue1, 1);
+        Queue_enqueue(queue2, 1);
     }
 
-    assert_int_equal(1, isEmpty);
+    Queue_bindQueues(queue1, queue2);
 
-    QueuePair_delete(queuePair);
+    int callbackIsCalled = 0;
+
+    void callback(Queue_t caller, void * callerData, Queue_t boundQueue){
+        callbackIsCalled = 1;
+
+        assert_true(caller == queue1);
+        assert_true(boundQueue == queue2);
+        assert_string_equal((char *)callerData, "test string");
+    }
+
+    Queue_subscribePairOverflowEvent(queue1, callback, "test string");
+
+     for(int i = 0; i < 7; i++){
+        Queue_enqueue(queue1, 1);
+        Queue_enqueue(queue2, 1);
+    }
+
+    Queue_delete(queue1);
+    Queue_delete(queue2);
 }
 
-void moduleTests_QueuePair(void) {
+
+static void subscribePairEmptyEvent__callback_data__callbackCalled(void **state){
+    Queue_t queue1 = Queue_new();
+    Queue_t queue2 = Queue_new();
+
+    for(int i = 0; i < 3; i++){
+        Queue_enqueue(queue1, 1);
+        Queue_enqueue(queue2, 1);
+    }
+
+    Queue_bindQueues(queue1, queue2);
+
+    int callbackIsCalled = 0;
+
+    void callback(Queue_t caller, void * callerData, Queue_t boundQueue){
+        callbackIsCalled = 1;
+
+        assert_true(caller == queue1);
+        assert_true(boundQueue == queue2);
+        assert_string_equal((char *)callerData, "test string");
+    }
+
+    Queue_subscribePairOverflowEvent(queue1, callback, "test string");
+
+     for(int i = 0; i < 3; i++){
+        Queue_dequeue(queue1);
+        Queue_dequeue(queue2);
+    }
+
+    Queue_delete(queue1);
+    Queue_delete(queue2);
+}
+
+
+void moduleTests_Queue(void) {
     const UnitTest tests[] =
     {
-        unit_test(new__void__queuesSizesEqueal3),
-        unit_test(enqueueFirst__val__increasedSize),
-        unit_test(dequeueFirst__val__increasedSize),
-        unit_test(enqueueFirst__void__decreasedSize),
-        unit_test(dequeueFirst__void__decreasedSize),
-        unit_test(enqueueFirst__val__singleOverflow),
-        unit_test(enquequeSecond__val__singleOverflow),
-        unit_test(enqueueFirst_enqueueSecond__val__fullOverflow),
-        unit_test(dequeueFirst_dequeueSecond__void__empty)
+        unit_test(new__void__isEmpty),
+        unit_test(enqueue__val__increasedSize),
+        unit_test(dequeue__void__validRes_decreasedSize),
+        unit_test(head__void__validRes),
+        unit_test(subscribeSingleOverflowEvent__callback_data__callbackCalled),
+        unit_test(subscribePairOverflowEvent__callback_data__callbackCalled),
+        unit_test(subscribePairEmptyEvent__callback_data__callbackCalled)
     };
     return run_tests(tests);
 }
