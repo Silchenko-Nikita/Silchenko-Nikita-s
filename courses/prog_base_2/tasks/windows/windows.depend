@@ -1,0 +1,50 @@
+# depslib dependency file v1.0
+1461277191 source:c:\users\Í\desktop\windows\db_manager.c
+	<stdlib.h>
+	"db_manager.h"
+	"investor.h"
+	<sqlite3.h>
+
+1461277191 c:\users\Í\desktop\windows\db_manager.h
+	"investor.h"
+	"list.h"
+
+1461683735 c:\users\Í\desktop\windows\investor.h
+
+1458333534 c:\users\Í\desktop\windows\list.h
+	<stdlib.h>
+
+1450774966 c:\users\Í\desktop\windows\sqlite\sqlite3.h
+	<stdarg.h>
+
+1461184164 source:c:\users\Í\desktop\windows\investor.c
+	<stdlib.h>
+	<stdio.h>
+	"investor.h"
+
+1458333534 source:c:\users\Í\desktop\windows\list.c
+	"list.h"
+
+1461691270 source:c:\users\Í\desktop\windows\main.c
+	<stdio.h>
+	<ctype.h>
+	<strings.h>
+	<windows.h>
+	<commctrl.h>
+	"resource.h"
+	"str_type.h"
+	"investor.h"
+
+1461524144 source:c:\users\Í\desktop\windows\str_type.c
+	<ctype.h>
+	<strings.h>
+	"str_type.h"
+
+1461690448 c:\users\Í\desktop\windows\str_type.h
+
+1461690131 c:\users\Í\desktop\windows\resource.h
+
+1461691334 source:c:\users\Í\desktop\windows\resource.rc
+	<windows.h>
+	"resource.h"
+
