@@ -1,31 +1,51 @@
-﻿Build started 08.04.2016 20:54:30.
+﻿Build started 01.05.2016 19:02:23.
      1>Project "C:\visual studio 2015\Projects\StarSystem\StarSystem\StarSystem.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\CL.exe /c /I"C:\visual studio 2015\Projects\StarSystem\packages\AntTweakBar.1.16.2\build\native\../..//build/native/include/" /I"C:\visual studio 2015\Projects\StarSystem\packages\nupengl.core.0.1.0.1\build\native\../..//build/native/include/" /ZI /nologo /W3 /WX- /Od /Oy- /D HAS_ANTTWEAKBAR /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Yu"stdafx.h" /Fp"Debug\StarSystem.pch" /Fo"Debug\\" /Fd"Debug\vc140.pdb" /Gd /TP /analyze- /errorReport:prompt SpaceObjects.cpp StarSystem.cpp glutCB.cpp manager.cpp
-         SpaceObjects.cpp
-     1>c:\visual studio 2015\projects\starsystem\starsystem\spaceobjects.cpp(26): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-     1>c:\visual studio 2015\projects\starsystem\starsystem\spaceobjects.cpp(27): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-     1>c:\visual studio 2015\projects\starsystem\starsystem\spaceobjects.cpp(28): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-         Generating Code...
-         Compiling...
-         manager.cpp
-         glutCB.cpp
-     1>c:\visual studio 2015\projects\starsystem\starsystem\glutcb.cpp(118): warning C4244: 'argument': conversion from 'const double' to 'unsigned int', possible loss of data
+         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\CL.exe /c /I"C:\visual studio 2015\Projects\StarSystem\packages\AntTweakBar.1.16.2\build\native\../..//build/native/include/" /I"C:\visual studio 2015\Projects\StarSystem\packages\nupengl.core.0.1.0.1\build\native\../..//build/native/include/" /ZI /nologo /W3 /WX- /Od /Oy- /D HAS_ANTTWEAKBAR /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Yu"stdafx.h" /Fp"Debug\StarSystem.pch" /Fo"Debug\\" /Fd"Debug\vc140.pdb" /Gd /TP /analyze- /errorReport:prompt glutCB.cpp camera.cpp SpaceObjects.cpp StarSystem.cpp RenderManager.cpp ControlPane.cpp utils.cpp vector3d.cpp
+         vector3d.cpp
+     1>c:\visual studio 2015\projects\starsystem\starsystem\vector3d.cpp(21): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+     1>c:\visual studio 2015\projects\starsystem\starsystem\vector3d.cpp(22): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+     1>c:\visual studio 2015\projects\starsystem\starsystem\vector3d.cpp(23): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+     1>c:\visual studio 2015\projects\starsystem\starsystem\vector3d.cpp(27): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+     1>c:\visual studio 2015\projects\starsystem\starsystem\vector3d.cpp(28): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+     1>c:\visual studio 2015\projects\starsystem\starsystem\vector3d.cpp(29): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+         utils.cpp
+         ControlPane.cpp
+     1>c:\visual studio 2015\projects\starsystem\starsystem\controlpane.cpp(10): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+         c:\program files (x86)\windows kits\10\include\10.0.10150.0\ucrt\stdio.h(1769): note: see declaration of 'sprintf'
+     1>c:\visual studio 2015\projects\starsystem\starsystem\controlpane.cpp(45): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+         c:\program files (x86)\windows kits\10\include\10.0.10150.0\ucrt\stdio.h(1769): note: see declaration of 'sprintf'
+         RenderManager.cpp
          StarSystem.cpp
-     1>c:\visual studio 2015\projects\starsystem\starsystem\starsystem.cpp(50): warning C4244: 'argument': conversion from 'const double' to 'unsigned int', possible loss of data
-     1>c:\visual studio 2015\projects\starsystem\starsystem\starsystem.cpp(64): warning C4305: 'argument': truncation from 'double' to 'float'
+         SpaceObjects.cpp
+     1>c:\visual studio 2015\projects\starsystem\starsystem\spaceobjects.cpp(33): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+     1>c:\visual studio 2015\projects\starsystem\starsystem\spaceobjects.cpp(34): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+     1>c:\visual studio 2015\projects\starsystem\starsystem\spaceobjects.cpp(35): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+         camera.cpp
+     1>c:\visual studio 2015\projects\starsystem\starsystem\camera.cpp(38): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+     1>c:\visual studio 2015\projects\starsystem\starsystem\camera.cpp(39): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+     1>c:\visual studio 2015\projects\starsystem\starsystem\camera.cpp(40): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+     1>c:\visual studio 2015\projects\starsystem\starsystem\camera.cpp(55): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+     1>c:\visual studio 2015\projects\starsystem\starsystem\camera.cpp(56): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+     1>c:\visual studio 2015\projects\starsystem\starsystem\camera.cpp(57): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+         glutCB.cpp
          Generating Code...
+     1>c:\visual studio 2015\projects\starsystem\starsystem\vector3d.cpp(10): warning C4172: returning address of local variable or temporary: res
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\visual studio 2015\Projects\StarSystem\Debug\StarSystem.exe" /INCREMENTAL /NOLOGO "C:\visual studio 2015\Projects\StarSystem\packages\AntTweakBar.1.16.2\build\native\../..//build/native/lib/Win32\v140\Debug\AntTweakBar.lib" "C:\visual studio 2015\Projects\StarSystem\packages\nupengl.core.0.1.0.1\build\native\../..//build/native/lib/Win32\glew32.lib" "C:\visual studio 2015\Projects\StarSystem\packages\nupengl.core.0.1.0.1\build\native\../..//build/native/lib/Win32\glfw3dll.lib" "C:\visual studio 2015\Projects\StarSystem\packages\nupengl.core.0.1.0.1\build\native\../..//build/native/lib/Win32\freeglut.lib" opengl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /Debug /PDB:"C:\visual studio 2015\Projects\StarSystem\Debug\StarSystem.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\visual studio 2015\Projects\StarSystem\Debug\StarSystem.lib" /MACHINE:X86 Debug\glutCB.obj
          Debug\camera.obj
          Debug\SpaceObjects.obj
          Debug\StarSystem.obj
          Debug\stdafx.obj
-         Debug\manager.obj
+         Debug\RenderManager.obj
+         Debug\ControlPane.obj
+         Debug\utils.obj
          Debug\vector3d.obj
-         StarSystem.vcxproj -> C:\visual studio 2015\Projects\StarSystem\Debug\StarSystem.exe
-     1>Done Building Project "C:\visual studio 2015\Projects\StarSystem\StarSystem\StarSystem.vcxproj" (Build target(s)).
+     1>ControlPane.obj : error LNK2019: unresolved external symbol "private: __thiscall ControlPane::ControlPane(void)" (??0ControlPane@@AAE@XZ) referenced in function "public: static class ControlPane * __cdecl ControlPane::getInstance(void)" (?getInstance@ControlPane@@SAPAV1@XZ)
+     1>ControlPane.obj : error LNK2001: unresolved external symbol "private: static class ControlPane * ControlPane::p_instance" (?p_instance@ControlPane@@0PAV1@A)
+     1>C:\visual studio 2015\Projects\StarSystem\Debug\StarSystem.exe : fatal error LNK1120: 2 unresolved externals
+     1>Done Building Project "C:\visual studio 2015\Projects\StarSystem\StarSystem\StarSystem.vcxproj" (Build target(s)) -- FAILED.
 
-Build succeeded.
+Build FAILED.
 
-Time Elapsed 00:00:07.92
+Time Elapsed 00:00:21.16

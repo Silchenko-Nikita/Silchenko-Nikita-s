@@ -5,7 +5,7 @@
 #include "RenderManager.h"
 
 
-
+// or DiplayManager
 namespace RenderManager {
 	static std::list<SpaceObject *> spObjs;
 

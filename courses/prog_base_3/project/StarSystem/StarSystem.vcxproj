@@ -151,8 +151,8 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="RenderManager.h" />
-    <ClInclude Include="TwManager.h" />
-    <ClInclude Include="vector3d.h" />
+    <ClInclude Include="ControlPane.h" />
+    <ClInclude Include="vector3.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="glutCB.cpp" />
@@ -166,9 +166,9 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="RenderManager.cpp" />
-    <ClCompile Include="TwManager.cpp" />
+    <ClCompile Include="ControlPane.cpp" />
     <ClCompile Include="utils.cpp" />
-    <ClCompile Include="vector3d.cpp" />
+    <ClCompile Include="vector3.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

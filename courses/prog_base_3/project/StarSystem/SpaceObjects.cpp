@@ -1,6 +1,5 @@
 #include "stdafx.h"
 
-#include <GL/freeglut.h> 
 #include <math.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -11,7 +10,7 @@
 #include "utils.h"
 
 
-SpaceObject::SpaceObject(const char * name, double mass, double diameter, Vector3d & color, Vector3d & position, Vector3d & velocity)
+SpaceObject::SpaceObject(const char * name, double mass, double diameter, Vector3f & color, Vector3d & position, Vector3d & velocity)
 {
 	this->name = name;
 	this->mass = mass;
@@ -67,6 +66,11 @@ Vector3d SpaceObject::getPosition() {
 	return position;
 }
 
+SpaceObject * SpaceObject::getParent()
+{
+	return parent;
+}
+
 const char * SpaceObject::getTypeStr() {
 	return typeStrRepr(getType());
 }
@@ -111,10 +115,10 @@ void Star::display() {
 	glTranslated(position.x / Constants::metersPerPixel, position.y / Constants::metersPerPixel, position.z / Constants::metersPerPixel);
 
 	float lightPos[] = { 0.0f, 0.0f, 0.0f, 1.0f };
-	float lightDiff[] = { 0.75f + color.x * 0.25f, 0.75f + color.y * 0.25f, 0.75f + color.z * 0.25f, 1.0f };
+	float lightDiff[] = { color.x, color.y, color.z, 1.0f };
 	
-	glLightfv(GL_LIGHT0 /* + starIndex */, GL_POSITION, lightPos);
-	glLightfv(GL_LIGHT0 /* + starIndex */, GL_DIFFUSE, lightDiff);
+	glLightfv(glLight, GL_POSITION, lightPos);
+	glLightfv(glLight, GL_DIFFUSE, lightDiff);
 	
 	float materialAmb[] = { color.x, color.y, color.z, 1.0f };
 	glMaterialfv(GL_FRONT, GL_AMBIENT, materialAmb);
@@ -130,7 +134,7 @@ void Planet::display() {
 	glTranslated(position.x / Constants::metersPerPixel, position.y / Constants::metersPerPixel, position.z / Constants::metersPerPixel);
 	
 	float materialAmb[] = { color.x * 0.05f, color.y * 0.05f, color.z * 0.05f, 1.0f };
-	float materialDiff[] = { 0.2f + color.x*0.2f, 0.2f + color.y*0.2f, 0.2f + color.z*0.2f, 1.0f };
+	float materialDiff[] = { 0.4f + color.x*0.2f, 0.4f + color.y*0.2f, 0.4f + color.z*0.2f, 1.0f };
 	
 	glMaterialfv(GL_FRONT, GL_AMBIENT, materialAmb);
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, materialDiff);
@@ -148,8 +152,8 @@ void Sputnik::display() {
 		(parentPos.y + (position.y * Constants::sputniksDistDisplayFactor))/ Constants::metersPerPixel,
 		(parentPos.z + (position.z * Constants::sputniksDistDisplayFactor))/ Constants::metersPerPixel);
 
-	float materialAmb[] = { color.x * 0.05f, color.y * 0.05f, color.z * 0.05f, 1.0f };
-	float materialDiff[] = { 0.2f + color.x*0.2f, 0.2f + color.y*0.2f, 0.2f + color.z*0.2f, 1.0f };
+	float materialAmb[] = { color.x * 0.05f, color.y *  0.05f, color.z * 0.05f, 1.0f };
+	float materialDiff[] = { 0.4f + color.x*0.2f, 0.4f + color.y*0.2f, 0.4f + color.z*0.2f, 1.0f };
 
 	glMaterialfv(GL_FRONT, GL_AMBIENT, materialAmb);
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, materialDiff);
@@ -172,10 +176,10 @@ SpaceObjectType Sputnik::getType() {
 
 const char * SpaceObject::typeStrRepr(SpaceObjectType type) {
 	static const char * repr[] = {
-		"Star",
-		"Planet",
-		"Sputnik",
-		"Teapot"
+		"star",
+		"planet",
+		"sputnik",
+		"teapot"
 	};
 
 	return repr[type];

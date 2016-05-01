@@ -40,7 +40,7 @@ namespace GlutCB {
 		glViewport(0, 0, w, h);
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		gluPerspective(60, ((float)w) / ((float)h), 10, 2000);
+		gluPerspective(60, ((float)w) / ((float)h), 1, 2000);
 		Camera::init();
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
@@ -75,7 +75,7 @@ namespace GlutCB {
 		glMatrixMode(GL_PROJECTION);
 		switch (key)
 		{
-		/*case 'w':
+		case 'w':
 		case 'W':
 			Camera::rotateUp(1.0);
 			break;
@@ -90,7 +90,7 @@ namespace GlutCB {
 		case 's':
 		case 'S':
 			Camera::rotateUp(-1.0);
-			break;*/
+			break;
 
 		case 'f':
 		case 'F':

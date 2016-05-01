@@ -2,15 +2,18 @@
 
 #include <list>
 
+#include <GL/freeglut.h> 
 #include <AntTweakBar.h>  
 #include <string>  
 
-#include "vector3d.h"
-#include "TwManager.h"
+#include "vector3.h"
+#include "ControlPane.h"
 
 enum SpaceObjectType{
 	STAR, PLANET, SPUTNIK, TEAPOT
 };
+
+class ControlPane;
 
 class SpaceObject
 {
@@ -23,7 +26,7 @@ protected:
 	double mass;
 	double diameter;
 	
-	Vector3d color;
+	Vector3f color;
 	
 	Vector3d accel; 
 	Vector3d velocity; 
@@ -32,7 +35,7 @@ protected:
 	void interactWith(SpaceObject * spObj);
 	void updatePosition();
 public:
-	SpaceObject(const char * name, double mass, double diameter, Vector3d & color, Vector3d & position, Vector3d & velocity);
+	SpaceObject(const char * name, double mass, double diameter, Vector3f & color, Vector3d & position, Vector3d & velocity);
 	virtual ~SpaceObject() {};
 	
 	const char * getName();
@@ -41,15 +44,10 @@ public:
 	Vector3d getAccel();
 	Vector3d getVelocity();
 	Vector3d getPosition();
+	SpaceObject * getParent();
 	const char * getTypeStr();
 
-	friend void addSpObjToTwBar(TwBar * bar, SpaceObject * spObj);
-
-	friend void TwManager::addSpObjToTwBar(TwBar * bar, SpaceObject * spObj);
-	friend void TW_CALL TwCB::spObj_setMantissa(const void *value, void *clientData);
-	friend void TW_CALL TwCB::spObj_getMantissa(void *value, void *clientData);
-	friend void TW_CALL TwCB::spObj_setExp(const void *value, void *clientData);
-	friend void TW_CALL TwCB::spObj_getExp(void *value, void *clientData);
+	friend class ControlPane;
 	
 	virtual void update(std::list<SpaceObject *> spObjs) = 0;
 	virtual void display() = 0;
@@ -60,9 +58,19 @@ public:
 
 class Star: public SpaceObject
 {
+	int glLight; // from GL_LIGHT0 to GL_LIGHT7
 public:
-	Star(const char * name, double mass, double diameter, Vector3d & color, Vector3d & position, Vector3d & velocity) :
-		SpaceObject(name, mass, diameter, color, position, velocity) { parent = NULL; };
+	Star(int glLight, const char * name, double mass, double diameter, Vector3f & color, Vector3d & position, Vector3d & velocity) :
+		SpaceObject(name, mass, diameter, color, position, velocity) {
+		if (glLight < GL_LIGHT0 || glLight > GL_LIGHT7) {
+			glLight = GL_LIGHT0;
+		}
+		float lightAmb[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+		glLightfv(glLight, GL_AMBIENT, lightAmb);
+		glEnable(glLight);
+		this->glLight = glLight;
+		parent = NULL;
+	};
 	void update(std::list<SpaceObject *> spObjs);
 	void display();
 	SpaceObjectType getType();
@@ -74,7 +82,7 @@ class Planet : public SpaceObject
 {
 	std::list<SpaceObject *> sputniks;
 public:
-	Planet(const char * name, double mass, double diameter, Vector3d & color, Vector3d & position, Vector3d & velocity) :
+	Planet(const char * name, double mass, double diameter, Vector3f & color, Vector3d & position, Vector3d & velocity) :
 		SpaceObject(name, mass, diameter, color, position, velocity) { parent = NULL; };
 	void addSputnik(Sputnik * sputnik);
 	void update(std::list<SpaceObject *> spObjs);
@@ -85,7 +93,7 @@ public:
 class Sputnik : public SpaceObject
 {
 public:
-	Sputnik(const char * name, double mass, double diameter, Vector3d & color, Planet * parent, Vector3d & relativePos, Vector3d & relativeVel):
+	Sputnik(const char * name, double mass, double diameter, Vector3f & color, Planet * parent, Vector3d & relativePos, Vector3d & relativeVel):
 		SpaceObject(name, mass, diameter, color, relativePos, relativeVel) { this->parent = parent; parent->addSputnik(this); };
 	void update(std::list<SpaceObject *> spObjs);
 	void display();

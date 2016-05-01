@@ -25,6 +25,10 @@ namespace Camera {
 
 	void rotateRight(double angle) {
 		glMatrixMode(GL_PROJECTION);
+		glRotated(angle, 0.0, 1.0, 0.0);
+		glMatrixMode(GL_MODELVIEW);
+
+		/*glMatrixMode(GL_PROJECTION);
 		glRotated(angle, up.x, up.y, up.z);
 		glMatrixMode(GL_MODELVIEW);
 
@@ -37,11 +41,15 @@ namespace Camera {
 		
 		right.z = (-(a*b + c*d) + sqrt(D)) / (b*b + d*d + 1);
 		right.y = a + b*right.z;
-		right.x = c + d*right.z;
+		right.x = c + d*right.z;*/
 	}
 
 	void rotateUp(double angle) {
 		glMatrixMode(GL_PROJECTION);
+		glRotated(angle, 1.0, 0.0, 0.0);
+		glMatrixMode(GL_MODELVIEW);
+
+		/*glMatrixMode(GL_PROJECTION);
 		glRotated(angle, right.x, right.y, right.z);
 		glMatrixMode(GL_MODELVIEW);
 
@@ -54,6 +62,6 @@ namespace Camera {
 
 		up.z = (-(a*b + c*d) + sqrt(D)) / (b*b + d*d + 1);
 		up.y = a + b*up.z;
-		up.x = c + d*up.z;
+		up.x = c + d*up.z;*/
 	}
 }
