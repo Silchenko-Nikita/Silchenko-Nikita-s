@@ -8,4 +8,6 @@ namespace RenderManager {
 	void updateSpaceObjects();
 	void displaySpaceObjects();
 	void freeMemory();
+	void pauseRendering();
+	void resumeRendering();
 }

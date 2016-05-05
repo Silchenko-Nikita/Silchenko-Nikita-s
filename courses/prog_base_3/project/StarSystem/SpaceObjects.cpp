@@ -9,6 +9,21 @@
 #include "constants.h"
 #include "utils.h"
 
+const double SpaceObject::default_G = 6.67408e-11;
+const double SpaceObject::default_timeAccel = 5.0e6;
+const double SpaceObject::default_metersPerPixel = 1.0e9;
+const double Star::default_diamDisplayFactor = 15.0;
+const double Planet::default_diamDisplayFactor = 350.0;
+const double Sputnik::default_diamDisplayFactor = 250.0;
+const double Sputnik::default_distDisplayFactor = 20.0;
+
+double SpaceObject::G = default_G;
+double SpaceObject::timeAccel = default_timeAccel;
+double SpaceObject::metersPerPixel = default_metersPerPixel;
+double Star::diamDisplayFactor = default_diamDisplayFactor; // change of diameter of star being displayed
+double Planet::diamDisplayFactor = default_diamDisplayFactor; // change of diameter of planet being displayed
+double Sputnik::diamDisplayFactor = default_diamDisplayFactor; // change of diameter of sputnik being displayed
+double Sputnik::distDisplayFactor = default_distDisplayFactor; // change of distance from sputnik to it's parent when displayed
 
 SpaceObject::SpaceObject(const char * name, double mass, double diameter, Vector3f & color, Vector3d & position, Vector3d & velocity)
 {
@@ -18,6 +33,19 @@ SpaceObject::SpaceObject(const char * name, double mass, double diameter, Vector
 	this->color = color;
 	this->position = position;
 	this->velocity = velocity;
+
+	isInteracting = true;
+}
+
+void SpaceObject::setDefaultFactors()
+{
+	SpaceObject::G = default_G;
+	SpaceObject::timeAccel = default_timeAccel;
+	SpaceObject::metersPerPixel = default_metersPerPixel;
+	//Star::diamDisplayFactor = default_starsDiamDisplayFactor;
+	//Planet::diamDisplayFactor = default_planetsDiamDisplayFactor;
+	//Sputnik::diamDisplayFactor = default_sputniksDiamDisplayFactor;
+	//Sputnik::distDisplayFactor = default_sputniksDistDisplayFactor;
 }
 
 void SpaceObject::interactWith(SpaceObject * spObj) {
@@ -30,16 +58,15 @@ void SpaceObject::interactWith(SpaceObject * spObj) {
 
 	if (dist > (diameter/2 + objDiameter/2)) {
 
-		accel.x += Constants::G * (objMass * (objPosition.x - absPosition.x) / pow(dist, 3));
-		accel.y += Constants::G * (objMass * (objPosition.y - absPosition.y) / pow(dist, 3));
-		accel.z += Constants::G * (objMass * (objPosition.z - absPosition.z) / pow(dist, 3));
+		gravityAccel.x += G * (objMass * (objPosition.x - absPosition.x) / pow(dist, 3));
+		gravityAccel.y += G * (objMass * (objPosition.y - absPosition.y) / pow(dist, 3));
+		gravityAccel.z += G * (objMass * (objPosition.z - absPosition.z) / pow(dist, 3));
 	}
-
 }
 
 void SpaceObject::updatePosition() {
-	velocity += accel * (Constants::deltaTime * 1.0e-3 * Constants::timeAccel);
-	position += velocity * (Constants::deltaTime * 1.0e-3  * Constants::timeAccel);
+	velocity += resultAccel * (Constants::deltaTime * 1.0e-3 * timeAccel);
+	position += velocity * (Constants::deltaTime * 1.0e-3  * timeAccel);
 }
 
 const char * SpaceObject::getName() {
@@ -52,10 +79,6 @@ double SpaceObject::getMass() {
 
 double SpaceObject::getDiameter() {
 	return diameter;
-}
-
-Vector3d SpaceObject::getAccel() {
-	return accel;
 }
 
 Vector3d SpaceObject::getVelocity() {
@@ -76,81 +99,137 @@ const char * SpaceObject::getTypeStr() {
 }
 
 void Planet::addSputnik(Sputnik * sputnik) {
-	sputniks.push_back(sputnik);
+	//sputniks.push_back(sputnik);
 }
 
+Star::Star(int glLight, const char * name, double mass, double diameter, Vector3f & color, Vector3d & position, Vector3d & velocity) :
+	SpaceObject(name, mass, diameter, color, position, velocity) {
+	if (glLight < GL_LIGHT0 || glLight > GL_LIGHT7) {
+		glLight = GL_LIGHT0;
+	}
+	parent = NULL;
+
+	glEnable(glLight);
+	this->glLight = glLight;
+	float lightAmb[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	glLightfv(glLight, GL_AMBIENT, lightAmb);
+	//glLightf(glLight, GL_CONSTANT_ATTENUATION, 1.0);
+	glLightf(glLight, GL_LINEAR_ATTENUATION, 6.0e-5);
+	glLightf(glLight, GL_QUADRATIC_ATTENUATION, 2.0e-5);
+};
+
 void Star::update(std::list<SpaceObject *> spObjs){
-	accel.nullify();
+	static Vector3d accelsDiff;
+
+	gravityAccel.nullify();
+
+	if (!isInteracting) return;
+
 	for (SpaceObject * spObj : spObjs) {
 		if ((spObj == this) || (spObj->getType() == PLANET) || (spObj->getType() == SPUTNIK)) continue;
 
 		interactWith(spObj);
 	}
+
+	resultAccel = gravityAccel + accelsDiff;
+
+	if (isInteracting) accelsDiff = resultAccel - gravityAccel;
+	else accelsDiff.nullify();
+	
 	updatePosition();
 }
 
 void Planet::update(std::list<SpaceObject *> spObjs){
-	accel.nullify();
+	static Vector3d accelsDiff;
+
+	gravityAccel.nullify();
+
+	if (!isInteracting) return;
+
 	for (SpaceObject * spObj : spObjs) {
-		if ((spObj == this) || (spObj->getType() == SPUTNIK)) continue;
+		if ((spObj == this) || (spObj->getType() == SPUTNIK) || (spObj->getType() == PLANET)) continue;
 
 		interactWith(spObj);
 	}
+
+	resultAccel = gravityAccel + accelsDiff;
+	
+	if (isInteracting) accelsDiff = resultAccel - gravityAccel;
+	else accelsDiff.nullify();
+	
 	updatePosition();
 }
 
 void Sputnik::update(std::list<SpaceObject *> spObjs){
-	accel.nullify();
+	static Vector3d accelsDiff;
+
+	gravityAccel.nullify();
+
+	if (!isInteracting) return;
+
 	for (SpaceObject * spObj : spObjs) {
 		if ((spObj == this) || (spObj->getType() == STAR) || ((spObj->getType() == PLANET) && (spObj != parent))) continue;
 
 		interactWith(spObj);
 	}
+
+	resultAccel = gravityAccel + accelsDiff;
+	
+	if (isInteracting) accelsDiff = resultAccel - gravityAccel;
+	else accelsDiff.nullify();
+
 	updatePosition();
 }
 
 void Star::display() {
-	glLoadIdentity();
+	glPushMatrix();
 
-	glTranslated(position.x / Constants::metersPerPixel, position.y / Constants::metersPerPixel, position.z / Constants::metersPerPixel);
+	glTranslated(position.x / metersPerPixel, position.y / metersPerPixel, position.z / metersPerPixel);
 
-	float lightPos[] = { 0.0f, 0.0f, 0.0f, 1.0f };
+	glEnable(GL_COLOR_MATERIAL);
+	glEnable(GL_BLEND);
+	glEnable(GL_ALPHA_TEST);
+	glColor4f(color.x, color.y, color.z, 0.7f);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+
+	float lightPos[] = { position.x / metersPerPixel, position.y / metersPerPixel, position.z / metersPerPixel, 1.0f };
 	float lightDiff[] = { color.x, color.y, color.z, 1.0f };
-	
+
 	glLightfv(glLight, GL_POSITION, lightPos);
 	glLightfv(glLight, GL_DIFFUSE, lightDiff);
 	
-	float materialAmb[] = { color.x, color.y, color.z, 1.0f };
-	glMaterialfv(GL_FRONT, GL_AMBIENT, materialAmb);
+	glutSolidSphere(diamDisplayFactor * diameter / metersPerPixel, 24, 24);
 
-	glutSolidSphere(Constants::starsDiamDisplayFactor * diameter / Constants::metersPerPixel, 180, 180);
-	glLoadIdentity();
+	glDisable(GL_COLOR_MATERIAL);
+	glDisable(GL_BLEND);
+	glDisable(GL_ALPHA_TEST);
+	glPopMatrix();
 }
 
 void Planet::display() {
 
-	glLoadIdentity();
+	glPushMatrix();
 
-	glTranslated(position.x / Constants::metersPerPixel, position.y / Constants::metersPerPixel, position.z / Constants::metersPerPixel);
+	glTranslated(position.x / metersPerPixel, position.y / metersPerPixel, position.z / metersPerPixel);
 	
 	float materialAmb[] = { color.x * 0.05f, color.y * 0.05f, color.z * 0.05f, 1.0f };
-	float materialDiff[] = { 0.4f + color.x*0.2f, 0.4f + color.y*0.2f, 0.4f + color.z*0.2f, 1.0f };
+    float materialDiff[] = { 0.4f + color.x*0.2f, 0.4f + color.y*0.2f, 0.4f + color.z*0.2f, 1.0f };
 	
 	glMaterialfv(GL_FRONT, GL_AMBIENT, materialAmb);
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, materialDiff);
-
-	glutSolidSphere(Constants::planetsDiamDisplayFactor * diameter / Constants::metersPerPixel, 180, 180);
-	glLoadIdentity();
+	
+	glutSolidSphere(diamDisplayFactor * diameter / metersPerPixel, 24, 24);
+	glPopMatrix();
 }
 
 void Sputnik::display() {
-	glLoadIdentity();
+	glPushMatrix();
 
 	Vector3d parentPos = parent->getPosition();
 
-	glTranslated((parentPos.x + (position.x  * Constants::sputniksDistDisplayFactor)) / Constants::metersPerPixel,
-		(parentPos.y + (position.y * Constants::sputniksDistDisplayFactor))/ Constants::metersPerPixel,
-		(parentPos.z + (position.z * Constants::sputniksDistDisplayFactor))/ Constants::metersPerPixel);
+	glTranslated((parentPos.x + (position.x  * distDisplayFactor)) / metersPerPixel,
+		(parentPos.y + (position.y * distDisplayFactor))/ metersPerPixel,
+		(parentPos.z + (position.z * distDisplayFactor))/ metersPerPixel);
 
 	float materialAmb[] = { color.x * 0.05f, color.y *  0.05f, color.z * 0.05f, 1.0f };
 	float materialDiff[] = { 0.4f + color.x*0.2f, 0.4f + color.y*0.2f, 0.4f + color.z*0.2f, 1.0f };
@@ -158,8 +237,8 @@ void Sputnik::display() {
 	glMaterialfv(GL_FRONT, GL_AMBIENT, materialAmb);
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, materialDiff);
 
-	glutSolidSphere(Constants::sputniksDiamDisplayFactor * diameter / Constants::metersPerPixel, 180, 180);
-	glLoadIdentity();
+	glutSolidSphere(diamDisplayFactor * diameter / metersPerPixel, 24, 24);
+	glPopMatrix();
 }
 
 SpaceObjectType Star::getType() {

@@ -4,10 +4,11 @@
 
 #include "RenderManager.h"
 
+static std::list<SpaceObject *> spObjs;
+static bool isPaused = false;
 
 // or DiplayManager
 namespace RenderManager {
-	static std::list<SpaceObject *> spObjs;
 
 	void addSpaceObjectForRendering(SpaceObject * spObj) {
 		spObjs.push_back(spObj);
@@ -15,6 +16,7 @@ namespace RenderManager {
 
 
 	void updateSpaceObjects() {
+		if (isPaused) return;
 		for (SpaceObject * spObj : spObjs) {
 			spObj->update(spObjs);
 		}
@@ -24,6 +26,14 @@ namespace RenderManager {
 		for (SpaceObject * spObj : spObjs) {
 			spObj->display();
 		}
+	}
+
+	void pauseRendering() {
+		isPaused = true;
+	}
+
+	void resumeRendering() {
+		isPaused = false;
 	}
 
 	void freeMemory() {

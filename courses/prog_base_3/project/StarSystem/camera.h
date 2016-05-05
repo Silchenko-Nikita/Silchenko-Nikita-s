@@ -4,7 +4,6 @@
 
 namespace Camera {
 	void init();
+	void rotate(double angle, double anglev);
 	void move(double delta);
-	void rotateRight(double angle);
-	void rotateUp(double angle);
 }

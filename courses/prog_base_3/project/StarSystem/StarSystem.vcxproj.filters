@@ -48,6 +48,9 @@
     <ClInclude Include="vector3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="twUtils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -75,6 +78,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="vector3.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="twUtils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

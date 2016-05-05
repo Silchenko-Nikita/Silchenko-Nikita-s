@@ -10,9 +10,11 @@
 #include "camera.h"
 
 namespace GlutCB {
+
 	void Display()
 	{
-		/*static int sec = 0;
+		/*
+		static int sec = 0;
 		static int ml = glutGet(GLUT_ELAPSED_TIME);
 		static int fcounter = 0;
 
@@ -24,8 +26,7 @@ namespace GlutCB {
 			sec++;
 		}
 		printf("%d %d\n", fcounter, sec);
-		*/ //for debug
-
+		*/
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
 		RenderManager::displaySpaceObjects();
@@ -41,28 +42,24 @@ namespace GlutCB {
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
 		gluPerspective(60, ((float)w) / ((float)h), 1, 2000);
-		Camera::init();
 		glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();
-		
+		Camera::init();
 		TwWindowSize(w, h);
 	}
 
 	void Mouse(int button, int state, int x, int y) {
 		TwEventMouseButtonGLUT(button, state, x, y);
 
-		glMatrixMode(GL_PROJECTION);
 		if (button == 3) { // scroll up
-			Camera::move(5.0);
+			Camera::move(0.4);
 		}
 		else if (button == 4) { // scroll down
-			Camera::move(-5.0);
+			Camera::move(-0.4);
 		}
-		glMatrixMode(GL_MODELVIEW);
 	}
 
 	void Motion(int x, int y) {
-		TwEventMouseMotionGLUT(x, y);
+		TwEventMouseMotionGLUT(x, y);		
 	}
 
 	void PassiveMotion(int x, int y) {
@@ -72,26 +69,33 @@ namespace GlutCB {
 	void Keyboard(unsigned char key, int x, int y) {
 		TwEventKeyboardGLUT(key, x, y);
 
-		glMatrixMode(GL_PROJECTION);
 		switch (key)
 		{
 		case 'w':
 		case 'W':
-			Camera::rotateUp(1.0);
+			Camera::rotate(0.0, 0.02);
 			break;
 		case 'a':
 		case 'A':
-			Camera::rotateRight(1.0);
+			Camera::rotate(-0.02, 0.0);
 			break;
 		case 'd':
 		case 'D':
-			Camera::rotateRight(-1.0);
+			Camera::rotate(0.02, 0.0);
 			break;
 		case 's':
 		case 'S':
-			Camera::rotateUp(-1.0);
+			Camera::rotate(0.0, -0.02);
 			break;
-
+		
+		case 'p':
+		case 'P':
+			RenderManager::pauseRendering();
+			break;
+		case 'r':
+		case 'R':
+			RenderManager::resuRendering();
+			break;
 		case 'f':
 		case 'F':
 			glutFullScreen();
@@ -101,21 +105,43 @@ namespace GlutCB {
 			glutReshapeWindow(glutGet(GLUT_SCREEN_WIDTH) * 6 / 7, glutGet(GLUT_SCREEN_HEIGHT) * 6 / 7);
 			break;
 		}
-		glMatrixMode(GL_MODELVIEW);
 	}
+
+	void KeyboardUp(unsigned char key, int x, int y) {
+		Camera::rotate(0.0, 0.0);
+	}
+
 
 	void Special(int key, int x, int y) {
 		TwEventSpecialGLUT(key, x, y);
-		glMatrixMode(GL_PROJECTION);
+
 		switch (key) {
 		case GLUT_KEY_UP:
-			Camera::move(5.0);
+			Camera::move(0.4);
 			break;
+		case GLUT_KEY_LEFT:
+			break;
+		case GLUT_KEY_RIGHT:
+				break;
 		case GLUT_KEY_DOWN:
-			Camera::move(-5.0);
+			Camera::move(-0.4);
 			break;
 		}
-		glMatrixMode(GL_MODELVIEW);
+	}
+
+	void SpecialUp(int key, int x, int y) {
+		switch (key) {
+		case GLUT_KEY_UP:
+			Camera::move(0);
+			break;
+		case GLUT_KEY_LEFT:
+			break;
+		case GLUT_KEY_RIGHT:
+			break;
+		case GLUT_KEY_DOWN:
+			Camera::move(0);
+			break;
+		}
 	}
 
 	void Timer(int v) {

@@ -10,6 +10,8 @@ class ControlPane {
 	static ControlPane * p_instance;
 
 	TwBar * twBar;
+	
+	void init();
 	ControlPane() {};
 public:
 	static ControlPane * getInstance();

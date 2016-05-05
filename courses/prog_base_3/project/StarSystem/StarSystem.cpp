@@ -1,7 +1,7 @@
 // StarSystem.cpp : Defines the entry point for the console application.
 //
 
-#define _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_DEPRECATE
 
 #include "stdafx.h"
 
@@ -24,13 +24,16 @@ int main(int argc, char ** argv)
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
 	glutInitWindowPosition(glutGet(GLUT_SCREEN_WIDTH) / 14, glutGet(GLUT_SCREEN_HEIGHT) / 21);
 	glutInitWindowSize(glutGet(GLUT_SCREEN_WIDTH) * 6 / 7, glutGet(GLUT_SCREEN_HEIGHT) * 6/7);
-	int window = glutCreateWindow("My Window");
+	int window = glutCreateWindow("Star System");
 	//glutFullScreen();
 
 	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_CULL_FACE);
+	//glEnable(GL_LINE_SMOOTH);
+	//glEnable(GL_CULL_FACE);
 	glEnable(GL_LIGHTING);
-	//glEnable(GL_COLOR_MATERIAL);
+
+	//glCullFace(GL_BACK);
+	
 	//glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
 
 	glutInitContextFlags(GLUT_FORWARD_COMPATIBLE);
@@ -43,18 +46,20 @@ int main(int argc, char ** argv)
 	glutMotionFunc(GlutCB::Motion);
 	glutPassiveMotionFunc(GlutCB::PassiveMotion);
 	glutKeyboardFunc(GlutCB::Keyboard);
+	glutKeyboardUpFunc(GlutCB::KeyboardUp);
 	glutSpecialFunc(GlutCB::Special);
+	glutSpecialUpFunc(GlutCB::SpecialUp);
 
 	TwGLUTModifiersFunc(glutGetModifiers);
 
 	glutTimerFunc(Constants::deltaTime, GlutCB::Timer, 1);
 	
-	ControlPane * ctrlPane  = ControlPane::getInstance();
+	ControlPane * ctrlPane = ControlPane::getInstance();
 
 	Vector3f color(1.0f, 1.0f, 0.0f);
 	Vector3d velocity(0.0, 0.0, 0.0);
 	Vector3d pos(0.0, 0.0, 0.0);
-	Star sun(GL_LIGHT3, "Sun", 2.0e30, 1.4e9, color, pos, velocity);
+	Star sun(GL_LIGHT0, "Sun", 2.0e30, 1.4e9, color, pos, velocity);
 	ctrlPane->addSpObj(&sun);
 	RenderManager::addSpaceObjectForRendering(&sun);
 
@@ -84,6 +89,7 @@ int main(int argc, char ** argv)
 
 	glutMainLoop();
 	
+	delete ctrlPane;
 	glutDestroyWindow(window);
 	return EXIT_SUCCESS;
 }
