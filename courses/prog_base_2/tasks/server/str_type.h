@@ -3,6 +3,8 @@
 
 int isAlpha(const char * str);
 int isAlphaNum(const char * str);
+int isNonNegatInteger(const char * str);
+int isNonNegatReal(const char * str);
 int isInteger(const char * str);
 int isReal(const char * str);
 int isDate(const char * str);

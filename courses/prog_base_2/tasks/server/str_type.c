@@ -5,28 +5,33 @@
 
 
 int isAlpha(const char * str){
-    for(int i = 0; i < strlen(str); i++){
+    int len = strlen(str);
+    for(int i = 0; i < len; i++){
         if(!isalpha(str[i])) return 0;
     }
     return 1;
 }
 
 int isAlphaNum(const char * str){
-    for(int i = 0; i < strlen(str); i++){
+    int len = strlen(str);
+    for(int i = 0; i < len; i++){
         if(!isalnum(str[i])) return 0;
     }
     return 1;
 }
 
 int isNonNegatInteger(const char * str){
-    for(int i = 0; i < strlen(str); i++){
+    int len = strlen(str);
+    for(int i = 0; i < len; i++){
         if(!isdigit(str[i])) return 0;
     }
+    return 1;
 }
 
 int isNonNegatReal(const char * str){
     int dot = 0;
-    for(int i = 0; i < strlen(str); i++){
+    int len = strlen(str);
+    for(int i = 0; i < len; i++){
         if(str[i] == '.'){
              if(!dot) dot = 1;
              else return 0;
