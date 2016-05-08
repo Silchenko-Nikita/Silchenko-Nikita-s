@@ -1,11 +1,30 @@
 #pragma once
 
+#include <vector>
 #include "SpaceObjects.h"
 
-namespace RenderManager {
+class SpaceObject;
 
-	void addSpaceObjectForRendering(SpaceObject * spObj);
-	//void addSpaceObjectToCtrlPane(SpaceObject * spObj);
+static enum DISPLAY_LIST {
+	BACKGROUND_LIST_ID = 1,
+	AXES_LIST_ID
+};
+
+class RenderManager {
+	static RenderManager * instance;
+	static const int backgroundStarsNumber;
+
+	std::list<SpaceObject *> spObjsList;
+	bool isPaused;
+
+	RenderManager();
+	RenderManager(const RenderManager &) {};
+	RenderManager& operator=(RenderManager &) {};
+
+public:
+	static RenderManager * getInstance();
+
+	void renderSpaceObject(SpaceObject * spObj);
 
 	void initBackground();
 	void initAxes();
@@ -19,5 +38,5 @@ namespace RenderManager {
 	void resumeSpObjsRendering();
 	bool isRenderingPaused();
 
-	void finalize();
-}
+	~RenderManager();
+};

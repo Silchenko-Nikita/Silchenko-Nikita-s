@@ -44,6 +44,8 @@ namespace TwCB {
 		*static_cast<int *>(value) = exp;
 	}
 
+	//
+
 	void TW_CALL setDefaultDouble_onButtonClick(void * clientData) {
 		VarWithDefault<double> * v = static_cast<VarWithDefault<double> *>(clientData);
 		*v->var = v->defaultVal;
@@ -79,9 +81,19 @@ namespace TwCB {
 		*v->var = v->defaultVal;
 	}
 
+	void TW_CALL showNewSpaceObjectPane_onButtonClick(void * clientData)
+	{
+		static_cast<NewSpaceObjectPane *>(clientData)->show();
+	}
+
+	void TW_CALL hideNewSpaceObjectPane_onButtonClick(void * clientData) {
+		static_cast<NewSpaceObjectPane *>(clientData)->hide();
+	}
+	
 	void TW_CALL createSpaceObject_onButtonClick(void * clientData) {
 		NewSpaceObjectPane * newSpObjPane = static_cast<NewSpaceObjectPane *>(clientData);
 		newSpObjPane->createSpaceObject();
+		newSpObjPane->hide();
 	}
 
 	void TW_CALL deleteSpaceObject_onButtonClick(void * clientData) {

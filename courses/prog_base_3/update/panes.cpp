@@ -112,7 +112,7 @@ void Pane::addColorVarToGroup(const char * groupName, const char * varName, Vect
 	sprintf(strBuff, "%s_%s", groupName, varName);
 	TwAddVarRW(twBar, strBuff, TW_TYPE_COLOR3F, var, "");
 
-	sprintf(strBuff1, "'%s'/%s opened=false label='%s'", TwGetBarName(twBar), strBuff, varName);
+	sprintf(strBuff1, "'%s'/%s opened=false label='%s' colormode=rgb", TwGetBarName(twBar), strBuff, varName);
 	TwDefine(strBuff1);
 	moveOneGroupToAnother(strBuff, groupName);
 
@@ -168,11 +168,11 @@ void Pane::addButtonToGroup(const char * groupName, const char * buttonName, TwB
 	moveOneGroupToAnother(strBuff, groupName);
 }
 
-void Pane::addSpaceObject(SpaceObject * spObj, bool ableToSetDefault)
+void Pane::addSpaceObject(SpaceObject * spObj, bool ableToSetDefault, bool ableToDelete, bool closed)
 {
 	char strBuff[256], strBuff1[256];
+
 	sprintf(strBuff, "spaceObject#%d", spObj->id);
-	addStrVarToGroup(strBuff, "name", &spObj->name);
 
 	addBoolVarToGroup(strBuff, "isVisible", &spObj->_isVisible);
 	addBoolVarToGroup(strBuff, "isActive", &spObj->_isActive);
@@ -182,9 +182,9 @@ void Pane::addSpaceObject(SpaceObject * spObj, bool ableToSetDefault)
 	addDoubleVarToGroup(strBuff, "mass", &spObj->mass, true);
 	addDoubleVarToGroup(strBuff, "diameter", &spObj->diameter, true);
 
+	addVector3dVarToGroup(strBuff, "position", &spObj->position, false);
 	addVector3dVarToGroup(strBuff, "velocity", &spObj->velocity, false);
 	addVector3dVarToGroup(strBuff, "acceleration", &spObj->resultAccel, false);
-	addVector3dVarToGroup(strBuff, "position", &spObj->position, false);
 
 	SpaceObjectAndPane * spObjAndPane = new SpaceObjectAndPane();
 	spObjAndPane->spObj = spObj;
@@ -208,9 +208,17 @@ void Pane::addSpaceObject(SpaceObject * spObj, bool ableToSetDefault)
 			addButtonToGroup(strBuff, "setDefault", TwCB::setDefaultSputnik_onButtonClick, v);
 		}
 	}
-	addButtonToGroup(strBuff, "delete", TwCB::deleteSpaceObject_onButtonClick, spObjAndPane);
 
-	sprintf(strBuff1, "'%s'/%s opened=false label='%s'", TwGetBarName(twBar), strBuff, spObj->getName());
+	if (ableToDelete) {
+		addButtonToGroup(strBuff, "delete", TwCB::deleteSpaceObject_onButtonClick, spObjAndPane);
+	}
+
+	if(closed){
+		sprintf(strBuff1, "'%s'/%s opened=false", TwGetBarName(twBar), strBuff);
+		TwDefine(strBuff1);
+	}
+
+	sprintf(strBuff1, "'%s'/%s label='%s'", TwGetBarName(twBar), strBuff, spObj->getName());
 	TwDefine(strBuff1);
 }
 
@@ -255,6 +263,23 @@ void Pane::removeSpaceObject(SpaceObject * spObj)
 	TwRemoveVar(twBar, strBuff);
 }
 
+void Pane::show()
+{
+	char strBuff[256];
+
+	sprintf(strBuff, "'%s' visible=true", TwGetBarName(twBar));
+	TwDefine(strBuff);
+}
+
+
+void Pane::hide()
+{
+	char strBuff[256];
+
+	sprintf(strBuff, "'%s' visible=false", TwGetBarName(twBar));
+	TwDefine(strBuff);
+}
+
 Pane::~Pane()
 {
 	for each (void * v in bufferList) {
@@ -264,21 +289,23 @@ Pane::~Pane()
 
 //
 
-ControlPane * ControlPane::getInstance()
+ControlPane * ControlPane::getInstance(Camera * camera, RenderManager * renderManager)
 {
 	if (NULL != instance) return NULL;
 	
-	instance = new ControlPane();
+	instance = new ControlPane(camera, renderManager);
 
-	instance->twBar = TwNewBar("Control pane");
-	instance->init();
 	return instance;
 }
 
-void ControlPane::init() {
+ControlPane::ControlPane(Camera * camera, RenderManager * renderManager) {
+	twBar = TwNewBar("Control pane");
 	TwDefine(" 'Control pane' contained=true size='300 600' color='0 0 20' position='0 0' alpha=0 label='Control pane (SI metrics)' ");
-	TwAddVarRW(twBar, "rot", TW_TYPE_QUAT4F, Camera::quat, "opened=true");
-	TwAddSeparator(twBar, "rotSep", "");
+	hide();
+	newSpObjPane = NewSpaceObjectPane::getInstance(this, renderManager);
+
+	TwAddVarRW(twBar, "rot", TW_TYPE_QUAT4F, camera->quat, "opened=true");
+	TwAddSeparator(twBar, "rot[Sep]", "");
 	//wAddButton(p_instance->twBar, "factors", _TwCB_callProc, SpaceObject::setDefaultFactors, "");
 	addDoubleVarToGroup("factors", "G", &SpaceObject::G, false);
 	addDoubleVarToGroup("factors", "timeAcceleration", &SpaceObject::timeAccel, false);
@@ -287,11 +314,14 @@ void ControlPane::init() {
 	addDoubleVarToGroup("factors", "planetsDiameterDisplayFactor", &Planet::diamDisplayFactor, true);
 	addDoubleVarToGroup("factors", "sputniksDiameterDisplayFactor", &Sputnik::diamDisplayFactor, true);
 	addDoubleVarToGroup("factors", "sputniksDistanceToParentDisplayFactor", &Sputnik::distDisplayFactor, true);
-	TwAddSeparator(twBar, "factorsSep", "");
+	TwAddSeparator(twBar, "factors[Sep]", "");
 
+	TwAddButton(twBar, "showNewSpaceObjectPane", TwCB::showNewSpaceObjectPane_onButtonClick, this->newSpObjPane,"label='create new space object'");
+	TwAddSeparator(twBar, "showNewSpaceObjectPane[Sep]", "");
+	//newSpObjPane->
 }
 
-void ControlPane::addSpaceObject(SpaceObject * spObj) // adding to categories
+void ControlPane::addSpaceObject(SpaceObject * spObj, bool ableToSetDefault, bool ableToDelete, bool closed) // adding to categories
 {
 	char strBuff[256], strBuff1[256];
 
@@ -317,39 +347,68 @@ void ControlPane::addSpaceObject(SpaceObject * spObj) // adding to categories
 	}
 }
 
-NewSpaceObjectPane * NewSpaceObjectPane::getInstance(ControlPane * ctrlPane)
+void ControlPane::showNewSpaceObjectPane()
+{
+	newSpObjPane->show();
+}
+
+void ControlPane::hideNewSpaceObjectPane()
+{
+	newSpObjPane->hide();
+}
+
+ControlPane::~ControlPane() {
+	delete newSpObjPane;
+}
+
+NewSpaceObjectPane * NewSpaceObjectPane::getInstance(ControlPane * ctrlPane, RenderManager * renderManager)
 {
 	if (NULL != instance) return NULL;
 
-	instance = new NewSpaceObjectPane();
+	instance = new NewSpaceObjectPane(ctrlPane, renderManager);
 
-	instance->twBar = TwNewBar("New space object pane");
-	instance->init(ctrlPane);
 	return instance;
 }
 
-void TW_CALL setSpObj(void * clientData) {
-	SpaceObject * newSpObj = static_cast<Planet *>(clientData);
-	RenderManager::addSpaceObjectForRendering(newSpObj);
+NewSpaceObjectPane::NewSpaceObjectPane(ControlPane * ctrlPane, RenderManager * renderManager) {
+	twBar = TwNewBar("New space object pane");
+	TwDefine(" 'New space object pane' contained=true size='300 600' color='0 0 20' position='2000 0' alpha=0 label='New space object pane (SI metrics)'");
+	hide();
+	this->ctrlPane = ctrlPane;
+	this->renderManager = renderManager;
+	addNewSpaceObject();
 }
 
-void NewSpaceObjectPane::init(ControlPane * ctrlPane) {
-	TwDefine(" 'New space object pane' contained=true size='300 600' color='0 0 20' position='2000 0' alpha=0 label='New space object pane (SI metrics)'");
-	this->ctrlPane = ctrlPane;
+void  NewSpaceObjectPane::addNewSpaceObject() {
 	newSpObj = new Planet("new", 0.0, 0.0, Vector3f(0.0, 0.0, 0.0), Vector3d(0.0, 0.0, 0.0), Vector3d(0.0, 0.0, 0.0));
-	Pane::addSpaceObject(newSpObj);
+	addSpaceObject(newSpObj, true, false, false);
 
-	TwAddButton(twBar, "confirm", TwCB::createSpaceObject_onButtonClick, this, "");
+	TwAddSeparator(twBar, "confirm[Sep]", "");
+	TwAddButton(twBar, "confirm", TwCB::createSpaceObject_onButtonClick, this, "label='confirm'");
+	TwAddButton(twBar, "cancel", TwCB::hideNewSpaceObjectPane_onButtonClick, this, "label='cancel'");
+}
+
+void NewSpaceObjectPane::addSpaceObject(SpaceObject * spObj, bool ableToSetDefault, bool ableToDelete, bool closed)
+{
+	char strBuff[256];
+
+	sprintf(strBuff, "spaceObject#%d", spObj->id);
+	addStrVarToGroup(strBuff, "name", &spObj->name);
+
+	Pane::addSpaceObject(spObj, ableToSetDefault, ableToDelete, closed);
 }
 
 void NewSpaceObjectPane::createSpaceObject()
 {
-	printf(newSpObj->getName());
-	ctrlPane->addSpaceObject(newSpObj);
-	RenderManager::addSpaceObjectForRendering(newSpObj);
+	renderManager->renderSpaceObject(newSpObj);
 
-	newSpObj = new Planet("new", 0.0, 0.0, Vector3f(0.0, 0.0, 0.0), Vector3d(0.0, 0.0, 0.0), Vector3d(0.0, 0.0, 0.0));
-	Pane::addSpaceObject(newSpObj);
+	ctrlPane->addSpaceObject(newSpObj);
+	removeSpaceObject(newSpObj);
+	TwRemoveVar(twBar, "confirm[Sep]");
+	TwRemoveVar(twBar, "confirm");
+	TwRemoveVar(twBar, "cancel");
+
+	addNewSpaceObject();
 }
 
 NewSpaceObjectPane::~NewSpaceObjectPane()

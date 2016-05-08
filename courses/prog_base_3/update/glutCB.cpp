@@ -10,6 +10,16 @@
 #include "SpaceObjects.h"
 #include "camera.h"
 
+static Camera * _camera;
+static RenderManager * _renderManager;
+
+namespace GlutCBInitializer {
+	void init(Camera * camera, RenderManager * renderManager) {
+		_camera = camera;
+		_renderManager = renderManager;
+	}
+}
+
 namespace GlutCB {
 
 	void Display()
@@ -30,9 +40,9 @@ namespace GlutCB {
 		*/
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
-		RenderManager::displayBackground();
-		RenderManager::displayAxes();
-		RenderManager::displaySpaceObjects();
+		_renderManager->displayBackground();
+		_renderManager->displayAxes();
+		_renderManager->displaySpaceObjects();
 	
 		TwDraw();
 
@@ -53,10 +63,10 @@ namespace GlutCB {
 		TwEventMouseButtonGLUT(button, state, x, y);
 
 		if (button == 3) { // scroll up
-			Camera::move(-10.0f);
+			_camera->move(-10.0f);
 		}
 		else if (button == 4) { // scroll down
-			Camera::move(10.0f);
+			_camera->move(10.0f);
 		}
 	}
 
@@ -75,7 +85,7 @@ namespace GlutCB {
 		{
 		case 'w':
 		case 'W':
-			Camera::move(-10.0f);
+			_camera->move(-10.0f);
 			break;
 		case 'a':
 		case 'A':
@@ -87,16 +97,16 @@ namespace GlutCB {
 			break;
 		case 's':
 		case 'S':
-			Camera::move(10.0f);
+			_camera->move(10.0f);
 			break;
 
 		case 'p':
 		case 'P':
-			RenderManager::pauseSpObjsRendering();
+			_renderManager->pauseSpObjsRendering();
 			break;
 		case 'r':
 		case 'R':
-			RenderManager::resumeSpObjsRendering();
+			_renderManager->resumeSpObjsRendering();
 			break;
 		case 'f':
 		case 'F':
@@ -119,14 +129,14 @@ namespace GlutCB {
 
 		switch (key) {
 		case GLUT_KEY_UP:
-			Camera::move(-10.0f);
+			_camera->move(-10.0f);
 			break;
 		case GLUT_KEY_LEFT:
 			break;
 		case GLUT_KEY_RIGHT:
 				break;
 		case GLUT_KEY_DOWN:
-			Camera::move(10.0f);
+			_camera->move(10.0f);
 			break;
 		}
 	}
@@ -147,8 +157,8 @@ namespace GlutCB {
 	}
 
 	void Timer(int v) {
-		Camera::render();
-		RenderManager::updateSpaceObjects();
+		_camera->render();
+		_renderManager->updateSpaceObjects();
 
 		glutPostRedisplay();
 		glutTimerFunc(Constants::deltaTime, Timer, v);

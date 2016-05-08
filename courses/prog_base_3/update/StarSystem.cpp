@@ -64,14 +64,11 @@ int main(int argc, char ** argv)
 	glutTimerFunc(Constants::deltaTime, GlutCB::Timer, 1);
 
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-	
-	ControlPane * ctrlPane = ControlPane::getInstance();
-	NewSpaceObjectPane * newSpObjPane = NewSpaceObjectPane::getInstance(ctrlPane);
 
 	Vector3f color(1.0f, 1.0f, 0.0f);
 	Vector3d velocity(0.0, 0.0, 0.0);
 	Vector3d pos(0.0, 0.0, 0.0);
-	Star sun(GL_LIGHT0, "Sun", 2.0e30, 1.4e9, color, pos, velocity);
+	Star sun("Sun", 2.0e30, 1.4e9, color, pos, velocity);
 
 	Vector3f color1(0.0f, 0.0f, 1.0f);
 	Vector3d velocity1(0.0, 3.0e4, 0.0);
@@ -87,27 +84,34 @@ int main(int argc, char ** argv)
 	Vector3d velocity3(0.0, 1.0e4, 0.0);
 	Vector3d pos3(5.0e11, 0.0, 0.0);
 	Planet tralfamadore("Tralfamadore", 6.0e24, 1.2e7, color3, pos3, velocity3);
+
+	RenderManager * renderManager = RenderManager::getInstance();
+	renderManager->initBackground();
+	renderManager->initAxes();
+
+	Camera * camera = new Camera();
 	
+	ControlPane * ctrlPane = ControlPane::getInstance(camera, renderManager);
+	ctrlPane->show();
+
 	TwCopyStdStringToClientFunc(CopyStdStringToClient);
 
 	ctrlPane->addSpaceObject(&sun);
-	RenderManager::addSpaceObjectForRendering(&sun);
+	renderManager->renderSpaceObject(&sun);
 
 	ctrlPane->addSpaceObject(&earth);
-	RenderManager::addSpaceObjectForRendering(&earth);
+	renderManager->renderSpaceObject(&earth);
 
 	ctrlPane->addSpaceObject(&moon);
-	RenderManager::addSpaceObjectForRendering(&moon);
+	renderManager->renderSpaceObject(&moon);
 
 	ctrlPane->addSpaceObject(&tralfamadore);
-	RenderManager::addSpaceObjectForRendering(&tralfamadore);
+	renderManager->renderSpaceObject(&tralfamadore);
+	GlutCBInitializer::init(camera, renderManager);
 
-
-	RenderManager::initBackground();
-	RenderManager::initAxes();
 	glutMainLoop();
 	
-	delete ctrlPane, newSpObjPane;
+	delete ctrlPane;
 	glutDestroyWindow(window);
 	return EXIT_SUCCESS;
 }

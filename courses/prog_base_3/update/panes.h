@@ -4,8 +4,11 @@
 #include <string>
 
 #include "twCB.h"
+#include "RenderManager.h"
+#include "camera.h"
 
 class SpaceObject;
+class RenderManager;
 
 // encapsulates utilities for inheritors
 class Pane {
@@ -27,40 +30,52 @@ protected:
 	void addVector3dVarToGroup(const char * groupName, const char * varName, Vector3d * var, bool isNonnegat, bool ableToSetDefault = true);
 	void addStrVarToGroup(const char * groupName, const char * varName, std::string * var, bool ableToSetDefault = true);
 	void addButtonToGroup(const char * groupName, const char * buttonName, TwButtonCallback buttonCB, void * clientData);
-	
+
 	Pane() {};
 	Pane(const Pane &) {};
 	Pane& operator=(Pane &) {};
 public:
-	void addSpaceObject(SpaceObject * spObj, bool ableToSetDefault = true);
+	void addSpaceObject(SpaceObject * spObj, bool ableToSetDefault = true, bool ableToDelete = true, bool closed = true);
 	void removeSpaceObject(SpaceObject * spObj);
+
+	void show();
+	void hide();
 	~Pane();
 };
 
-class ControlPane : Pane {
-	static ControlPane * instance;
+class NewSpaceObjectPane;
 
-	ControlPane() {};
+class ControlPane : public Pane {
+	static ControlPane * instance;
+	
+	NewSpaceObjectPane * newSpObjPane;
+
+	ControlPane(Camera * camera, RenderManager * renderManager);
 	ControlPane(const ControlPane &) {};
 	ControlPane& operator=(ControlPane &) {};
 public:
-	static ControlPane * getInstance();
-	void init();
-	void addSpaceObject(SpaceObject * spObj);
+	static ControlPane * getInstance(Camera * camera, RenderManager * renderManager);
+	void addSpaceObject(SpaceObject * spObj, bool ableToSetDefault = true, bool ableToDelete = true, bool closed = true);
+	void showNewSpaceObjectPane();
+	void hideNewSpaceObjectPane();
+	~ControlPane();
 };
 
-class NewSpaceObjectPane : Pane{
+class NewSpaceObjectPane : public Pane{
 	static NewSpaceObjectPane * instance;
 	
+	RenderManager * renderManager = NULL;
 	ControlPane * ctrlPane = NULL; // ControlPane is needed to let NewSpaceObjectPane know where to add SpaceObject for modifying
 	SpaceObject * newSpObj = NULL;
 
-	NewSpaceObjectPane() {};
+	NewSpaceObjectPane(ControlPane * ctrlPane, RenderManager * renderManager);
 	NewSpaceObjectPane(const NewSpaceObjectPane &) {};
 	NewSpaceObjectPane& operator=(NewSpaceObjectPane &) {};
+	void addNewSpaceObject();
+
 public:
-	static NewSpaceObjectPane * getInstance(ControlPane * ctrlPane);
-	void init(ControlPane * ctrlPane);
+	static NewSpaceObjectPane * getInstance(ControlPane * ctrlPane, RenderManager * renderManager);
+	void addSpaceObject(SpaceObject * spObj, bool ableToSetDefault = true, bool ableToDelete = true, bool closed = true);
 	void createSpaceObject();
 	~NewSpaceObjectPane();
 };

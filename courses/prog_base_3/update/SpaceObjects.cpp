@@ -25,7 +25,13 @@ double Planet::diamDisplayFactor = default_diamDisplayFactor; // change of diame
 double Sputnik::diamDisplayFactor = default_diamDisplayFactor; // change of diameter of sputnik being displayed
 double Sputnik::distDisplayFactor = default_distDisplayFactor; // change of distance from sputnik to it's parent when displayed
 
-int SpaceObject::idCounter = 0;
+int SpaceObject::spObjsNum = 0;
+int Star::starsNum = 0;
+
+const bool SpaceObject::interactionArr[]= { true, true, true, true };
+const bool Star::interactionArr[] = {true, false, false, false};
+const bool Planet::interactionArr[] = { true, false, false, false };
+const bool Sputnik::interactionArr[] = { false, false, false, false };
 
 SpaceObject::SpaceObject(const char * name, double mass, double diameter, Vector3f & color, Vector3d & position, Vector3d & velocity)
 {
@@ -41,19 +47,37 @@ SpaceObject::SpaceObject(const char * name, double mass, double diameter, Vector
 	_isVisible = true;
 	_isBeingRendered = true;
 
-	id = idCounter;
-	idCounter++;
+	id = spObjsNum;
+	spObjsNum++;
 }
 
-void SpaceObject::setDefaultFactors()
-{
-	SpaceObject::G = default_G;
-	SpaceObject::timeAccel = default_timeAccel;
-	SpaceObject::metersPerPixel = default_metersPerPixel;
-	//Star::diamDisplayFactor = default_starsDiamDisplayFactor;
-	//Planet::diamDisplayFactor = default_planetsDiamDisplayFactor;
-	//Sputnik::diamDisplayFactor = default_sputniksDiamDisplayFactor;
-	//Sputnik::distDisplayFactor = default_sputniksDistDisplayFactor;
+Star::Star(const char * name, double mass, double diameter, Vector3f & color, Vector3d & position, Vector3d & velocity) :
+	SpaceObject(name, mass, diameter, color, position, velocity) {
+	parent = NULL;
+	if (starsNum > 7) {
+		id = 0;
+	}
+	else {
+		id = starsNum;
+	}
+	glEnable(GL_LIGHT0 + id);
+	starsNum++;
+	float lightAmb[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	glLightfv(GL_LIGHT0 + id, GL_AMBIENT, lightAmb);
+	//glLightf(glLight, GL_CONSTANT_ATTENUATION, 1.0);
+	glLightf(GL_LIGHT0 + id, GL_LINEAR_ATTENUATION, 6.0e-5);
+	glLightf(GL_LIGHT0 + id, GL_QUADRATIC_ATTENUATION, 2.0e-5);
+};
+
+Planet::Planet(const char * name, double mass, double diameter, Vector3f & color, Vector3d & position, Vector3d & velocity) :
+	SpaceObject(name, mass, diameter, color, position, velocity) {
+	parent = NULL;
+}
+
+Sputnik::Sputnik(const char * name, double mass, double diameter, Vector3f & color, Planet * parent, Vector3d & relativePos, Vector3d & relativeVel) :
+	SpaceObject(name, mass, diameter, color, relativePos, relativeVel) {
+	this->parent = parent;
+	parent->addSputnik(this);
 }
 
 void SpaceObject::interactWith(SpaceObject * spObj) {
@@ -83,23 +107,7 @@ void Planet::addSputnik(Sputnik * sputnik) {
 	//sputniks.push_back(sputnik);
 }
 
-Star::Star(int glLight, const char * name, double mass, double diameter, Vector3f & color, Vector3d & position, Vector3d & velocity) :
-	SpaceObject(name, mass, diameter, color, position, velocity) {
-	if (glLight < GL_LIGHT0 || glLight > GL_LIGHT7) {
-		glLight = GL_LIGHT0;
-	}
-	parent = NULL;
-
-	glEnable(glLight);
-	this->glLight = glLight;
-	float lightAmb[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-	glLightfv(glLight, GL_AMBIENT, lightAmb);
-	//glLightf(glLight, GL_CONSTANT_ATTENUATION, 1.0);
-	glLightf(glLight, GL_LINEAR_ATTENUATION, 6.0e-5);
-	glLightf(glLight, GL_QUADRATIC_ATTENUATION, 2.0e-5);
-};
-
-void Star::update(std::list<SpaceObject *> spObjs){
+void SpaceObject::update(std::list<SpaceObject *> & spObjs){
 	if (!_isActive) {
 		resultAccel.nullify();
 		return;
@@ -112,7 +120,7 @@ void Star::update(std::list<SpaceObject *> spObjs){
 	if (_isInteracting) {
 
 		for (SpaceObject * spObj : spObjs) {
-			if ((spObj == this) || (spObj->getType() == PLANET) || (spObj->getType() == SPUTNIK)) continue;
+			if ((spObj == this) || (!interactsWith(spObj->getType()) && (parent != NULL && spObj != parent))) continue;
 
 			interactWith(spObj);
 		}
@@ -123,67 +131,13 @@ void Star::update(std::list<SpaceObject *> spObjs){
 	if (_isInteracting) accelsDiff = resultAccel - gravityAccel;
 	else accelsDiff.nullify();
 	
-	updatePosition();
-}
-
-void Planet::update(std::list<SpaceObject *> spObjs) {
-	if (!_isActive) {
-		resultAccel.nullify();
-		return;
-	}
-
-	static Vector3d accelsDiff;
-
-	gravityAccel.nullify();
-
-	if (_isInteracting) {
-
-		for (SpaceObject * spObj : spObjs) {
-			if ((spObj == this) || (spObj->getType() == SPUTNIK) || (spObj->getType() == PLANET)) continue;
-
-			interactWith(spObj);
-		}
-	}
-
-	resultAccel = gravityAccel + accelsDiff;
-	
-	if (_isInteracting) accelsDiff = resultAccel - gravityAccel;
-	else accelsDiff.nullify();
-	
-	updatePosition();
-}
-
-void Sputnik::update(std::list<SpaceObject *> spObjs){
-	if (!_isActive) {
-		resultAccel.nullify();
-		return;
-	}
-
-	static Vector3d accelsDiff;
-
-	gravityAccel.nullify();
-
-	if (_isInteracting) {
-
-		for (SpaceObject * spObj : spObjs) {
-			if ((spObj == this) || (spObj->getType() == STAR) || ((spObj->getType() == PLANET) && (spObj != parent))) continue;
-
-			interactWith(spObj);
-		}
-	}
-
-	resultAccel = gravityAccel + accelsDiff;
-	
-	if (_isInteracting) accelsDiff = resultAccel - gravityAccel;
-	else accelsDiff.nullify();
-
 	updatePosition();
 }
 
 void Star::display() {
 	if (!_isVisible) {
 		float lightDiff[] = { 0.0, 0.0, 0.0, 1.0f };
-		glLightfv(glLight, GL_DIFFUSE, lightDiff);
+		glLightfv(GL_LIGHT0 + id, GL_DIFFUSE, lightDiff);
 		return;
 	}
 
@@ -192,11 +146,11 @@ void Star::display() {
 	glTranslated(position.x / metersPerPixel, position.y / metersPerPixel, position.z / metersPerPixel);
 
 
-	float lightPos[] = { position.x / metersPerPixel, position.y / metersPerPixel, position.z / metersPerPixel, 1.0f };
+	float lightPos[] = { 0.0f, 0.0f, 0.0f, 1.0f };
 	float lightDiff[] = { color.x, color.y, color.z, 1.0f };
 
-	glLightfv(glLight, GL_POSITION, lightPos);
-	glLightfv(glLight, GL_DIFFUSE, lightDiff);
+	glLightfv(GL_LIGHT0 + id, GL_POSITION, lightPos);
+	glLightfv(GL_LIGHT0 + id, GL_DIFFUSE, lightDiff);
 	
 	glEnable(GL_COLOR_MATERIAL);
 

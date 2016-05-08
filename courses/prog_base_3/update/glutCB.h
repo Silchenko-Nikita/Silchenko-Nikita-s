@@ -1,6 +1,14 @@
 #pragma once
 
+#include "camera.h"
+#include "RenderManager.h"
+
+namespace GlutCBInitializer {
+	void init(Camera * camera, RenderManager * renderManager);
+}
+
 namespace GlutCB {
+
 	void Display();
 	void Reshape(int w, int h);
 	void Mouse(int button, int state, int x, int y);
