@@ -9,14 +9,17 @@
 #include "vector3.h"
 #include "panes.h"
 
+struct Vector3f;
+
 enum SpaceObjectType{
 	STAR, PLANET, SPUTNIK, TEAPOT
 };
 
 class SpaceObject
 {
-	static int idCounter;
+	static int spObjsNum;
 protected:
+	static const bool interactionArr[TEAPOT + 1]; // if obj interactsWith any of SpaceObjectType
 	static const double default_G;
 	static const  double default_timeAccel;
 	static const double default_metersPerPixel;
@@ -47,8 +50,6 @@ protected:
 
 	Vector3d velocity; 
 	Vector3d position;
-
-	static void setDefaultFactors();
 	
 	void interactWith(SpaceObject * spObj);
 	void updatePosition();
@@ -73,7 +74,8 @@ public:
 
 	void setBeingRendered(bool value) { _isBeingRendered = value; };
 
-	virtual void update(std::list<SpaceObject *> spObjs) = 0;
+	virtual bool interactsWith(SpaceObjectType type) { return interactionArr[type]; };
+	virtual void update(std::list<SpaceObject *> & spObjs);
 	virtual void display() = 0;
 	virtual SpaceObjectType getType() = 0;
 
@@ -86,15 +88,19 @@ public:
 
 class Star: public SpaceObject
 {
+	static const bool interactionArr[TEAPOT + 1]; // if obj interactsWith any of SpaceObjectType
+
 	static const double default_diamDisplayFactor;
 
 	static double diamDisplayFactor;
 
-	int glLight; // from GL_LIGHT0 to GL_LIGHT7
+	static int starsNum; // for GL_LIGHT
+
+	int id; // for GL_LIGHT from 0 to 7
 public:
 	Star(){}
-	Star(int glLight, const char * name, double mass, double diameter, Vector3f & color, Vector3d & position, Vector3d & velocity);
-	void update(std::list<SpaceObject *> spObjs);
+	Star(const char * name, double mass, double diameter, Vector3f & color, Vector3d & position, Vector3d & velocity);
+	bool interactsWith(SpaceObjectType type) { return interactionArr[type]; };
 	void display();
 	SpaceObjectType getType() { return STAR; };
 
@@ -107,6 +113,8 @@ class Sputnik;
 
 class Planet : public SpaceObject
 {
+	static const bool interactionArr[TEAPOT + 1]; // if obj interactsWith any of SpaceObjectType
+
 	static const double default_diamDisplayFactor;
 
 	static double diamDisplayFactor;
@@ -114,10 +122,9 @@ class Planet : public SpaceObject
 	//std::list<SpaceObject *> sputniks;
 public:
 	Planet(){};
-	Planet(const char * name, double mass, double diameter, Vector3f & color, Vector3d & position, Vector3d & velocity) :
-		SpaceObject(name, mass, diameter, color, position, velocity) { parent = NULL; };
+	Planet(const char * name, double mass, double diameter, Vector3f & color, Vector3d & position, Vector3d & velocity);
 	void addSputnik(Sputnik * sputnik);
-	void update(std::list<SpaceObject *> spObjs);
+	bool interactsWith(int type) { return interactionArr[type]; };
 	void display();
 	SpaceObjectType getType() { return PLANET; };
 
@@ -128,6 +135,8 @@ public:
 
 class Sputnik : public SpaceObject
 {
+	static const bool interactionArr[TEAPOT + 1]; // if obj interactsWith any of SpaceObjectType
+
 	static const double default_diamDisplayFactor;
 	static const double default_distDisplayFactor;
 
@@ -135,9 +144,8 @@ class Sputnik : public SpaceObject
 	static double distDisplayFactor;
 public:
 	Sputnik() {};
-	Sputnik(const char * name, double mass, double diameter, Vector3f & color, Planet * parent, Vector3d & relativePos, Vector3d & relativeVel):
-		SpaceObject(name, mass, diameter, color, relativePos, relativeVel) { this->parent = parent; parent->addSputnik(this); };
-	void update(std::list<SpaceObject *> spObjs);
+	Sputnik(const char * name, double mass, double diameter, Vector3f & color, Planet * parent, Vector3d & relativePos, Vector3d & relativeVel);
+	bool interactsWith(SpaceObjectType type) { return interactionArr[type]; };
 	void display();
 	SpaceObjectType getType() { return SPUTNIK;  };
 
