@@ -1,0 +1,7 @@
+# depslib dependency file v1.0
+1463488384 source:c:\users\Í\desktop\nlp\list.c
+	"list.h"
+
+1463427658 c:\users\Í\desktop\nlp\list.h
+	<stdlib.h>
+
