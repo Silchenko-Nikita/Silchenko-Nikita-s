@@ -1,0 +1,25 @@
+# depslib dependency file v1.0
+1463488384 source:c:\users\Í\desktop\npl\list.c
+	"list.h"
+
+1463427658 c:\users\Í\desktop\npl\list.h
+	<stdlib.h>
+
+1463492228 source:c:\users\Í\desktop\npl\main.c
+	<stdio.h>
+	<stdlib.h>
+	<strings.h>
+	<math.h>
+	<limits.h>
+	"npl.h"
+	"list.h"
+
+1463491968 source:c:\users\Í\desktop\npl\npl.c
+	<stdlib.h>
+	<strings.h>
+	<limits.h>
+	"npl.h"
+	"list.h"
+
+1463491489 c:\users\Í\desktop\npl\npl.h
+
