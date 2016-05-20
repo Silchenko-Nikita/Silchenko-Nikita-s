@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<investors>
+  <investor>
+    <name>e</name>
+    <surname>e</surname>
+    <birthdate>2112-11-11</birthdate>
+    <investment>21.000000</investment>
+    <projectsNumber>2</projectsNumber>
+  </investor>
+  <investor>
+    <name>d</name>
+    <surname>d</surname>
+    <birthdate>1922-11-23</birthdate>
+    <investment>2.000000</investment>
+    <projectsNumber>2</projectsNumber>
+  </investor>
+  <investor>
+    <name>w</name>
+    <surname>e</surname>
+    <birthdate>1292-11-11</birthdate>
+    <investment>1.000000</investment>
+    <projectsNumber>2</projectsNumber>
+  </investor>
+</investors>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<students>
+  <student>
+    <name>Taras</name>
+    <surname>Kartoplia</surname>
+    <year>1990</year>
+    <score>4.900000</score>
+    <group name="KP-51">
+      <faculty>PBF</faculty>
+    </group>
+  </student>
+</students>

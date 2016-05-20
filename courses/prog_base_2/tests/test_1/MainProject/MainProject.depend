@@ -1,0 +1,8 @@
+# depslib dependency file v1.0
+1463764002 source:c:\users\Í\documents\myrepos\silchenko-nikita-s\courses\prog_base_2\tests\test_1\mainproject\main.c
+	<stdio.h>
+	<stdlib.h>
+	"ControlPost.h"
+
+1463762863 c:\users\Í\documents\myrepos\silchenko-nikita-s\courses\prog_base_2\tests\test_1\mainproject\controlpost.h
+

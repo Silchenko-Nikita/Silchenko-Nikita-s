@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="lab4" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/lab4" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/lab4" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add directory="iconv-1.9.2.win32/include" />
+			<Add directory="libxml2-2.7.8.win32/include" />
+		</Compiler>
+		<Linker>
+			<Add option="-lws2_32" />
+			<Add option="-llibxml2" />
+			<Add directory="libxml2-2.7.8.win32/bin" />
+		</Linker>
+		<Unit filename="data_handler.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="data_handler.h" />
+		<Unit filename="http.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="http.h" />
+		<Unit filename="investor.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="investor.h" />
+		<Unit filename="libsocket/socket.h" />
+		<Unit filename="libsocket/socket_win.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="list.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="list.h" />
+		<Unit filename="main.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="str_type.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="str_type.h" />
+		<Unit filename="web.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="web.h" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
