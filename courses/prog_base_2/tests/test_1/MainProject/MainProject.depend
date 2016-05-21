@@ -1,8 +1,16 @@
 # depslib dependency file v1.0
-1463764002 source:c:\users\Í\documents\myrepos\silchenko-nikita-s\courses\prog_base_2\tests\test_1\mainproject\main.c
-	<stdio.h>
+1463828730 source:c:\users\Í\documents\myrepos\silchenko-nikita-s\courses\prog_base_2\tests\test_1\mainproject\main.c
 	<stdlib.h>
+	<stdio.h>
 	"ControlPost.h"
 
-1463762863 c:\users\Í\documents\myrepos\silchenko-nikita-s\courses\prog_base_2\tests\test_1\mainproject\controlpost.h
+1463829324 c:\users\Í\documents\myrepos\silchenko-nikita-s\courses\prog_base_2\tests\test_1\mainproject\controlpost.h
+	<stdbool.h>
+	"list.h"
+
+1463427658 c:\users\Í\documents\myrepos\silchenko-nikita-s\courses\prog_base_2\tests\test_1\mainproject\list.h
+	<stdlib.h>
+
+1463488384 source:c:\users\Í\documents\myrepos\silchenko-nikita-s\courses\prog_base_2\tests\test_1\mainproject\list.c
+	"list.h"
 

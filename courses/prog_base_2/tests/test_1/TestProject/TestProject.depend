@@ -1,0 +1,21 @@
+# depslib dependency file v1.0
+1463488384 source:c:\users\Í\documents\myrepos\silchenko-nikita-s\courses\prog_base_2\tests\test_1\testproject\list.c
+	"list.h"
+
+1463427658 c:\users\Í\documents\myrepos\silchenko-nikita-s\courses\prog_base_2\tests\test_1\testproject\list.h
+	<stdlib.h>
+
+1463829466 source:c:\users\Í\documents\myrepos\silchenko-nikita-s\courses\prog_base_2\tests\test_1\testproject\main.c
+	<stdlib.h>
+	<stdarg.h>
+	<stddef.h>
+	<setjmp.h>
+	"cmocka.h"
+	"ControlPost.h"
+
+1424096216 c:\users\Í\documents\myrepos\silchenko-nikita-s\courses\prog_base_2\tests\test_1\testproject\cmocka.h
+
+1463829324 c:\users\Í\documents\myrepos\silchenko-nikita-s\courses\prog_base_2\tests\test_1\testproject\controlpost.h
+	<stdbool.h>
+	"list.h"
+
