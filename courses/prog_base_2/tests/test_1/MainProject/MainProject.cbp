@@ -35,6 +35,10 @@
 			<Add library="../ControlPost/bin/Debug/libControlPost.a" />
 		</Linker>
 		<Unit filename="ControlPost.h" />
+		<Unit filename="list.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="list.h" />
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>

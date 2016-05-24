@@ -45,8 +45,10 @@ void HttpRequest_delete(HttpRequest_t self){
 }
 
 void HttpRequest_parse(HttpRequest_t self, const char * request){
-    size_t methodLen = strstr(request, " ") - request;
-    char methodStr[24];
+    size_t methodLen = 0;
+    methodLen = strstr(request, " ") - request;
+    if(methodLen > 24 || methodLen < 0) return;
+    char methodStr[256] = "";
     memcpy(methodStr, request, methodLen);
     methodStr[methodLen] = '\0';
     self->method = getMethodByStr(methodStr);
@@ -61,6 +63,7 @@ void HttpRequest_parse(HttpRequest_t self, const char * request){
         formStartPtr = strstr(uriStartPtr, "\r\n\r\n");
         formStartPtr += 4;
         if(4 == formStartPtr){
+            formStartPtr = NULL;
             formStartPtr = strstr(uriStartPtr, "\n\n");
             formStartPtr += 2;
         }

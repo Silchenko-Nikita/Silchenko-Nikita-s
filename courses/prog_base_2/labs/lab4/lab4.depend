@@ -140,7 +140,7 @@
 1458333534 c:\users\Í\desktop\lab4\list.h
 	<stdlib.h>
 
-1463588582 source:c:\users\Í\desktop\lab4\http.c
+1463831000 source:c:\users\Í\desktop\lab4\http.c
 	<stdlib.h>
 	<string.h>
 	"http.h"
@@ -150,10 +150,10 @@
 1463498570 source:c:\users\Í\desktop\lab4\list.c
 	"list.h"
 
-1463494768 source:c:\users\Í\desktop\lab4\main.c
+1463831102 source:c:\users\Í\desktop\lab4\main.c
 	"web.h"
 
-1463776645 source:c:\users\Í\desktop\lab4\web.c
+1463835366 source:c:\users\Í\desktop\lab4\web.c
 	"libsocket/socket.h"
 	"web.h"
 	"http.h"

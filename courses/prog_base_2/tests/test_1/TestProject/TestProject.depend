@@ -5,7 +5,8 @@
 1463427658 c:\users\Í\documents\myrepos\silchenko-nikita-s\courses\prog_base_2\tests\test_1\testproject\list.h
 	<stdlib.h>
 
-1463829466 source:c:\users\Í\documents\myrepos\silchenko-nikita-s\courses\prog_base_2\tests\test_1\testproject\main.c
+1463839777 source:c:\users\Í\documents\myrepos\silchenko-nikita-s\courses\prog_base_2\tests\test_1\testproject\main.c
+	<stdio.h>
 	<stdlib.h>
 	<stdarg.h>
 	<stddef.h>

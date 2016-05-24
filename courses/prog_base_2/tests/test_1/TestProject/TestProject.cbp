@@ -33,9 +33,13 @@
 		</Compiler>
 		<Linker>
 			<Add library="../ControlPost/bin/Debug/libControlPost.a" />
-			<Add library="libcmocka.dll.a" />
+			<Add library="C:/Users/Н/Documents/MyRepos/Silchenko-Nikita-s/courses/prog_base_2/tests/test_1/TestProject/libcmocka.dll.a" />
 		</Linker>
 		<Unit filename="ControlPost.h" />
+		<Unit filename="list.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="list.h" />
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>

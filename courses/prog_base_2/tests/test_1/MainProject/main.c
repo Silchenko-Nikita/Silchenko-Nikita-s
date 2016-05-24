@@ -18,6 +18,7 @@ int main()
     Person_t carOwner = Person_new("Nikita", "Silchenko");
     Car_t car = Car_new("007");
     Car_setOwner(car, carOwner);
+    char buff[128];
     Transist_t transist = Transist_new(car, TRANSIST_DEST_TO);
     Post_subscribeWantedCarTransist(post, carOwner, wantedCarPassed_Person, NULL );
     Post_pass(post, transist);

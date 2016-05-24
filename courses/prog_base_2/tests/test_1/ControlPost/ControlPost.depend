@@ -5,13 +5,13 @@
 1463427658 c:\users\Í\documents\myrepos\silchenko-nikita-s\courses\prog_base_2\tests\test_1\controlpost\list.h
 	<stdlib.h>
 
-1463828711 source:c:\users\Í\documents\myrepos\silchenko-nikita-s\courses\prog_base_2\tests\test_1\controlpost\main.c
+1463829324 source:c:\users\Í\documents\myrepos\silchenko-nikita-s\courses\prog_base_2\tests\test_1\controlpost\main.c
 	<stdlib.h>
 	<stdio.h>
 	"ControlPost.h"
 	"list.h"
 
-1463828522 c:\users\Í\documents\myrepos\silchenko-nikita-s\courses\prog_base_2\tests\test_1\controlpost\controlpost.h
+1463829324 c:\users\Í\documents\myrepos\silchenko-nikita-s\courses\prog_base_2\tests\test_1\controlpost\controlpost.h
 	<stdbool.h>
 	"list.h"
 

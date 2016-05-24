@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
 #include <stddef.h>
@@ -29,16 +30,13 @@ static void Post_getLastNCars__N__validRes(void **state){
     assert_string_equal(Car_getID(car1), Car_getID(List_get(lasr2cars, 0, NULL)));
     assert_string_equal(Car_getID(car2), Car_getID(List_get(lasr2cars, 1, NULL)));
 
+
     List_delete(lasr2cars);
     Post_delete(post);
     Transist_delete(transist);
     Transist_delete(transist1);
     Transist_delete(transist2);
     Person_delete(carOwner);
-
-    Car_delete(car);
-    Car_delete(car1);
-    Car_delete(car2);
 }
 
 int main(){

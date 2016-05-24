@@ -29,7 +29,7 @@ static const char * const httpSuccessReplyStrFormat =
         "%s";
 
 static const char * const httpInvalidUriReplyStrFormat =
-        "HTTP/1.1 400 INVALID_URI\r\n"
+        "HTTP/1.1 404 INVALID_URI\r\n"
         "Content-Type: text\r\n"
         "Content-Length: %zu\r\n\r\n"
         "%s";
@@ -47,10 +47,16 @@ static const char * const httpInvalidValueReplyStrFormat =
         "%s";
 
 static const char * const httpMethtodValueReplyStrFormat =
-        "HTTP/1.1 403 INVALID_METHOD\r\n"
+        "HTTP/1.1 400 INVALID_METHOD\r\n"
         "Content-Type: text\r\n"
         "Content-Length: %zu\r\n\r\n"
         "%s";
+
+static const char * const httpOptionsOkStr =
+            "HTTP/1.1 200 OK\n"
+            "Access-Control-Allow-Origin: *\n"
+            "Access-Control-Allow-Methods: DELETE\n"
+            "\n";
 
 static const char * const htmlDocStrFormat =
         "<!DOCTYPE html>"
@@ -71,6 +77,7 @@ static void _writeInvestor_XML(Web_t self, socket_t * clientSock, unsigned int i
 static void _emptySuccessReply(socket_t * clientSock);
 static void _successDeleteReply(socket_t * clientSock, unsigned int index);
 static void _successUpdateReply(socket_t * clientSock, unsigned int index);
+static void _optionsOkReply(socket_t * clientSock);
 static void _successAdditionReply(socket_t * clientSock);
 static void _replyInvalidUri(socket_t * clientSock);
 static void _replyInvalidMethod(socket_t * clientSock);
@@ -105,8 +112,8 @@ void Web_delete(Web_t self){
 }
 
 void Web_listen(Web_t self){
-    char input[10000];
-    char output[10000];
+    char input[8000];
+
     HttpRequest_t httpRequest = HttpRequest_new();
     while(1) {
         socket_t * clientSock = socket_accept(self->serverSock);
@@ -145,6 +152,8 @@ static void _reply_XML(Web_t self, HttpRequest_t httpRequest, socket_t * clientS
             }else{
                 if (method == HTTP_GET){
                     _writeInvestor_XML(self, clientSock, index);
+                } else if(method == HTTP_OPTIONS){
+                    _optionsOkReply(clientSock);
                 } else if (method == HTTP_DELETE){
                     DataHandler_deleteInvestor(self->dataHandler, index);
                     DataHandler_serializeInvestors(self->dataHandler);
@@ -205,6 +214,8 @@ static void _reply_HTML(Web_t self, HttpRequest_t httpRequest, socket_t * client
             }else{
                 if (method == HTTP_GET){
                     _writeInvestor_HTML(self, clientSock, index);
+                }else if(method == HTTP_OPTIONS){
+                    _optionsOkReply(clientSock);
                 }else if (method == HTTP_DELETE){
                     DataHandler_deleteInvestor(self->dataHandler, index);
                     DataHandler_serializeInvestors(self->dataHandler);
@@ -230,7 +241,7 @@ static void _reply_HTML(Web_t self, HttpRequest_t httpRequest, socket_t * client
 static void _reply(Web_t self, HttpRequest_t httpRequest, socket_t * clientSock){
     const char * uri = HttpRequest_getURI(httpRequest);
 
-    char root[64];
+    char root[128];
     getTok(uri, 0, "/", root);
 
     if (!strcmp(root, "api")) {
@@ -243,9 +254,9 @@ static void _reply(Web_t self, HttpRequest_t httpRequest, socket_t * clientSock)
 }
 
 static void _replyHomepage_HTML(Web_t self, socket_t * clientSock){
-    char buff[256];
-    char buff1[256];
-    char res[256];
+    char buff[512];
+    char buff1[512];
+    char res[512];
     strcpy(buff, "<h2>Hello, visitor!</h2><br>"
            "<a href=\"/investors\">investors</a>");
     sprintf(buff1, htmlDocStrFormat, "", buff);
@@ -281,7 +292,7 @@ static void _writeInvestors_HTML(Web_t self, socket_t * clientSock){
 
 static void _writeInvestor_HTML(Web_t self, socket_t * clientSock, unsigned int index){
     char buff[1000] = "";
-    char buff1[512] = "";
+    char buff1[1000] = "";
     char res[1000] = "";
 
     Investor_t inv = DataHandler_getInvestor(self->dataHandler, index);
@@ -303,9 +314,9 @@ static void _writeInvestor_HTML(Web_t self, socket_t * clientSock, unsigned int 
 }
 
 static void _replyNewInvestor_HTML(Web_t self, socket_t * clientSock){
-    char buff[1000] = "";
-    char buff1[1000] = "";
-    char res[1000] = "";
+    char buff[2000] = "";
+    char buff1[2000] = "";
+    char res[2000] = "";
 
     strcpy(buff, "<form action=\"/investors\" method=\"POST\">"
             "<fieldset>"
@@ -366,7 +377,7 @@ static void _successAdditionReply(socket_t * clientSock){
 }
 
 static void _successUpdateReply(socket_t * clientSock, unsigned int index){
-    char buff[48];
+    char buff[64];
     char res[128];
     sprintf(buff, "Investor %zu was successfully updated", index);
     sprintf(res, httpSuccessReplyStrFormat, strlen(buff), buff);
@@ -425,6 +436,10 @@ static void _replyInvalidValue(socket_t * clientSock, const char * value){
     socket_close(clientSock);
 }
 
+static void _optionsOkReply(socket_t * clientSock){
+    socket_write_string(clientSock, httpOptionsOkStr);
+    socket_close(clientSock);
+}
 
 static void _replyInvalidArgsNum(socket_t * clientSock){
     char buff[64];

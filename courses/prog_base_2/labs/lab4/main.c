@@ -1,9 +1,12 @@
 #include "web.h"
 
+#define PORT 5000
+
 int main() {
     lib_init();
 
-	Web_t web = Web_new(5000);
+	Web_t web = Web_new(PORT);
+	printf("port: %d", PORT);
 
 	Web_listen(web);
 
