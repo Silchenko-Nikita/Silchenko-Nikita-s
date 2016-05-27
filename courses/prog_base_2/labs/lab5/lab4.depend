@@ -1,0 +1,190 @@
+# depslib dependency file v1.0
+1464370633 source:c:\users\Í\desktop\lab4\data_handler.c
+	<libxml/parser.h>
+	<libxml/tree.h>
+	<sqlite3.h>
+	<stdlib.h>
+	"data_handler.h"
+	"list.h"
+
+1288882724 c:\users\Í\desktop\lab4\libxml2-2.7.8.win32\include\libxml\parser.h
+	<stdarg.h>
+	<libxml/xmlversion.h>
+	<libxml/tree.h>
+	<libxml/dict.h>
+	<libxml/hash.h>
+	<libxml/valid.h>
+	<libxml/entities.h>
+	<libxml/xmlerror.h>
+	<libxml/xmlstring.h>
+	<libxml/encoding.h>
+	<libxml/xmlIO.h>
+	<libxml/globals.h>
+
+1308508838 c:\users\Í\desktop\lab4\libxml2-2.7.8.win32\include\libxml\xmlversion.h
+	<libxml/xmlexports.h>
+	<ansidecl.h>
+
+1286861132 c:\users\Í\desktop\lab4\libxml2-2.7.8.win32\include\libxml\xmlexports.h
+
+1286861132 c:\users\Í\desktop\lab4\libxml2-2.7.8.win32\include\libxml\tree.h
+	<stdio.h>
+	<libxml/xmlversion.h>
+	<libxml/xmlstring.h>
+	<libxml/xmlregexp.h>
+	<libxml/xmlmemory.h>
+
+1286861132 c:\users\Í\desktop\lab4\libxml2-2.7.8.win32\include\libxml\xmlstring.h
+	<stdarg.h>
+	<libxml/xmlversion.h>
+
+1286861132 c:\users\Í\desktop\lab4\libxml2-2.7.8.win32\include\libxml\xmlregexp.h
+	<libxml/xmlversion.h>
+	<libxml/tree.h>
+	<libxml/dict.h>
+
+1253802720 c:\users\Í\desktop\lab4\libxml2-2.7.8.win32\include\libxml\dict.h
+	<libxml/xmlversion.h>
+	<libxml/tree.h>
+
+1286861132 c:\users\Í\desktop\lab4\libxml2-2.7.8.win32\include\libxml\xmlmemory.h
+	<stdio.h>
+	<libxml/xmlversion.h>
+	<libxml/threads.h>
+	<libxml/globals.h>
+
+1286861132 c:\users\Í\desktop\lab4\libxml2-2.7.8.win32\include\libxml\threads.h
+	<libxml/xmlversion.h>
+	<libxml/globals.h>
+
+1286861132 c:\users\Í\desktop\lab4\libxml2-2.7.8.win32\include\libxml\globals.h
+	<libxml/xmlversion.h>
+	<libxml/parser.h>
+	<libxml/xmlerror.h>
+	<libxml/SAX.h>
+	<libxml/SAX2.h>
+	<libxml/xmlmemory.h>
+	<libxml/threads.h>
+
+1286861132 c:\users\Í\desktop\lab4\libxml2-2.7.8.win32\include\libxml\xmlerror.h
+	<libxml/parser.h>
+
+1253802720 c:\users\Í\desktop\lab4\libxml2-2.7.8.win32\include\libxml\sax.h
+	<stdio.h>
+	<stdlib.h>
+	<libxml/xmlversion.h>
+	<libxml/parser.h>
+	<libxml/xlink.h>
+
+1253802720 c:\users\Í\desktop\lab4\libxml2-2.7.8.win32\include\libxml\xlink.h
+	<libxml/xmlversion.h>
+	<libxml/tree.h>
+
+1253802720 c:\users\Í\desktop\lab4\libxml2-2.7.8.win32\include\libxml\sax2.h
+	<stdio.h>
+	<stdlib.h>
+	<libxml/xmlversion.h>
+	<libxml/parser.h>
+	<libxml/xlink.h>
+
+1253802720 c:\users\Í\desktop\lab4\libxml2-2.7.8.win32\include\libxml\hash.h
+	<libxml/xmlversion.h>
+	<libxml/parser.h>
+	<libxml/dict.h>
+
+1286861132 c:\users\Í\desktop\lab4\libxml2-2.7.8.win32\include\libxml\valid.h
+	<libxml/xmlversion.h>
+	<libxml/xmlerror.h>
+	<libxml/tree.h>
+	<libxml/list.h>
+	<libxml/xmlautomata.h>
+	<libxml/xmlregexp.h>
+
+1253802720 c:\users\Í\desktop\lab4\libxml2-2.7.8.win32\include\libxml\list.h
+	<libxml/xmlversion.h>
+
+1253802720 c:\users\Í\desktop\lab4\libxml2-2.7.8.win32\include\libxml\xmlautomata.h
+	<libxml/xmlversion.h>
+	<libxml/tree.h>
+	<libxml/xmlregexp.h>
+
+1286861132 c:\users\Í\desktop\lab4\libxml2-2.7.8.win32\include\libxml\entities.h
+	<libxml/xmlversion.h>
+	<libxml/tree.h>
+
+1288886032 c:\users\Í\desktop\lab4\libxml2-2.7.8.win32\include\libxml\encoding.h
+	<libxml/xmlversion.h>
+	<iconv.h>
+	<unicode/ucnv.h>
+	<libxml/tree.h>
+
+1146767014 c:\users\Í\desktop\lab4\iconv-1.9.2.win32\include\iconv.h
+	"iconv.h"
+	<stddef.h>
+	<errno.h>
+
+1253802720 c:\users\Í\desktop\lab4\libxml2-2.7.8.win32\include\libxml\xmlio.h
+	<stdio.h>
+	<libxml/xmlversion.h>
+	<libxml/globals.h>
+	<libxml/tree.h>
+	<libxml/parser.h>
+	<libxml/encoding.h>
+
+1464272366 c:\users\Í\desktop\lab4\data_handler.h
+	"investor.h"
+
+1464272366 c:\users\Í\desktop\lab4\investor.h
+	<libxml/parser.h>
+	<libxml/tree.h>
+
+1458333534 c:\users\Í\desktop\lab4\list.h
+	<stdlib.h>
+
+1463831000 source:c:\users\Í\desktop\lab4\http.c
+	<stdlib.h>
+	<string.h>
+	"http.h"
+
+1460901990 c:\users\Í\desktop\lab4\http.h
+
+1463498570 source:c:\users\Í\desktop\lab4\list.c
+	"list.h"
+
+1464270677 source:c:\users\Í\desktop\lab4\main.c
+	"web.h"
+	"data_handler.h"
+	<stdio.h>
+
+1464366976 source:c:\users\Í\desktop\lab4\web.c
+	"libsocket/socket.h"
+	"web.h"
+	"http.h"
+	"str_type.h"
+	"data_handler.h"
+
+1463163078 c:\users\Í\desktop\lab4\web.h
+
+1464272762 source:c:\users\Í\desktop\lab4\investor.c
+	<libxml/parser.h>
+	<libxml/tree.h>
+	<stdlib.h>
+	<stdio.h>
+	"investor.h"
+
+1460593386 source:c:\users\Í\desktop\lab4\libsocket\socket_win.c
+	<winsock2.h>
+	"socket.h"
+
+1460593386 c:\users\Í\desktop\lab4\libsocket\socket.h
+
+1461691924 source:c:\users\Í\desktop\lab4\str_type.c
+	<ctype.h>
+	<strings.h>
+	"str_type.h"
+
+1461690448 c:\users\Í\desktop\lab4\str_type.h
+
+1450774966 c:\users\Í\desktop\lab4\sqlite\sqlite3.h
+	<stdarg.h>
+
