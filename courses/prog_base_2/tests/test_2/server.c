@@ -12,21 +12,22 @@
 
 #include "http.h"
 
+// code isn't beautiful but i don't care
+
 static struct Server{
     socket_t * serverSock;
     DB_t * db;
 };
 
-static enum SERVER_ERROR{
-    SERVER_OK,
-    SERVER_FILE_ERROR,
-    SERVER_INDEX_ERROR,
-    SERVER_KEY_ERROR,
-    SERVER_VALUE_ERROR,
-    SERVER_ARGS_ERROR
+
+static enum FILE_DELETE_STATUS{
+    FILE_OK,
+    FILE_NOT_EXISTS,
+    FILE_ERROR
 };
 
 typedef enum SERVER_ERROR SERVER_ERROR;
+typedef enum FILE_DELETE_STATUS FILE_DELETE_STATUS;
 
 static const char * const httpReplyStrFormat =
         "HTTP/1.1 %sr\n"
@@ -46,23 +47,12 @@ static const char * const httpRequestStrFormat =
         "Content-Length: %zu\r\n\r\n"
         "%s";
 
-static const char * const htmlDocStrFormat =
-        "<!DOCTYPE html>"
-        "<html>"
-        "<head>"
-        "<meta charset=\"ASCI\">"
-        "%s"
-        "</head>"
-        "<body>"
-        "%s"
-        "</body>"
-        "</html>";
-
-char * _serializeInvestors(List_t invs, char * mem_p);
+static char * _serializeInvestors(List_t invs, char * mem_p);
 static void _emptySuccessReply(socket_t * clientSock);
 static void _reply(Server_t self, HttpRequest_t httpRequest, socket_t * clientSock);
 static void _replyStudent(socket_t * clientSock);
-void _replyFileDeleteStatus(socket_t * clientSock, int status);
+static const char * _getFileStatusStr(FILE_DELETE_STATUS status);
+static void _replyFileDeleteStatus(socket_t * clientSock, FILE_DELETE_STATUS status);
 
 Server_t Server_new(int port){
     Server_t self = (Server_t) malloc(sizeof(Server_s));
@@ -142,9 +132,15 @@ static void _reply(Server_t self, HttpRequest_t httpRequest, socket_t * clientSo
             char filePath[256];
             strcpy(filePath, strstr(strstr(uri, "/") + 1, "/") + 1);
 
-            int rc = 0;
-            if(rc = file_exists()){
-                rc = file_remove(filePath);
+            FILE_DELETE_STATUS rc;
+            if(file_exists(filePath)){
+                if(file_remove(filePath)){
+                    rc = FILE_OK;
+                }else{
+                    rc = FILE_ERROR;
+                }
+            }else{
+                rc = FILE_NOT_EXISTS;
             }
             _replyFileDeleteStatus(clientSock, rc);
         } else{
@@ -215,7 +211,16 @@ char * _serializeInvestors(List_t invs, char * mem_p){
     return mem_p;
 }
 
-void _replyFileDeleteStatus(socket_t * clientSock, int status){
+static const char * _getFileStatusStr(FILE_DELETE_STATUS status){
+    static const char * const strs[] = {
+        "deleted",
+        "not exists",
+        "fail"
+    };
+    return strs[status];
+}
+
+void _replyFileDeleteStatus(socket_t * clientSock, FILE_DELETE_STATUS status){
     xmlDoc * doc = NULL;
 	xmlChar * xmlStr = NULL;
 
@@ -225,10 +230,8 @@ void _replyFileDeleteStatus(socket_t * clientSock, int status){
     statusNode = xmlNewNode(NULL, "status");
     xmlDocSetRootElement(doc, statusNode);
 
-    xmlNewChild(statusNode, NULL, "code", status ? "success" : "failure");
+    xmlNewChild(statusNode, NULL, "code", _getFileStatusStr(status));
 	xmlDocDumpMemory(doc, &xmlStr, NULL);
-
-    puts(xmlStr);
 
     char buff[512];
     sprintf(buff, httpReplyStrFormat, "200 OK", "text/xml", strlen(xmlStr), xmlStr);
@@ -244,11 +247,11 @@ void _getDataStr(char * mem_p){
     socket_t* clientSock = socket_new ();
     socket_connect(clientSock, "216.58.209.49", 80);
 
-    char uri [256];
+    char uri[256];
 
-    strcpy (uri, "http://pb-homework.appspot.com/test/var/34?format=xml");
+    strcpy(uri, "http://pb-homework.appspot.com/test/var/34?format=xml");
 
-    char req [1024];
+    char req[1024];
 
     sprintf (req, httpRequestStrFormat, "GET", uri, NULL, NULL, NULL);
 
@@ -256,8 +259,6 @@ void _getDataStr(char * mem_p){
     char responce [1024];
     socket_read (clientSock, responce, 1024);
 
-    int contentLength = 0;
-    sscanf (strstr(responce, "Content-Length: ") + strlen ("Content-Length: "), "%d", &contentLength);
     strcpy(mem_p, strstr (responce, "\r\n\r\n") + 4);
 
     socket_free(clientSock);
