@@ -103,14 +103,14 @@ static void _reply(Server_t self, HttpRequest_t httpRequest, socket_t * clientSo
         if (!strcmp(child1, "info")) {
             _replyStudent(clientSock);
         }else if (!strcmp(child1, "external")) {
-            char buff[512];
+            char buff[100000];
             _getDataStr(buff);
             TaskData_t td = TaskData_new();
             TaskData_getFromXmlStr(td, buff);
             time(&td->time);
 
             TaskData_toXmlStr(td, buff);
-            char buff1[512];
+            char buff1[100000];
             sprintf(buff1, httpReplyStrFormat, "200 OK", "text/xml", strlen(buff), buff);
 
             TaskData_delete(td);

@@ -16,4 +16,29 @@
     <investment>1.000000</investment>
     <projectsNumber>2</projectsNumber>
   </investor>
+  <investor>
+    <id>3</id>
+    <name>Nikita
+</name>
+    <surname>Silchenko</surname>
+    <birthdate>1972-11-11</birthdate>
+    <investment>521.000000</investment>
+    <projectsNumber>4</projectsNumber>
+  </investor>
+  <investor>
+    <id>4</id>
+    <name>Murad</name>
+    <surname>Muhamed</surname>
+    <birthdate>1975-01-02</birthdate>
+    <investment>123.000000</investment>
+    <projectsNumber>3</projectsNumber>
+  </investor>
+  <investor>
+    <id>5</id>
+    <name>James</name>
+    <surname>Smith</surname>
+    <birthdate>1988-01-01</birthdate>
+    <investment>21.320000</investment>
+    <projectsNumber>3</projectsNumber>
+  </investor>
 </investors>
