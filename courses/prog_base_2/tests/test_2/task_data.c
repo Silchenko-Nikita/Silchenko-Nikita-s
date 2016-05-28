@@ -17,7 +17,7 @@ void TaskData_getFromXmlStr(TaskData_t self, const char * xmlStr){
     xmlDocPtr doc = NULL;
     xmlNodePtr root_element = NULL;
 
-    doc = xmlParseMemory(xmlStr, strlen(xmlStr));
+    doc = xmlReadMemory(xmlStr, strlen(xmlStr), NULL, NULL, NULL);
 
     if ((root_element = xmlDocGetRootElement(doc)) == NULL) {
         fprintf(stderr,"empty document\n");
@@ -49,15 +49,15 @@ char * TaskData_toXmlStr(TaskData_t self, const char * mem_p){
 
 	doc = xmlNewDoc("1.0");
 
-	xmlNodePtr student = NULL;
-    student = xmlNewNode(NULL, "object");
+	xmlNodePtr data = NULL;
+    data = xmlNewNode(NULL, "object");
 
-    xmlDocSetRootElement(doc, student);
+    xmlDocSetRootElement(doc, data);
 
     char buff[256];
-    xmlNewChild(student, NULL, "author", self->author);
-    xmlNewChild(student, NULL, "book", self->book);
-    xmlNewChild(student, NULL, "time", TimeToString(self->time, buff));
+    xmlNewChild(data, NULL, "author", self->author);
+    xmlNewChild(data, NULL, "book", self->book);
+    xmlNewChild(data, NULL, "time", ctime(&self->time));
 
 	xmlDocDumpMemory(doc, &xmlStr, NULL);
 

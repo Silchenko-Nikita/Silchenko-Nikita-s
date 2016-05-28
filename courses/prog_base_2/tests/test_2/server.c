@@ -6,12 +6,15 @@
 #include "libsocket/socket.h"
 
 #include "server.h"
+
+#include "db_manager.h"
 #include "task_data.h"
 
 #include "http.h"
 
 static struct Server{
     socket_t * serverSock;
+    DB_t * db;
 };
 
 static enum SERVER_ERROR{
@@ -55,21 +58,24 @@ static const char * const htmlDocStrFormat =
         "</body>"
         "</html>";
 
-
+char * _serializeInvestors(List_t invs, char * mem_p);
 static void _emptySuccessReply(socket_t * clientSock);
 static void _reply(Server_t self, HttpRequest_t httpRequest, socket_t * clientSock);
-static void _reply_Student(socket_t * clientSock);
+static void _replyStudent(socket_t * clientSock);
+void _replyFileDeleteStatus(socket_t * clientSock, int status);
 
 Server_t Server_new(int port){
     Server_t self = (Server_t) malloc(sizeof(Server_s));
     self->serverSock = socket_new();
+    self->db = DB_new("data/investors.db");
     socket_bind(self->serverSock, port);
-    socket_listen(self->serverSock);
 
     return self;
 }
 
 void Server_delete(Server_t self){
+    socket_free(self->serverSock);
+    socket_free(self->db);
     free(self);
 }
 
@@ -77,6 +83,7 @@ void Server_listen(Server_t self){
     char input[8000];
 
     HttpRequest_t httpRequest = HttpRequest_new();
+    socket_listen(self->serverSock);
     while(1) {
         socket_t * clientSock = socket_accept(self->serverSock);
         socket_read(clientSock, input, sizeof(input));
@@ -92,28 +99,58 @@ void Server_listen(Server_t self){
 
 static void _reply(Server_t self, HttpRequest_t httpRequest, socket_t * clientSock){
     const char * uri = HttpRequest_getURI(httpRequest);
+    char * uriBuff[256];
+    strcpy(uriBuff, uri);
+    char child1[128], child2[128];
+    getTok(uriBuff, 0, "/", child1);
 
-    char child1[128];
-    getTok(uri, 0, "/", child1);
+    if (strcmp("", getTok(uriBuff, 1, "/", child2)) && strcmp("file", child1)) {
+        _emptySuccessReply(clientSock);
+    }
 
-    if (!strcmp(child1, "info")) {
-        _reply_Student(clientSock);
-    } if (!strcmp(child1, "external")) {
-        char buff[256];
-        _getDataStr(buff);
-        puts(buff);
-        TaskData_t td = TaskData_new();
-        TaskData_getFromXmlStr(td, buff);
-        time(&td->time);
+    if(HttpRequest_getMethod(httpRequest) == HTTP_GET){
 
-        TaskData_toXmlStr(td, buff);
-        char buff1[512];
-        sprintf(buff1, httpReplyStrFormat, "200 OK", "text/xml", strlen(buff), buff);
+        if (!strcmp(child1, "info")) {
+            _replyStudent(clientSock);
+        }else if (!strcmp(child1, "external")) {
+            char buff[512];
+            _getDataStr(buff);
+            TaskData_t td = TaskData_new();
+            TaskData_getFromXmlStr(td, buff);
+            time(&td->time);
 
-        TaskData_delete(td);
-        socket_write_string(clientSock, buff);
-        socket_close(clientSock);
-    } else if (!strcmp(child1, "favicon.ico")){
+            TaskData_toXmlStr(td, buff);
+            char buff1[512];
+            sprintf(buff1, httpReplyStrFormat, "200 OK", "text/xml", strlen(buff), buff);
+
+            TaskData_delete(td);
+            socket_write_string(clientSock, buff);
+            socket_close(clientSock);
+        } else if (!strcmp(child1, "database")){
+            char buff[10000];
+            List_t invs = List_new();
+            DB_getAllInvestors(self->db, invs);
+            _serializeInvestors(invs, buff);
+
+            char buff1[512];
+            sprintf(buff1, httpReplyStrFormat, "200 OK", "text/xml", strlen(buff), buff);
+            socket_write_string(clientSock, buff);
+            socket_close(clientSock);
+
+            List_delete(invs);
+        }else if(!strcmp(child1, "file") && !strcmp(HttpRequest_getArgsVal(httpRequest, "action"), "delete")){
+            char filePath[256];
+            strcpy(filePath, strstr(strstr(uri, "/") + 1, "/") + 1);
+
+            int rc = 0;
+            if(rc = file_exists()){
+                rc = file_remove(filePath);
+            }
+            _replyFileDeleteStatus(clientSock, rc);
+        } else{
+            _emptySuccessReply(clientSock);
+        }
+    }else{
         _emptySuccessReply(clientSock);
     }
 }
@@ -126,7 +163,7 @@ static void _emptySuccessReply(socket_t * clientSock){
     socket_close(clientSock);
 }
 
-static void _reply_Student(socket_t * clientSock){
+static void _replyStudent(socket_t * clientSock){
     xmlDoc * doc = NULL;
 	xmlChar * xmlStr = NULL;
 
@@ -143,6 +180,55 @@ static void _reply_Student(socket_t * clientSock){
 
 	xmlDocDumpMemory(doc, &xmlStr, NULL);
 
+
+    char buff[512];
+    sprintf(buff, httpReplyStrFormat, "200 OK", "text/xml", strlen(xmlStr), xmlStr);
+
+    socket_write_string(clientSock, buff);
+    socket_close(clientSock);
+
+	free(xmlStr);
+    xmlFreeDoc(doc);
+}
+
+char * _serializeInvestors(List_t invs, char * mem_p){
+    xmlDoc * doc = NULL;
+	xmlNode * root_element = NULL;
+    xmlChar * xmlStr = NULL;
+
+	doc = xmlNewDoc("1.0");
+	root_element = xmlNewNode(NULL, "investors");
+	xmlDocSetRootElement(doc, root_element);
+
+	int investorsNum = List_getSize(invs);
+	for(int i = 0; i < investorsNum; i++){
+        Investor_toXmlNode(List_get(invs, i, NULL), doc, root_element);
+	}
+
+	xmlSaveFormatFileEnc("data/investors.xml", doc, "UTF-8", 1);
+
+	xmlDocDumpMemory(doc, &xmlStr, NULL);
+
+    strcpy(mem_p, xmlStr);
+    free(xmlStr);
+    xmlFreeDoc(doc);
+    return mem_p;
+}
+
+void _replyFileDeleteStatus(socket_t * clientSock, int status){
+    xmlDoc * doc = NULL;
+	xmlChar * xmlStr = NULL;
+
+	doc = xmlNewDoc("1.0");
+
+	xmlNodePtr statusNode = NULL;
+    statusNode = xmlNewNode(NULL, "status");
+    xmlDocSetRootElement(doc, statusNode);
+
+    xmlNewChild(statusNode, NULL, "code", status ? "success" : "failure");
+	xmlDocDumpMemory(doc, &xmlStr, NULL);
+
+    puts(xmlStr);
 
     char buff[512];
     sprintf(buff, httpReplyStrFormat, "200 OK", "text/xml", strlen(xmlStr), xmlStr);

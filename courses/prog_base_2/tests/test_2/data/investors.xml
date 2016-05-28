@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<investors>
+  <investor>
+    <id>1</id>
+    <name>John</name>
+    <surname>Jones</surname>
+    <birthdate>1881-11-11</birthdate>
+    <investment>1221.300049</investment>
+    <projectsNumber>3</projectsNumber>
+  </investor>
+  <investor>
+    <id>2</id>
+    <name>Carles</name>
+    <surname>Suarez</surname>
+    <birthdate>1922-05-05</birthdate>
+    <investment>1.000000</investment>
+    <projectsNumber>2</projectsNumber>
+  </investor>
+</investors>

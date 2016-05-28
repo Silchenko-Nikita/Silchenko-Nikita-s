@@ -130,7 +130,7 @@
 	<libxml/parser.h>
 	<libxml/encoding.h>
 
-1464422324 source:c:\users\Í\documents\myrepos\silchenko-nikita-s\courses\prog_base_2\tests\test_2\http.c
+1464434798 source:c:\users\Í\documents\myrepos\silchenko-nikita-s\courses\prog_base_2\tests\test_2\http.c
 	<stdlib.h>
 	<string.h>
 	"http.h"
@@ -144,12 +144,13 @@
 1464378440 c:\users\Í\documents\myrepos\silchenko-nikita-s\courses\prog_base_2\tests\test_2\list.h
 	<stdlib.h>
 
-1464430568 source:c:\users\Í\documents\myrepos\silchenko-nikita-s\courses\prog_base_2\tests\test_2\server.c
+1464436261 source:c:\users\Í\documents\myrepos\silchenko-nikita-s\courses\prog_base_2\tests\test_2\server.c
 	<libxml/parser.h>
 	<libxml/tree.h>
 	<time.h>
 	"libsocket/socket.h"
 	"server.h"
+	"db_manager.h"
 	"task_data.h"
 	"http.h"
 
@@ -174,24 +175,22 @@
 1464380867 c:\users\Í\documents\myrepos\silchenko-nikita-s\courses\prog_base_2\tests\test_2\files_manger.h
 	<time.h>
 
-1464415610 source:c:\users\Í\documents\myrepos\silchenko-nikita-s\courses\prog_base_2\tests\test_2\db_manager.c
+1461277191 source:c:\users\Í\documents\myrepos\silchenko-nikita-s\courses\prog_base_2\tests\test_2\db_manager.c
 	<stdlib.h>
 	"db_manager.h"
 	"investor.h"
 	<sqlite3.h>
 
-1461277191 c:\users\Í\documents\myrepos\silchenko-nikita-s\courses\prog_base_2\tests\test_2\db_manager.h
+1464432236 c:\users\Í\documents\myrepos\silchenko-nikita-s\courses\prog_base_2\tests\test_2\db_manager.h
 	"investor.h"
 	"list.h"
 
-1464382148 c:\users\Í\documents\myrepos\silchenko-nikita-s\courses\prog_base_2\tests\test_2\investor.h
-	<libxml/parser.h>
-	<libxml/tree.h>
+1461266862 c:\users\Í\documents\myrepos\silchenko-nikita-s\courses\prog_base_2\tests\test_2\investor.h
 
 1450774966 c:\users\Í\documents\myrepos\silchenko-nikita-s\courses\prog_base_2\tests\test_2\sqlite\sqlite3.h
 	<stdarg.h>
 
-1464422344 source:c:\users\Í\documents\myrepos\silchenko-nikita-s\courses\prog_base_2\tests\test_2\investor.c
+1461184164 source:c:\users\Í\documents\myrepos\silchenko-nikita-s\courses\prog_base_2\tests\test_2\investor.c
 	<stdlib.h>
 	<stdio.h>
 	"investor.h"
@@ -210,7 +209,7 @@
 
 1464426846 c:\users\Í\documents\myrepos\silchenko-nikita-s\courses\prog_base_2\tests\test_2\client.h
 
-1464430722 source:c:\users\Í\documents\myrepos\silchenko-nikita-s\courses\prog_base_2\tests\test_2\task_data.c
+1464431595 source:c:\users\Í\documents\myrepos\silchenko-nikita-s\courses\prog_base_2\tests\test_2\task_data.c
 	<stdio.h>
 	<libxml/parser.h>
 	<libxml/tree.h>

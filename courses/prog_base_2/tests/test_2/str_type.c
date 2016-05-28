@@ -59,6 +59,11 @@ int isDate(const char * str){
     return 1;
 }
 
+char * TimeToString(time_t time, char * mem_p){
+    struct tm * tm = localtime(&time);
+    sprintf(mem_p, "%d-%d-%d", tm->tm_year,  tm->tm_mon, tm->tm_mday);
+}
+
 char * getTok(const char * str, unsigned int index, const char * delimeters, char * memPtr){
     char buff[500];
     strcpy(buff, str);

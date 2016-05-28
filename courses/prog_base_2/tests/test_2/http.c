@@ -76,7 +76,6 @@ void HttpRequest_parse(HttpRequest_t self, const char * request){
             self->args[self->argsLen].key[keyLen] = '\0';
 
             strcpy(self->args[self->argsLen].value, tok + keyLen + 1);
-            puts(self->args[self->argsLen].value);
 
             self->argsLen++;
         }
