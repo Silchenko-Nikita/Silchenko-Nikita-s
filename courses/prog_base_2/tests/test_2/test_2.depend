@@ -144,9 +144,13 @@
 1464378440 c:\users\Í\documents\myrepos\silchenko-nikita-s\courses\prog_base_2\tests\test_2\list.h
 	<stdlib.h>
 
-1464378760 source:c:\users\Í\documents\myrepos\silchenko-nikita-s\courses\prog_base_2\tests\test_2\server.c
+1464430568 source:c:\users\Í\documents\myrepos\silchenko-nikita-s\courses\prog_base_2\tests\test_2\server.c
+	<libxml/parser.h>
+	<libxml/tree.h>
+	<time.h>
 	"libsocket/socket.h"
 	"server.h"
+	"task_data.h"
 	"http.h"
 
 1460593386 c:\users\Í\documents\myrepos\silchenko-nikita-s\courses\prog_base_2\tests\test_2\libsocket\socket.h
@@ -192,16 +196,27 @@
 	<stdio.h>
 	"investor.h"
 
-1461690448 c:\users\Í\documents\myrepos\silchenko-nikita-s\courses\prog_base_2\tests\test_2\str_type.h
+1464430236 c:\users\Í\documents\myrepos\silchenko-nikita-s\courses\prog_base_2\tests\test_2\str_type.h
+	"time.h"
 
-1461691924 source:c:\users\Í\documents\myrepos\silchenko-nikita-s\courses\prog_base_2\tests\test_2\str_type.c
+1464430236 source:c:\users\Í\documents\myrepos\silchenko-nikita-s\courses\prog_base_2\tests\test_2\str_type.c
 	<ctype.h>
 	<strings.h>
 	"str_type.h"
 
-1464424218 source:c:\users\Í\documents\myrepos\silchenko-nikita-s\courses\prog_base_2\tests\test_2\client.c
+1464427716 source:c:\users\Í\documents\myrepos\silchenko-nikita-s\courses\prog_base_2\tests\test_2\client.c
 	"libsocket/socket.h"
 	"client.h"
 
-1464424228 c:\users\Í\documents\myrepos\silchenko-nikita-s\courses\prog_base_2\tests\test_2\client.h
+1464426846 c:\users\Í\documents\myrepos\silchenko-nikita-s\courses\prog_base_2\tests\test_2\client.h
+
+1464430722 source:c:\users\Í\documents\myrepos\silchenko-nikita-s\courses\prog_base_2\tests\test_2\task_data.c
+	<stdio.h>
+	<libxml/parser.h>
+	<libxml/tree.h>
+	"task_data.h"
+	"str_type.h"
+
+1464430236 c:\users\Í\documents\myrepos\silchenko-nikita-s\courses\prog_base_2\tests\test_2\task_data.h
+	"time.h"
 

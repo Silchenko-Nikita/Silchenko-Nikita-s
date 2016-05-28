@@ -1,9 +1,12 @@
 #include <libxml/parser.h>
 #include <libxml/tree.h>
 
+#include <time.h>
+
 #include "libsocket/socket.h"
 
 #include "server.h"
+#include "task_data.h"
 
 #include "http.h"
 
@@ -34,8 +37,8 @@ static const char * const httpSuccessReplyStrFormat =
         "Content-Length: %zu\r\n\r\n"
         "%s";
 
-static const char * const HttpRequestStrFormat =
-        "%s HTTP/1.1\r\n"
+static const char * const httpRequestStrFormat =
+        "%s %s HTTP/1.1\r\n"
         "Content-Type: text\r\n"
         "Content-Length: %zu\r\n\r\n"
         "%s";
@@ -90,12 +93,27 @@ void Server_listen(Server_t self){
 static void _reply(Server_t self, HttpRequest_t httpRequest, socket_t * clientSock){
     const char * uri = HttpRequest_getURI(httpRequest);
 
-    char root[128];
-    getTok(uri, 0, "/", root);
+    char child1[128];
+    getTok(uri, 0, "/", child1);
 
-    if (!strcmp(root, "info")) {
+    if (!strcmp(child1, "info")) {
         _reply_Student(clientSock);
-    } else if (!strcmp(root, "favicon.ico")){
+    } if (!strcmp(child1, "external")) {
+        char buff[256];
+        _getDataStr(buff);
+        puts(buff);
+        TaskData_t td = TaskData_new();
+        TaskData_getFromXmlStr(td, buff);
+        time(&td->time);
+
+        TaskData_toXmlStr(td, buff);
+        char buff1[512];
+        sprintf(buff1, httpReplyStrFormat, "200 OK", "text/xml", strlen(buff), buff);
+
+        TaskData_delete(td);
+        socket_write_string(clientSock, buff);
+        socket_close(clientSock);
+    } else if (!strcmp(child1, "favicon.ico")){
         _emptySuccessReply(clientSock);
     }
 }
@@ -136,140 +154,26 @@ static void _reply_Student(socket_t * clientSock){
     xmlFreeDoc(doc);
 }
 
-/*
-static void _reply_XML(Web_t self, HttpRequest_t httpRequest, socket_t * clientSock){
-    const char * uri = HttpRequest_getURI(httpRequest);
-    HTTP_REQUEST_METHOD method = HttpRequest_getMethod(httpRequest);
+void _getDataStr(char * mem_p){
+    socket_t* clientSock = socket_new ();
+    socket_connect(clientSock, "216.58.209.49", 80);
 
-    char child1[128], child2[128];
-    getTok(uri, 1, "/", child1);
-    getTok(uri, 2, "/", child2);
+    char uri [256];
 
-    if (!strcmp(child1, "investors")) {
-        if(!strcmp(child2, "")){
-            if (method == HTTP_GET){
-                char * charP = HttpRequest_getArgsVal(httpRequest, "gtinvestment");
-                double minInvestment = !strcmp(charP, "[empty]") ? MAX_DOUBLE : atof(charP);
+    strcpy (uri, "http://pb-homework.appspot.com/test/var/34?format=xml");
 
-                printf("%d\n", minInvestment);
+    char req [1024];
 
-                charP = HttpRequest_getArgsVal(httpRequest, "ltinvestment");
-                double maxInvestment = !strcmp(charP, "[empty]") ? MAX_DOUBLE : atof(charP);
+    sprintf (req, httpRequestStrFormat, "GET", uri, NULL, NULL, NULL);
 
-                printf("%d\n", maxInvestment);
+    socket_write(clientSock, req, strlen (req));
+    char responce [1024];
+    socket_read (clientSock, responce, 1024);
 
-                charP = HttpRequest_getArgsVal(httpRequest, "gtprojects");
-                int minProjectsNumber = !strcmp(charP, "[empty]") ? MIN_INT : atoi(charP);
+    int contentLength = 0;
+    sscanf (strstr(responce, "Content-Length: ") + strlen ("Content-Length: "), "%d", &contentLength);
+    strcpy(mem_p, strstr (responce, "\r\n\r\n") + 4);
 
-                printf("%f\n", minProjectsNumber);
-
-                charP = HttpRequest_getArgsVal(httpRequest, "ltprojects");
-                int maxProjectsNumber = !strcmp(charP, "[empty]") ? MAX_INT : atoi(charP);
-
-                printf("%f\n", maxProjectsNumber);
-
-                _writeInvestors_XML(self, clientSock, minInvestment, maxInvestment, minProjectsNumber, maxProjectsNumber);
-            }else if (method == HTTP_POST){
-                _addInvestorIfPossible(self, clientSock, httpRequest);
-            }else{
-               _replyInvalidMethod(clientSock);
-            }
-        }else if (isNonNegatInteger(child2)){
-            int index = atoi(child2);
-
-            if(_checkIndex(self, index) == SERVER_INDEX_ERROR){
-                _replyInvalidIndex(clientSock, index);
-            }else{
-                if (method == HTTP_GET){
-                    _writeInvestor_XML(self, clientSock, index);
-                } else if(method == HTTP_OPTIONS){
-                    _optionsOkReply(clientSock);
-                } else if (method == HTTP_DELETE){
-                    DataHandler_deleteInvestor(self->dataHandler, index);
-                    _successDeleteReply(clientSock, index);
-                }else{
-                    _replyInvalidMethod(clientSock);
-                }
-            }
-        }else{
-            _replyInvalidUri(clientSock);
-        }
-    }else{
-        _replyInvalidUri(clientSock);
-    }
+    socket_free(clientSock);
+    return mem_p;
 }
-
-static void _reply_HTML(Web_t self, HttpRequest_t httpRequest, socket_t * clientSock){
-    const char * uri = HttpRequest_getURI(httpRequest);
-    HTTP_REQUEST_METHOD method = HttpRequest_getMethod(httpRequest);
-
-    char child0[128], child1[128];
-    getTok(uri, 0, "/", child0);
-    getTok(uri, 1, "/", child1);
-
-    if (!strcmp(child0, "")) {
-        if (method == HTTP_GET){
-            _replyHomepage_HTML(self, clientSock);
-        }else{
-            _replyInvalidMethod(clientSock);
-        }
-    }else if (!strcmp(child0, "investors")){
-        if(!strcmp(child1, "")){
-            if (method == HTTP_GET){
-                char * charP = HttpRequest_getArgsVal(httpRequest, "gtinvestment");
-                double minInvestment = !strcmp(charP, "[empty]") ? MIN_DOUBLE : atof(charP);
-
-                printf("%d\n", minInvestment);
-
-                charP = HttpRequest_getArgsVal(httpRequest, "ltinvestment");
-                double maxInvestment = !strcmp(charP, "[empty]") ? MIN_DOUBLE : atof(charP);
-
-                printf("%d\n", maxInvestment);
-
-                charP = HttpRequest_getArgsVal(httpRequest, "gtprojects");
-                int minProjectsNumber = !strcmp(charP, "[empty]") ? MIN_INT : atoi(charP);
-
-                printf("%f\n", minProjectsNumber);
-
-                charP = HttpRequest_getArgsVal(httpRequest, "ltprojects");
-                int maxProjectsNumber = !strcmp(charP, "[empty]") ? MAX_INT : atoi(charP);
-
-                printf("%f\n", maxProjectsNumber);
-
-                _writeInvestors_HTML(self, clientSock, minInvestment, maxInvestment, minProjectsNumber, maxProjectsNumber);
-            }else if (method == HTTP_POST){
-                _addInvestorIfPossible(self, clientSock, httpRequest);
-            }else{
-               _replyInvalidMethod(clientSock);
-            }
-        }else if(isNonNegatInteger(child1)){
-            int index = atoi(child1);
-
-            if(_checkIndex(self, index) == SERVER_INDEX_ERROR){
-                _replyInvalidIndex(clientSock, index);
-            }else{
-                if (method == HTTP_GET){
-                    _writeInvestor_HTML(self, clientSock, index);
-                }else if(method == HTTP_OPTIONS){
-                    _optionsOkReply(clientSock);
-                }else if (method == HTTP_DELETE){
-                    DataHandler_deleteInvestor(self->dataHandler, index);
-                    _successDeleteReply(clientSock, index);
-                }else{
-                   _replyInvalidMethod(clientSock);
-                }
-            }
-        }else{
-            _replyInvalidUri(clientSock);
-        }
-    }else if (!strcmp(child0, "new-investor")){
-        if (method == HTTP_GET){
-            _replyNewInvestor_HTML(self, clientSock);
-        }else{
-            _replyInvalidMethod(clientSock);
-        }
-    }else{
-        _replyInvalidUri(clientSock);
-    }
-}*/
-
