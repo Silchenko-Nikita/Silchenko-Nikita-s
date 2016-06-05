@@ -61,7 +61,7 @@ void DataHandler_delete(DataHandler_t self){
     free(self);
 }
 
-char * DataHandler_investorsToXmlStr(DataHandler_t self, char * mem_p){
+char * DataHandler_investorsToXmlStr(DataHandler_t self, double minInvestment, double maxInvestment, int minProjectsNumber, int maxProjectsNumber, char * mem_p){
     xmlDoc * doc = NULL;
 	xmlNode * root_element = NULL;
 	xmlChar * xmlStr = NULL;
@@ -74,7 +74,7 @@ char * DataHandler_investorsToXmlStr(DataHandler_t self, char * mem_p){
         Investor_toXmlNode(inv, doc, root_element);
     }
 
-    DataHandler_foreachInv(self, Inv_toXmlNode);
+    DataHandler_foreachInv(self, Inv_toXmlNode, minInvestment, maxInvestment, minProjectsNumber, maxProjectsNumber);
 
 	xmlDocDumpMemory(doc, &xmlStr, NULL);
 
@@ -192,23 +192,56 @@ int DataHandler_addInvestor(DataHandler_t self, Investor_t investor){
 
 void DataHandler_deleteInvestor(DataHandler_t self, unsigned int id){
     sqlite3_stmt * stmt = NULL;
-    sqlite3_prepare_v2(self->db, "DELETE FROM Investors WHERE Id = ?;", -1, &stmt, 0);
+
+    sqlite3_prepare_v2(self->db, "SELECT ContactsId FROM Investors WHERE Id = ?;", -1, &stmt, 0);
     sqlite3_bind_int(stmt, 1, id);
 
     int rc = sqlite3_step(stmt);
+    if (SQLITE_ERROR == rc) {
+        printf("error\n");
+        sqlite3_finalize(stmt);
+        exit(1);
+    }else if(SQLITE_ROW != rc){
+        return NULL;
+    }
+    int contactsId = sqlite3_column_int(stmt, 0);
+
+    sqlite3_finalize(stmt);
+
+    sqlite3_prepare_v2(self->db, "DELETE FROM Investors WHERE Id = ?;", -1, &stmt, 0);
+    sqlite3_bind_int(stmt, 1, id);
+
+    rc = sqlite3_step(stmt);
     if (SQLITE_ERROR == rc) {
         printf("can't delete investor\n");
         sqlite3_finalize(stmt);
         exit(1);
     }
+    sqlite3_finalize(stmt);
 
+    sqlite3_prepare_v2(self->db, "DELETE FROM contacts WHERE Id = ?;", -1, &stmt, 0);
+    sqlite3_bind_int(stmt, 1, contactsId);
+
+    rc = sqlite3_step(stmt);
+    if (SQLITE_ERROR == rc) {
+        printf("can't delete investor\n");
+        sqlite3_finalize(stmt);
+        exit(1);
+    }
     sqlite3_finalize(stmt);
 }
 
-void DataHandler_foreachInv(DataHandler_t self, void (fn)(Investor_t inv)){
+void DataHandler_foreachInv(DataHandler_t self, void (fn)(Investor_t inv), double minInvestment, double maxInvestment, int minProjectsNumber, int maxProjectsNumber)
+{
     sqlite3_stmt * stmt = NULL;
     sqlite3_stmt * stmt1 = NULL;
-    sqlite3_prepare_v2(self->db, "SELECT * FROM Investors;", -1, &stmt, 0);
+
+    sqlite3_prepare_v2(self->db, "SELECT * FROM Investors"
+                       " WHERE (Investment > ? AND Investment < ?) OR (ProjectsNumber > ? AND ProjectsNumber < ?);", -1, &stmt, 0);
+    sqlite3_bind_double(stmt, 1, minInvestment);
+    sqlite3_bind_double(stmt, 2, maxInvestment);
+    sqlite3_bind_int(stmt, 3, minProjectsNumber);
+    sqlite3_bind_int(stmt, 4, maxProjectsNumber);
 
     int rc = sqlite3_step(stmt);
     while (SQLITE_ROW == rc) {

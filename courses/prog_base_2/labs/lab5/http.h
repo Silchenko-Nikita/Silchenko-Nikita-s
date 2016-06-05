@@ -21,8 +21,14 @@ void HttpRequest_delete(HttpRequest_t self);
 void HttpRequest_parse(HttpRequest_t self, const char * request); // for init
 HTTP_REQUEST_METHOD HttpRequest_getMethod(HttpRequest_t self);
 const char * HttpRequest_getURI(HttpRequest_t self);
-const char * HttpRequest_getArg(HttpRequest_t self, const char * key);
-const char * HttpRequest_getKey(HttpRequest_t self, unsigned int index);
-const char * HttpRequest_getArgsNum(HttpRequest_t self);
+
+const char * HttpRequest_getFormVal(HttpRequest_t self, const char * key);
+const char * HttpRequest_getFormKey(HttpRequest_t self, unsigned int index);
+
+const char * HttpRequest_getArgsVal(HttpRequest_t self, const char * key);
+const char * HttpRequest_getArgsKey(HttpRequest_t self, unsigned int index);
+
+const char * HttpRequest_getFormLen(HttpRequest_t self);
+const char * HttpRequest_getArgsLen(HttpRequest_t self);
 
 #endif // HTTP_H_INCLUDED

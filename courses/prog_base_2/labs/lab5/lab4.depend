@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1464370633 source:c:\users\Í\desktop\lab4\data_handler.c
+1464418030 source:c:\users\Í\desktop\lab4\data_handler.c
 	<libxml/parser.h>
 	<libxml/tree.h>
 	<sqlite3.h>
@@ -131,7 +131,7 @@
 	<libxml/parser.h>
 	<libxml/encoding.h>
 
-1464272366 c:\users\Í\desktop\lab4\data_handler.h
+1464415839 c:\users\Í\desktop\lab4\data_handler.h
 	"investor.h"
 
 1464272366 c:\users\Í\desktop\lab4\investor.h
@@ -141,22 +141,23 @@
 1458333534 c:\users\Í\desktop\lab4\list.h
 	<stdlib.h>
 
-1463831000 source:c:\users\Í\desktop\lab4\http.c
+1464600574 source:c:\users\Í\desktop\lab4\http.c
 	<stdlib.h>
 	<string.h>
 	"http.h"
+	"str_type.h"
 
-1460901990 c:\users\Í\desktop\lab4\http.h
+1464415702 c:\users\Í\desktop\lab4\http.h
 
 1463498570 source:c:\users\Í\desktop\lab4\list.c
 	"list.h"
 
-1464270677 source:c:\users\Í\desktop\lab4\main.c
+1464417283 source:c:\users\Í\desktop\lab4\main.c
 	"web.h"
 	"data_handler.h"
 	<stdio.h>
 
-1464366976 source:c:\users\Í\desktop\lab4\web.c
+1464600505 source:c:\users\Í\desktop\lab4\web.c
 	"libsocket/socket.h"
 	"web.h"
 	"http.h"
@@ -165,7 +166,7 @@
 
 1463163078 c:\users\Í\desktop\lab4\web.h
 
-1464272762 source:c:\users\Í\desktop\lab4\investor.c
+1464371225 source:c:\users\Í\desktop\lab4\investor.c
 	<libxml/parser.h>
 	<libxml/tree.h>
 	<stdlib.h>

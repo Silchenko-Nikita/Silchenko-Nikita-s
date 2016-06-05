@@ -6,6 +6,11 @@
 #include "str_type.h"
 #include "data_handler.h"
 
+#define MAX_INT 65536
+#define MIN_INT -65535
+#define MAX_DOUBLE 99999.0
+#define MIN_DOUBLE -99999.0
+
 static struct Web{
     DataHandler_t dataHandler;
     socket_t * serverSock;
@@ -72,7 +77,7 @@ static const char * const htmlDocStrFormat =
 
 
 static void _reply(Web_t self, HttpRequest_t httpRequest, socket_t * clientSock);
-static void _writeInvestors_XML(Web_t self, socket_t * clientSock);
+static void _writeInvestors_XML(Web_t self, socket_t * clientSock,  double minInvestment, double maxInvestment, int minProjectsNumber, int maxProjectsNumber);
 static void _writeInvestor_XML(Web_t self, socket_t * clientSock, unsigned int index);
 static void _emptySuccessReply(socket_t * clientSock);
 static void _successDeleteReply(socket_t * clientSock, unsigned int index);
@@ -86,9 +91,10 @@ static void _replyInvalidKey(socket_t * clientSock, const char * key);
 static void _replyInvalidValue(socket_t * clientSock, const char * value);
 static void _replyInvalidArgsNum(socket_t * clientSock);
 static void _replyHomepage_HTML(Web_t self, socket_t * clientSock);
-static void _writeInvestors_HTML(Web_t self, socket_t * clientSock);
+static void _writeInvestors_HTML(Web_t self, socket_t * clientSock,  double minInvestment, double maxInvestment, int minProjectsNumber, int maxProjectsNumber);
 static void _writeInvestor_HTML(Web_t self, socket_t * clientSock, unsigned int index);
 static void _replyNewInvestor_HTML(Web_t self, socket_t * clientSock);
+void _validateArgsVals(double * minInvestment, double * maxInvestment, int * minProjectsNumber, int * maxProjectsNumber);
 
 static void _addInvestorIfPossible(Web_t self, socket_t * clientSock, HttpRequest_t httpRequest);
 
@@ -137,7 +143,20 @@ static void _reply_XML(Web_t self, HttpRequest_t httpRequest, socket_t * clientS
     if (!strcmp(child1, "investors")) {
         if(!strcmp(child2, "")){
             if (method == HTTP_GET){
-                _writeInvestors_XML(self, clientSock);
+                char * charP = HttpRequest_getArgsVal(httpRequest, "gtinvestment");
+                double minInvestment = !strcmp(charP, "[empty]") ? MIN_DOUBLE : atof(charP);
+
+                charP = HttpRequest_getArgsVal(httpRequest, "ltinvestment");
+                double maxInvestment = !strcmp(charP, "[empty]") ? MAX_DOUBLE : atof(charP);
+
+                charP = HttpRequest_getArgsVal(httpRequest, "gtprojects");
+                int minProjectsNumber = !strcmp(charP, "[empty]") ? MIN_INT : atoi(charP);
+
+                charP = HttpRequest_getArgsVal(httpRequest, "ltprojects");
+                int maxProjectsNumber = !strcmp(charP, "[empty]") ? MAX_INT : atoi(charP);
+
+                _validateArgsVals(&minInvestment, &maxInvestment, &minProjectsNumber, &maxProjectsNumber);
+                _writeInvestors_XML(self, clientSock, minInvestment, maxInvestment, minProjectsNumber, maxProjectsNumber);
             }else if (method == HTTP_POST){
                 _addInvestorIfPossible(self, clientSock, httpRequest);
             }else{
@@ -185,7 +204,20 @@ static void _reply_HTML(Web_t self, HttpRequest_t httpRequest, socket_t * client
     }else if (!strcmp(child0, "investors")){
         if(!strcmp(child1, "")){
             if (method == HTTP_GET){
-                _writeInvestors_HTML(self, clientSock);
+                char * charP = HttpRequest_getArgsVal(httpRequest, "gtinvestment");
+                double minInvestment = !strcmp(charP, "[empty]") ? MIN_DOUBLE : atof(charP);
+
+                charP = HttpRequest_getArgsVal(httpRequest, "ltinvestment");
+                double maxInvestment = !strcmp(charP, "[empty]") ? MAX_DOUBLE : atof(charP);
+
+                charP = HttpRequest_getArgsVal(httpRequest, "gtprojects");
+                int minProjectsNumber = !strcmp(charP, "[empty]") ? MIN_INT : atoi(charP);
+
+                charP = HttpRequest_getArgsVal(httpRequest, "ltprojects");
+                int maxProjectsNumber = !strcmp(charP, "[empty]") ? MAX_INT : atoi(charP);
+
+                _validateArgsVals(&minInvestment, &maxInvestment, &minProjectsNumber, &maxProjectsNumber);
+                _writeInvestors_HTML(self, clientSock, minInvestment, maxInvestment, minProjectsNumber, maxProjectsNumber);
             }else if (method == HTTP_POST){
                 _addInvestorIfPossible(self, clientSock, httpRequest);
             }else{
@@ -250,7 +282,7 @@ static void _replyHomepage_HTML(Web_t self, socket_t * clientSock){
     socket_close(clientSock);
 }
 
-static void _writeInvestors_HTML(Web_t self, socket_t * clientSock){
+static void _writeInvestors_HTML(Web_t self, socket_t * clientSock,  double minInvestment, double maxInvestment, int minProjectsNumber, int maxProjectsNumber){
     char buff[10000] = "";
     char buff1[10000] = "";
     char res[10000] = "";
@@ -265,7 +297,7 @@ static void _writeInvestors_HTML(Web_t self, socket_t * clientSock){
         strcat(buff, buff2);
     }
 
-    DataHandler_foreachInv(self->dataHandler, _foreachInv_appendInv_HTML);
+    DataHandler_foreachInv(self->dataHandler, _foreachInv_appendInv_HTML, minInvestment, maxInvestment, minProjectsNumber, maxProjectsNumber);
 
     strcat(buff, "</ol><a href=\"/new-investor\">new</a>");
 
@@ -274,6 +306,27 @@ static void _writeInvestors_HTML(Web_t self, socket_t * clientSock){
 
     socket_write_string(clientSock, res);
     socket_close(clientSock);
+}
+
+void _validateArgsVals(double * minInvestment, double * maxInvestment, int * minProjectsNumber, int * maxProjectsNumber){
+    int updateProjectsNumber = 0, updateInvestment = 0;
+
+    updateProjectsNumber = ((*minInvestment > MIN_DOUBLE) || (*maxInvestment < MAX_DOUBLE));
+    updateInvestment = ((*minProjectsNumber > MIN_INT) || (*maxProjectsNumber < MAX_INT));
+
+    if(updateProjectsNumber){
+        if(*minProjectsNumber == MIN_INT && *maxProjectsNumber == MAX_INT){
+            *minProjectsNumber == MAX_INT;
+            *maxProjectsNumber = MIN_INT;
+        }
+    }
+
+    if(updateInvestment){
+        if(*minInvestment == MIN_DOUBLE && *maxInvestment == MAX_DOUBLE){
+            *minInvestment == MAX_DOUBLE;
+            *maxInvestment = MIN_DOUBLE;
+        }
+    }
 }
 
 static void _writeInvestor_HTML(Web_t self, socket_t * clientSock, unsigned int index){
@@ -443,12 +496,12 @@ static void _replyInvalidArgsNum(socket_t * clientSock){
     socket_close(clientSock);
 }
 
-static void _writeInvestors_XML(Web_t self, socket_t * clientSock){
+static void _writeInvestors_XML(Web_t self, socket_t * clientSock,  double minInvestment, double maxInvestment, int minProjectsNumber, int maxProjectsNumber){
     char investorsStr[10000];
     investorsStr[0] = '\0';
     char res[10000];
 
-    sprintf(res, httpSuccessReplyStrFormat, strlen(investorsStr), DataHandler_investorsToXmlStr(self->dataHandler, investorsStr));
+    sprintf(res, httpSuccessReplyStrFormat, strlen(investorsStr), DataHandler_investorsToXmlStr(self->dataHandler, minInvestment, maxInvestment, minProjectsNumber, maxProjectsNumber, investorsStr));
 
     socket_write_string(clientSock, res);
     socket_close(clientSock);
@@ -465,14 +518,14 @@ static void _writeInvestor_XML(Web_t self, socket_t * clientSock, unsigned int i
 }
 
 static void _addInvestorIfPossible(Web_t self, socket_t * clientSock, HttpRequest_t httpRequest){
-    int argsNum = HttpRequest_getArgsNum(httpRequest);
+    int argsNum = HttpRequest_getFormLen(httpRequest);
             if(argsNum < 5){
                 _replyInvalidArgsNum(clientSock);
             }else if(_checkArgs(httpRequest, clientSock) == SERVER_OK){
                 Investor_t inv = Investor_new();
                 for(int i = 0; i < argsNum; i++){
-                    const char * key = HttpRequest_getKey(httpRequest, i);
-                    const char * val = HttpRequest_getArg(httpRequest, key);
+                    const char * key = HttpRequest_getFormKey(httpRequest, i);
+                    const char * val = HttpRequest_getFormVal(httpRequest, key);
 
                     Investor_update(inv, key, val);
 
@@ -485,10 +538,10 @@ static void _addInvestorIfPossible(Web_t self, socket_t * clientSock, HttpReques
 }
 
 static SERVER_ERROR _checkArgs(HttpRequest_t httpRequest, socket_t * clientSock){
-    int argsNum = HttpRequest_getArgsNum(httpRequest);
+    int argsNum = HttpRequest_getFormLen(httpRequest);
     for(int i = 0; i < argsNum; i++){
-        const char * key = HttpRequest_getKey(httpRequest, i);
-        const char * val = HttpRequest_getArg(httpRequest, key);
+        const char * key = HttpRequest_getFormKey(httpRequest, i);
+        const char * val = HttpRequest_getFormVal(httpRequest, key);
         SERVER_ERROR err = _checkKeyValue(key, val);
         if(err == SERVER_KEY_ERROR){
             _replyInvalidKey(clientSock, key);
