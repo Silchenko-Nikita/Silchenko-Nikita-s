@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Saper:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Saper_jar</output-path>
+    <root id="archive" name="Saper.jar">
+      <element id="module-output" name="Saper" />
+    </root>
+  </artifact>
+</component>
