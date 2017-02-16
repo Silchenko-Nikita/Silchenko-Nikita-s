@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+{% block title %}The films list page{% endblock %}
+{% block description %}The films list page{% endblock %}
+{% block body %}
+  <table class="film_reviews">
+      {% for film in films %}
+          <tr>
+              <td>
+                <a href='{{ url_for('film_full_descr', tag=film["tag"]) }}'>
+                  <img class="film_pstr" src="{{ film["Постер"] }}" alt="Постер">
+                </a>
+              </td>
+              <td class="film_name_dsrt" align="left">
+                <a href='{{ url_for('film_full_descr', tag=film["tag"]) }}'><p class="film_title">{{ film["Название"] }}</p></a>
+                <p class="film_shrt_dscr">
+                    {{ film['Короткое описание']|join }}
+                </p>
+              </td>
+            </tr>
+      {% endfor %}
+  </table>
+  <nav>
+    <h4>Опции:</h4>
+    <ul>
+      <li><a href="{{ url_for("index") }}">Home</a></li>
+    </ul>
+  </nav>
+{% endblock %}

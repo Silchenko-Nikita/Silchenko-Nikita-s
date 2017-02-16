@@ -1,0 +1,288 @@
+from PyQt4 import QtGui, QtCore
+import sys, os, shutil
+
+
+def getNewFName(path, initName):
+    i = 1
+    while True:
+        name = "{0} ({1})".format(initName, i) if i > 1 else initName
+        fPath = path.rstrip("/") + "/" + name
+        if not os.path.exists(fPath): return name
+        i += 1
+
+def getIconPath(filename):
+    return "icons/" + filename
+
+class PathLine(QtGui.QLineEdit):
+
+    def __init__(self, path="C:/", parent=None):
+        super().__init__(parent)
+        self.setText(path)
+
+
+class FilesListItemDegate(QtGui.QItemDelegate):
+    pass
+
+class FilesList(QtGui.QListWidget):
+
+    def __init__(self, path="C:/", parent=None):
+        super().__init__(parent)
+        self.updatePath(path)
+        self.path = path
+        self.fileItemBeingEditedTuple = None
+        self.selectedFilePath = ""
+
+
+    def updatePath(self, path):
+        self.clear()
+        self.path = path
+        listDir = os.listdir(path)
+        listDir.sort(key=lambda x: os.path.splitext(x)[1])
+        self.addItems(listDir)
+        self.connect(self, QtCore.SIGNAL("itemClicked(QListWidgetItem*)"), self._fileItemClicked)
+
+        for i in range(len(listDir)):
+            item = self.item(i)
+
+            if os.path.isdir(path + "/" + listDir[i]):
+                item.setIcon(QtGui.QIcon(getIconPath("folder.png")))
+            elif os.path.splitext(listDir[i])[1] == ".exe":
+                item.setIcon(QtGui.QIcon(getIconPath("exe.png")))
+            elif os.path.splitext(listDir[i])[1] == ".txt":
+                item.setIcon(QtGui.QIcon(getIconPath("txt.png")))
+            else:
+                item.setIcon(QtGui.QIcon(getIconPath("file.png")))
+
+
+    def _fileItemClicked(self, fileItem):
+        self.selectedFilePath = self.path.rstrip("/") + "/" + fileItem.text()
+
+
+    def keyPressEvent(self, event):
+        if event.key() == QtCore.Qt.Key_Return and self.fileItemBeingEditedTuple is not None:
+            curPath = self.path.rstrip("/") + "/" + self.fileItemBeingEditedTuple[0].text()
+            if not os.path.exists(curPath) or self.fileItemBeingEditedTuple[1] == curPath:
+                os.rename(self.fileItemBeingEditedTuple[1],  curPath)
+                self.closePersistentEditor(self.fileItemBeingEditedTuple[0])
+                self.emit(QtCore.SIGNAL("filesUpdate()"))
+                self.fileItemBeingEditedTuple = None
+
+
+    def contextMenuEvent(self, event):
+        item = self.itemAt(event.pos())
+
+        if item:
+            menu = QtGui.QMenu(self)
+            openAction = menu.addAction("open")
+            renameAction = menu.addAction("rename")
+            deleteAction = menu.addAction("delete")
+
+            action = menu.exec_(self.mapToGlobal(event.pos()))
+
+            selectedFilePath = self.path.rstrip("/") + "/" + item.text()
+
+
+            if action == openAction:
+                self.emit(QtCore.SIGNAL("open(const QString&)"), selectedFilePath)
+            elif action == renameAction:
+                self.fileItemBeingEditedTuple = (item, selectedFilePath)
+                self.openPersistentEditor(item)
+            elif action == deleteAction:
+                try:
+                    shutil.rmtree(selectedFilePath)
+                except NotADirectoryError as e:
+                    os.remove(selectedFilePath)
+                self.emit(QtCore.SIGNAL("filesUpdate()"))
+
+
+        else:
+            menu = QtGui.QMenu(self)
+
+            createFolderAction = menu.addAction("create folder")
+            createFileAction = menu.addAction("create file")
+
+            action = menu.exec_(self.mapToGlobal(event.pos()))
+            if action == createFolderAction:
+                self._createF(getNewFName(self.path, "new folder"), False)
+            elif action == createFileAction:
+                self._createF(getNewFName(self.path, "new file"), True)
+
+
+    def _createF(self, name, isfile):
+        newFPath = self.path.rstrip("/") + "/" + name
+
+        if isfile:
+            open(newFPath, "a").close()
+        else:
+            os.makedirs(newFPath)
+
+        self.emit(QtCore.SIGNAL("filesUpdate()"))
+        newFolderItem = self.findItems(name, QtCore.Qt.MatchExactly)[0]
+        self.fileItemBeingEditedTuple = (newFolderItem, newFPath)
+        self.openPersistentEditor(newFolderItem)
+
+
+    # def mousePressEvent(self, event):
+    #     item = self.itemAt(event.pos())
+    #
+    #     if item:
+    #         data = QtCore.QMimeData()
+    #         drag = QtGui.QDrag(self)
+    #         drag.setMimeData(data)
+    #         act = drag.exec_(QtCore.Qt.MoveAction)
+
+
+class FilesSurfer(QtGui.QWidget):
+
+    def __init__(self, initialPass="C:/", parent=None):
+        super().__init__(parent)
+        self.selectedFilePath = ""
+        self.pathLine = PathLine(initialPass)
+        self.toLeftButton = QtGui.QPushButton()
+        self.toLeftButton.setIcon(QtGui.QIcon(getIconPath("toLeftArrow.png")))
+        self.connect(self.toLeftButton, QtCore.SIGNAL("clicked()"), self._goToParentDir)
+
+        self.pathLayout = QtGui.QHBoxLayout()
+        self.pathLayout.addWidget(self.pathLine)
+        self.pathLayout.addWidget(self.toLeftButton)
+        self.filesListW = FilesList(initialPass)
+        self.path = initialPass
+        self.vLayout = QtGui.QVBoxLayout()
+        self.vLayout.addItem(self.pathLayout)
+        self.vLayout.addWidget(self.filesListW)
+        self.setLayout(self.vLayout)
+
+        self.connect(self.pathLine, QtCore.SIGNAL("textChanged(const QString&)"), self._filePathLineChanged)
+        self.connect(self.filesListW, QtCore.SIGNAL("itemClicked(QListWidgetItem*)"), self._fileItemClicked)
+        self.connect(self.filesListW, QtCore.SIGNAL("itemActivated(QListWidgetItem*)"), self._fileItemActivated)
+        self.connect(self.filesListW, QtCore.SIGNAL("open(const QString&)"), self._fileOpen)
+
+
+    def _fileOpen(self, path):
+        if os.path.exists(path) and "/" in path:
+            if os.path.isdir(path):
+                # QtGui.QSound.play("click.wav")
+                self.setPath(path.rstrip("/") + "/")
+            else:
+                os.startfile(path)
+
+    def _goToParentDir(self):
+        self.setPath(self.path.rstrip('/').rpartition("/")[0].rstrip("/") + "/")
+
+
+    def _filePathLineChanged(self, path):
+        if os.path.exists(path):
+            self.setPath(path)
+
+
+    def _fileItemClicked(self, fileItem):
+        self.selectedFilePath = self.path.rstrip("/") + "/" + fileItem.text()
+
+
+    def _fileItemActivated(self, fileItem):
+        filePath = self.path.rstrip("/") + "/" + fileItem.text()
+        if os.path.exists(filePath) and "/" in filePath:
+            if os.path.isdir(filePath):
+                filePath += "/"
+                self.setPath(filePath)
+            else:
+                os.startfile(filePath)
+
+
+    def setPath(self, path):
+        if os.path.exists(path) and os.path.isdir(path) and ":" in path and '/' in path:
+            self.path = path
+            self.filesListW.path = path
+            self.updateView()
+
+
+    def updateView(self):
+        self.pathLine.setText(self.path)
+        self.filesListW.updatePath(self.path)
+
+
+    def getChosenFilePath(self):
+        return self.selectedFilePath
+
+    def isFileSelected(self):
+        return self.filesListW.selectedItems()
+
+
+class MainContainer(QtGui.QWidget):
+
+    def __init__(self, initialPath="C:/fileManagerTest/", parent=None):
+        super().__init__(parent)
+        self.mainLayout = QtGui.QHBoxLayout()
+        self.leftFileSurfer = FilesSurfer(initialPath)
+        self.centerVLayout = QtGui.QVBoxLayout()
+
+        self.toRightMoveButton = QtGui.QPushButton()
+        self.toRightMoveButton.setIcon(QtGui.QIcon(getIconPath("toRigthArrow.png")))
+        self.toLeftMoveButton = QtGui.QPushButton()
+        self.toLeftMoveButton.setIcon(QtGui.QIcon(getIconPath("toLeftArrow.png")))
+        self.connect(self.toRightMoveButton, QtCore.SIGNAL("clicked()"), self.onToRightMoveButtonClick)
+        self.connect(self.toLeftMoveButton, QtCore.SIGNAL("clicked()"), self.onToLeftMoveButtonClick)
+        self.centerVLayout.addWidget(self.toRightMoveButton)
+        self.centerVLayout.addWidget(self.toLeftMoveButton)
+
+        self.rightFilesSurfer = FilesSurfer(initialPath)
+
+        self.connect(self.leftFileSurfer.filesListW, QtCore.SIGNAL("filesUpdate()"), self._filesUpdate)
+        self.connect(self.rightFilesSurfer.filesListW, QtCore.SIGNAL("filesUpdate()"), self._filesUpdate)
+
+        self.mainLayout.addWidget(self.leftFileSurfer)
+        self.mainLayout.addItem(self.centerVLayout)
+        self.mainLayout.addWidget(self.rightFilesSurfer)
+        self.setLayout(self.mainLayout)
+
+
+    def _filesUpdate(self):
+        self.leftFileSurfer.updateView()
+        self.rightFilesSurfer.updateView()
+
+
+    def onToRightMoveButtonClick(self):
+        try:
+            if self.leftFileSurfer.isFileSelected():
+                chosenFilePath = self.leftFileSurfer.getChosenFilePath()
+                if app.keyboardModifiers() == QtCore.Qt.ControlModifier:
+                    if os.path.isdir(chosenFilePath):
+                        shutil.copytree(chosenFilePath, self.rightFilesSurfer.path + os.path.basename(chosenFilePath))
+                    else:
+                        shutil.copy(chosenFilePath, self.rightFilesSurfer.path)
+                else:
+                    shutil.move(chosenFilePath, self.rightFilesSurfer.path)
+                self.leftFileSurfer.updateView()
+                self.rightFilesSurfer.updateView()
+        except:
+            pass
+
+
+    def onToLeftMoveButtonClick(self):
+        if self.rightFilesSurfer.isFileSelected():
+            chosenFilePath = self.rightFilesSurfer.getChosenFilePath()
+            if app.keyboardModifiers() == QtCore.Qt.ControlModifier:
+                if os.path.isdir(chosenFilePath):
+                    shutil.copytree(chosenFilePath, self.leftFileSurfer.path + os.path.basename(chosenFilePath))
+                else:
+                    shutil.copy(chosenFilePath, self.leftFileSurfer.path)
+            else:
+                shutil.move(self.rightFilesSurfer.getChosenFilePath(), self.leftFileSurfer.path)
+            self.leftFileSurfer.updateView()
+            self.rightFilesSurfer.updateView()
+
+
+class MainWindow(QtGui.QMainWindow):
+
+    def __init__(self, initialPath="C:/fileManagerTest/"):
+        super().__init__()
+        self.mainCont = MainContainer(initialPath)
+        self.setWindowTitle("Files Manager")
+        self.setCentralWidget(self.mainCont)
+
+
+if __name__ == "__main__":
+    app = QtGui.QApplication(sys.argv)
+    window = MainWindow()
+    window.show()
+    exit(app.exec_())

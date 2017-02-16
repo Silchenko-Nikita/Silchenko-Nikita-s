@@ -1,0 +1,24 @@
+{% extends 'user_page.html' %}
+
+{% block form %}
+    <form enctype="multipart/form-data"  action="" method="post">
+              {% csrf_token %}
+
+                <p>Змінити аватар</p>
+              {{ avatar_form.as_p }}
+                {% if submit_val %}
+                  <input type="submit" value="{{ submit_val }}">
+                {% else %}
+                    <input type="submit" value="Підтвердити">
+                {% endif %}
+            </form>
+        <br>
+{% endblock %}
+
+{% block nav %}
+    <ul>
+        <li><a href="{% url "search" %}">Пошук користувачів</a></li>
+        <li><a href="{% url "sandbox" %}">Пісочниця</a></li>
+        <li><a href="{% url "password_change" %}">Змінити пароль</a></li>
+    </ul>
+{% endblock %}

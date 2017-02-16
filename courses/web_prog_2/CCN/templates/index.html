@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block top_bar %}
+    <ul>
+        <li>
+            <h1>Вітаю</h1>
+        </li>
+        <li>
+            <a href="{% url "login" %}">Увійти</a>
+        </li>
+        <li>
+            <a href="{% url "register" %}">Зареєструватися</a>
+        </li>
+    </ul>
+{% endblock %}
+
+{% block article %}
+    <article>
+        <h2>Опис сайту</h2>
+        <h3>(Куди я попав)</h3>
+        <pre>
+            ...
+        </pre>
+    </article>
+{% endblock %}

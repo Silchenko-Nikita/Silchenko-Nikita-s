@@ -1,0 +1,17 @@
+<!doctype html>
+{% extends "layout.html" %}
+{% block title %}The about page{% endblock %}
+{% block description %}The about page{% endblock %}
+{% block body %}
+  <h1>About</h1>
+  <p><b>Name</b>: Films to see</p>
+  <p><b>e-mail</b>: nikita.silchenko.kpi.kp52@gmail.com</p>
+  <p><b>About</b>: A site to see the list of some good films and their description</p>
+
+  <nav>
+    <h4>Опции:</h4>
+    <ul>
+      <li><a href="{{ url_for('index') }}">Home</a></li>
+    </ul>
+  </nav>
+{% endblock %}

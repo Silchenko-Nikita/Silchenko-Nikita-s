@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load search_tags %}
+
+{% block article %}
+    {% search user_list username %}
+
+    {% if found_users %}
+        <ul>
+        {% for user in found_users %}
+            <li><div><span>{% if user.profile.avatar %}
+                <img src="{{ MEDIA_URL }}{{ user.profile.avatar }}" width="60px" height="75px">
+            {% else %}
+                <img src="{{ anonymous_avatar_src }}" width="60px" height="75px">
+            {% endif %}</span>
+                <span class="search-name">{% if searchtag in user.first_name %} <span class="distinguish">{{ searchtag }}</span>{% endif %}{{ user.first_name|cut:searchtag }}
+                {% if searchtag in user.last_name %} <span class="distinguish">{{ searchtag }}</span>{% endif %}{{ user.last_name|cut:searchtag }}
+                ({% if searchtag in user.username %} <span class="distinguish">{{ searchtag }}</span>{% endif %}{{ user.username|cut:searchtag }})
+                - <a href="{% url "guest" user.username %}">visit profile</a></span></div></li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock %}

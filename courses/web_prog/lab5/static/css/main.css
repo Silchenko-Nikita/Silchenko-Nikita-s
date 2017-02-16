@@ -1,0 +1,123 @@
+#logo {
+	width: 100px;
+}
+
+.film_pstr {
+	width: 100px;
+  height: 150px;
+	margin-right: 14px;
+}
+
+.film_name_dsrt {
+	vertical-align: top;
+}
+
+.film_pstr_full {
+	width: 140px;
+  	height: 210px;
+	margin-right: 14px;
+}
+
+.film_descr_full {
+	vertical-align: top;
+	width: 600px;
+}
+
+.my_form {
+	width: 100%;
+	background-color: paleturquoise;
+	border-color: black;
+}
+
+.text_input{
+	position: absolute;
+	left: 25%;
+	width: 70%;
+}
+
+.my_form .area{
+	height: 200px;
+	vertical-align: center;
+}
+
+.my_form td{
+	width: 100%;
+}
+
+
+form[action="add_film"] textarea{
+	text-align: left;
+	vertical-align: center;
+	height: 100px;
+}
+
+form[action="add_film"] td{
+	text-align: left;
+	vertical-align: center;
+}
+
+/*textarea{*/
+	/*position: absolute;*/
+	/*left: 50%;*/
+	/*width: 30%;*/
+/*}*/
+
+form > input[type="sumbit"]{
+	position: absolute;
+	top: 40px;
+}
+
+table.film_reviews {
+	width: 100%;
+	padding-bottom: 5px;
+	background-color: lightblue;
+	border-color: black;
+	border-collapse: collapse;
+	counter-reset: rowNumber;
+}
+
+table.film_reviews tr {
+	border: 1px solid black;
+	counter-increment: rowNumber;
+}
+
+table.film_reviews tr td:first-child::before {
+	content: counter(rowNumber);
+	min-width: 1em;
+	margin-right: 0.5em;
+}
+
+table.film_reviews td {
+		border: 0;
+}
+
+table.film_reviews .film_name_dsrt{
+	text-align: left;
+}
+
+header {
+	text-align: center;
+	background: rgb(70, 150, 245);
+}
+
+body {
+	background: rgb(70, 150, 245);
+	background-size: 100%;
+}
+
+nav {
+	background: rgb(130, 190, 170);
+}
+
+nav > h4 {
+		padding-left: 5px
+}
+
+/*div{
+	background-image: green;
+}*/
+
+/*#welcome_img {
+	width: 200;
+	height: 100;
+}*/

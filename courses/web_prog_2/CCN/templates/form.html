@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block form %}
+
+{% load bootstrap3 %}
+
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{##}
+{% bootstrap_messages %}
+{##}
+{% if form.errors %}
+    {% bootstrap_form_errors form layout='inline' %}
+{% endif %}
+
+<form enctype="multipart/form-data"  action="" method="post" class="form">
+  {% csrf_token %}
+  {% bootstrap_form form layout='center' %}
+  {% buttons %}
+    <button type="submit" class="btn btn-primary">
+      {% bootstrap_icon "star" %} Submit
+    </button>
+  {% endbuttons %}
+</form>
+
+
+{##}
+{#{% load bootstrap3 %}#}
+{##}
+{##}
+{#{% if form.errors %}#}
+{#    <p>Неправильно введені дані</p>#}
+{#{% endif %}#}
+{##}
+{#<form enctype="multipart/form-data"  action="" method="post">#}
+{#  {% csrf_token %}#}
+{##}
+{#    {% bootstrap_form form %}#}
+{#    {% buttons %}#}
+{#        <button type="submit" class="btn btn-primary">#}
+{#            {% bootstrap_icon "star" %} Submit#}
+{#        </button>#}
+{#    {% endbuttons %}#}
+{#  {{ form.as_p }}#}
+{#    {% if submit_val %}#}
+{#      <input type="submit" value="{{ submit_val }}">#}
+{#    {% else %}#}
+{#        <input type="submit" value="Підтвердити">#}
+{#    {% endif %}#}
+{#</form>#}
+{##}
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block form %}
+
+    {% if form.errors %}
+        <p>Неправильно введені дані</p>
+    {% endif %}
+
+    <form action="" method="post">
+      {% csrf_token %}
+
+      {{ form.as_p }}
+      <input type="submit" value="{{ submit_val }}">
+    </form>
+
+
+{% endblock %}
+
+{#{% if log %}#}
+{#    {% block nav %}#}
+{#        <ul>#}
+{#            <li><a href="{% url "password_reset" %}">Забули пароль?</a></li>#}
+{#        </ul>#}
+{#    {% endblock %}#}
+{#{% endif %}#}

@@ -1,0 +1,8 @@
+{% extends 'user_page.html' %}
+
+{% block nav %}
+    <ul>
+        <li><a href="{% url "search" %}">Пошук користувачів</a></li>
+        <li><a href="{% url "home" %}">Додому</a></li>
+    </ul>
+{% endblock %}

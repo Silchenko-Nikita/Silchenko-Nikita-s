@@ -1,0 +1,45 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% block head %}
+    <meta charset="UTF-8">
+{#    <title>Django</title>#}
+{#    <link rel="stylesheet" href="{% static "css/base.css" %}" /> <!-- CSS -->#}
+{#    <script src="{% static "js/jquery.js" %}"></script> <!-- JavaScript --> #}
+    {% endblock %}
+</head>
+<body>
+    <header>
+        {% block header %}{% endblock %}
+    </header>
+    <article>
+        {% block article %}{% endblock %}
+    </article>
+    <footer>
+        {% block footer %}{% endblock %}
+    </footer>
+    {% block top_bar %}{% endblock %}
+{#    <div class="">#}
+    {% block form %}
+{#            {% if form.errors %}#}
+{#                <p>Неправильно введені дані</p>#}
+{#            {% endif %}#}
+{##}
+{#            <form enctype="multipart/form-data"  action="" method="post">#}
+{#              {% csrf_token %}#}
+{##}
+{#              {{ form.as_p }}#}
+{#                {% if submit_val %}#}
+{#                  <input type="submit" value="{{ submit_val }}">#}
+{#                {% else %}#}
+{#                    <input type="submit" value="Підтвердити">#}
+{#                {% endif %}#}
+{#            </form>#}
+    {% endblock %}
+{#    </div>#}
+    <nav>
+    {% block nav %}{% endblock %}
+    </nav>
+</body>
+</html>

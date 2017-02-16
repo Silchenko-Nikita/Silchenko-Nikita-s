@@ -1,0 +1,54 @@
+{% extends "layout.html" %}
+{% block title %}The films list page{% endblock %}
+{% block description %}The films list page{% endblock %}
+{% block body %}
+    <p>Go to film:</p>
+    <form class="my_form" action="films_descr" method="get">
+        <label>Название: <input class="text_input" type="text" name="name"></label>
+        <br>
+        <input type="submit" value="Submit">
+        <br>
+    </form>
+    <hr>
+    <p>Add film:</p>
+    <form class="my_form" action="add_film_within_form" method="post" enctype="multipart/form-data">
+    <table>
+        <tr><td><label>tag: <input class="text_input" type="text" name="tag" ></label></td></tr>
+        <tr><td><label>Название: <input class="text_input" type="text" name="Название"></label></td></tr>
+        <tr><td><label>Год:	<input class="text_input" type="text" name="Год"></label></td></tr>
+        <tr><td><label>Страна:	<input class="text_input" type="text" name="Страна"></label></td></tr>
+        <tr><td><label>Слоган:	<input class="text_input" type="text" name="Слоган"></label></td></tr>
+        <tr><td><label>Режиссер:	<input class="text_input" type="text" name="Режиссер"></label></td></tr>
+        <tr><td><label>Жанр: <input class="text_input" type="text" name="Жанр"></label></td></tr>
+        <tr><td><label>Постер: <input class="file_input" type="file" name="Постер"></label></td></tr>
+        <tr class="area"><td><label>Короткое описание: <textarea class="text_input" name="Короткое описание"></textarea></label></td></tr>
+        <tr class="area"><td><label>Длинное описание: <textarea class="text_input" name="Длинное описание"></textarea></label></td></tr>
+        <tr><td><input type="submit" value="Submit"><tr><td>
+        <br>
+    </table>
+    </form>
+    <hr>
+  <table class="film_reviews">
+      {% for film in films %}
+          <tr>
+              <td>
+                <a href='{{ url_for('film_full_descr', tag=film["tag"]) }}'>
+                    <img class="film_pstr" src="{{ "data:image/jpg;base64,{0}".format( film["Постер"]) }}" alt="Постер">
+                </a>
+              </td>
+              <td class="film_name_dsrt" align="left">
+                <a href='{{ url_for('film_full_descr', tag=film["tag"]) }}'><p class="film_title">{{ film["Название"] }}</p></a>
+                <p class="film_shrt_dscr">
+                    {{ film['Короткое описание']|join }}
+                </p>
+              </td>
+            </tr>
+      {% endfor %}
+  </table>
+  <nav>
+    <h4>Опции:</h4>
+    <ul>
+      <li><a href="{{ url_for("index") }}">Home</a></li>
+    </ul>
+  </nav>
+{% endblock %}

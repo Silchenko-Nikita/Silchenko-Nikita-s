@@ -1,0 +1,7 @@
+# depslib dependency file v1.0
+1446911070 source:c:\users\Í\documents\myrepos\silchenko-nikita-s\courses\prog_base\tasks\console\main.c
+	<stdio.h>
+	<stdlib.h>
+	<windows.h>
+	<math.h>
+

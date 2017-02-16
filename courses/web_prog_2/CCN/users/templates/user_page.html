@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block header %}
+    <h2>{{ user.username }}</h2>
+    <h3>{{ user.first_name }} {{ user.last_name }}</h3>
+    <br>
+
+    {% block avatar %}
+        {% if user.profile.avatar %}
+            <img src="{{ MEDIA_URL }}{{ user.profile.avatar }}" width="60px" height="75px">
+        {% else %}
+            <img src="{{ anonymous_avatar_src }}" width="60px" height="75px">
+        {% endif %}
+
+    {% endblock %}
+    {% for field in profile_info_form %}
+        <li><b>{{ field.label }}:</b> {{ field.data }}</li>
+    {% endfor %}
+{% endblock %}
+
+{% block nav %}
+{% endblock %}

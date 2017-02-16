@@ -1,0 +1,22 @@
+#pane{
+    position: absolute;
+    right: 100px;
+    top: 50px;
+    text-align: right;
+}
+
+#addCardsButton{
+
+}
+
+#gameCanvas{
+    border: 1px solid black;
+}
+
+/*#scoreLabel{*/
+    /*position: relative;*/
+/*}*/
+
+/*#cardsLeftLabel{*/
+    /*position: relative;*/
+/*}*/

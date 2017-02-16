@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block article %}
+    {% if user.literary_compositions %}
+        <form action="{% url "sandbox" %}">
+            {% for compos in request.user.literary_compositions %}
+                <input type="radio" name="compos" value="{{ compos }}">
+            {% endfor %}
+            <input type="submit" value="Обрати твір">
+        </form>
+    {% endif %}
+        <form action="{% url "sandbox" %}" method="post">
+            {% csrf_token %}
+
+            {{ comp_form.as_p }}
+            <input type="submit" value="Зберегти">
+        </form>
+{% endblock %}
+
+{% block nav %}
+    <ul>
+        <li><a href="{% url "home" %}">Перейти на домашню сторінку</a></li>
+    </ul>
+{% endblock %}

@@ -1,0 +1,75 @@
+{% extends "layout.html" %}
+{% block title %}The descr page{% endblock %}
+{% block description %}descr{% endblock %}
+{% block body %}
+    <h1>{{ filmJSON['Название'] }}</h1>
+  <table>
+    <tr>
+      <td>
+        <img class="film_pstr" src="{{ filmJSON["Постер"] }}" alt="Постер">
+      </td>
+      <td class="film_descr_full">
+        <table>
+
+          <tr>
+            <td>
+              Год:
+            </td>
+            <td>
+              {{ filmJSON['Год'] }}
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              Страна:
+            </td>
+            <td>
+              {{ filmJSON['Страна'] }}
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              Слоган:
+            </td>
+            <td>
+              {{ filmJSON['Слоган'] }}
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              Режиссер:
+            </td>
+            <td>
+              {{ filmJSON['Режиссер'] }}
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              Жанр:
+            </td>
+            <td>
+              {{ filmJSON['Жанр'] }}
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+
+  <h4>Описание:</h4>
+  <div>
+    {{ filmJSON['Длинное описание']|join }}
+  </div>
+  <nav>
+    <h4>Опции:</h4>
+    <ul>
+      <li><a href="{{ url_for('films_table') }}">Back</a></li>
+      <li><a href="{{ url_for('index') }}">Home</a></li>
+    </ul>
+  </nav>
+{% endblock %}

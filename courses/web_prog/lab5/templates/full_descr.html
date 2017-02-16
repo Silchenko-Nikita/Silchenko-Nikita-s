@@ -1,0 +1,82 @@
+{% extends "layout.html" %}
+{% block title %}The descr page{% endblock %}
+{% block description %}descr{% endblock %}
+{% block body %}
+    <pre class="response_type">
+    Response for request:
+        method: {{ request.method }}, url: {{ request.url }}, args: {{ dict(request.args) }}
+    </pre>
+    <h1>{{ film['Название'] }}</h1>
+  <table>
+    <tr>
+      <td>
+        <img class="film_pstr" src="{{ film["Постер"] }}" alt="Постер">
+      </td>
+      <td class="film_descr_full">
+        <table>
+
+          <tr>
+            <td>
+              Год:
+            </td>
+            <td>
+              {{ film['Год'] }}
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              Страна:
+            </td>
+            <td>
+              {{ film['Страна'] }}
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              Слоган:
+            </td>
+            <td>
+              {{ film['Слоган'] }}
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              Режиссер:
+            </td>
+            <td>
+              {{ film['Режиссер'] }}
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              Жанр:
+            </td>
+            <td>
+              {{ film['Жанр'] }}
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+
+  <h4>Описание:</h4>
+  <div>
+    {{ film['Длинное описание'] }}
+  </div>
+    <form class="my_form" action="{{ url_for("delete_film_within_form", tag=film['tag']) }}" method="post" enctype="multipart/form-data">
+    <input type="submit" value="DELETE">
+    </form>
+  <nav>
+    <h4>Опции:</h4>
+    <ul>
+      <li><a href="{{ url_for('films_table') }}">Back</a></li>
+      <li><a href="{{ url_for('index') }}">Home</a></li>
+    </ul>
+  </nav>
+{% endblock %}

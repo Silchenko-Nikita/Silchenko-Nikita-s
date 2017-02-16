@@ -2,7 +2,7 @@
 #define CONSOLE_H
 
 #define CONSOLE_COLUMNS 80
-#define CONSOLE_ROWS 25
+#define CONSOLE_ROWS 24
 
 void setTextColor(short);
 void moveCursor(int, int);

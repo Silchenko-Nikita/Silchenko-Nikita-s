@@ -1,0 +1,35 @@
+# depslib dependency file v1.0
+1447179598 source:c:\users\Í\documents\myrepos\silchenko-nikita-s\courses\prog_base\extra\console_balls\balls.c
+	<stdlib.h>
+	<stdio.h>
+	<math.h>
+	"balls.h"
+	"console.h"
+	"rect.h"
+
+1447175636 c:\users\Í\documents\myrepos\silchenko-nikita-s\courses\prog_base\extra\console_balls\balls.h
+	"rect.h"
+
+1447167803 c:\users\Í\documents\myrepos\silchenko-nikita-s\courses\prog_base\extra\console_balls\rect.h
+
+1450127326 c:\users\Í\documents\myrepos\silchenko-nikita-s\courses\prog_base\extra\console_balls\console.h
+
+1447090374 source:c:\users\Í\documents\myrepos\silchenko-nikita-s\courses\prog_base\extra\console_balls\console_linux.c
+
+1447086347 source:c:\users\Í\documents\myrepos\silchenko-nikita-s\courses\prog_base\extra\console_balls\console_windows.c
+	<windows.h>
+
+1447179813 source:c:\users\Í\documents\myrepos\silchenko-nikita-s\courses\prog_base\extra\console_balls\main.c
+	<stdio.h>
+	<stdlib.h>
+	<time.h>
+	"balls.h"
+	"console.h"
+	"rect.h"
+
+1447170191 source:c:\users\Í\documents\myrepos\silchenko-nikita-s\courses\prog_base\extra\console_balls\rect.c
+	<stdio.h>
+	<stdlib.h>
+	"console.h"
+	"rect.h"
+
