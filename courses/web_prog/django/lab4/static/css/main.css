@@ -1,0 +1,26 @@
+.index_welcome { text-align: center }
+
+body {
+    background: url("../images/background.jpg");
+    background-repeat: no-repeat;
+}
+
+.full_descr{
+    position: relative;
+    margin-left: 3%;
+}
+
+.pag-buttons {
+    width: 100px;
+    position: relative;
+    margin-left: 10%;
+}
+
+.film_add_form_table {
+    position: relative;
+    margin-left: 3%;
+}
+
+.films_short_descr_table{
+    width: 100%;
+}

@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block title %}The descr page{% endblock %}
+{% block description %}descr{% endblock %}
+{% block body %}
+    <div class="full_descr">
+    <h1>{{ film.name }}</h1>
+      <table>
+        <tr>
+          <td>
+            <img width="175px" height="250px" class="film_pstr" src="{% static film.poster %}" alt="Постер">
+          </td>
+          <td class="table">
+            <table>
+
+              <tr>
+                <td>
+                  Год:
+                </td>
+                <td>
+                  {{ film.year }}
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  Страна:
+                </td>
+                <td>
+                  {{ film.country }}
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  Слоган:
+                </td>
+                <td>
+                  {{ film.tagline }}
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  Режиссер:
+                </td>
+                <td>
+                  {{ film.producer }}
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  Жанр:
+                </td>
+                <td>
+                  {{ film.genre }}
+                </td>
+              </tr>
+
+            </table>
+          </td>
+        </tr>
+      </table>
+
+
+      <h4>Описание:</h4>
+      <div>
+        {{ film.full_descr }}
+      </div>
+        <hr>
+        <form action="{% url "del_film" pk=film.pk %}"  method="post">
+            {% csrf_token %}
+            <input type="submit" value="Удалить">
+        </form>
+    </div>
+
+{% endblock %}
+
+{% block nav %}
+    <h4>Опции:</h4>
+    <ul class="list-group">
+      <li class="list-group-item"><a href="{% url 'films_list' %}">Back</a></li>
+      <li class="list-group-item"><a href="{% url 'index' %}">Home</a></li>
+    </ul>
+{% endblock %}

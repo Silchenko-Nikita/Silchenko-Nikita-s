@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block title %}The films list page{% endblock %}
+{% block description %}The films list page{% endblock %}
+
+{% block body %}
+    <form action="{% url "films_list" %}" method="get">
+        <span><label>Название фильма: <input name="name" type="text"></label>
+        <input type="submit" value="Підтвердити"></span>
+    </form>
+    {% if search_name %}
+        {% if not found %}
+            <p><b>Фильмы с названием {{ search_name }} отсутствуют</b></p>
+        {% else %}
+            <p><b>Результат поиска фильмов с названием, содержащим "{{ search_name }}"</b></p>
+        {% endif %}
+    {% endif %}
+  <table class="table-bordered">
+      {% for film in object_list %}
+          <tr>
+              <td>
+                <a href="{% url "film_full_descr" film.tag %}">
+                  <img width="125px" height="175px" src="{% static film.poster %}" alt="Постер">
+                </a>
+              </td>
+              <td align="left" class="films_short_descr_table">
+                <a href="{% url "film_full_descr" film.tag %}"><p>{{ film.name }}</p></a>
+                <p>
+                    {{ film.short_descr}}
+                </p>
+              </td>
+          </tr>
+      {% endfor %}
+  </table>
+{% endblock %}
+
+{% block pagination %}
+
+    <div>
+        {% if paginator.num_pages > 1 %}
+            <div class="pag-buttons">
+                {% if page_obj.has_previous %}
+                    <a href="{% url "open_page" name=search_name page=page_obj.previous_page_number %}">&larr;</a>
+                {% endif %}
+                <span>{{ paginator.number }}</span>
+                {% if page_obj.has_next %}
+                    <a href="{% url "open_page" name=search_name page=page_obj.next_page_number %}">&rarr;</a>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+
+    <form action="{% url "add_film" %} " method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="film_add_form_table">
+            <table class="table">
+                {% for field in form %}
+                    <tr><td><b>{{ field.label }}: </b></td><td>{{ field }}</td></tr>
+                {% endfor %}
+            </table>
+            <input type="submit" value="Подтвердить">
+        </div>
+    </form>
+
+{% endblock %}
+
+{% block nav %}
+    <h4>Опции:</h4>
+    <ul class="list-group">
+      <li class="list-group-item"><a href="{% url "index" %}">Home</a></li>
+    </ul>
+{% endblock %}

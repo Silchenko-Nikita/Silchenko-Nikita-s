@@ -1,0 +1,27 @@
+{% load staticfiles %}
+
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+
+        <title>{% block title %}{% endblock %}</title>
+        <meta name="description" content="{% block description %}{% endblock %}">
+        <meta name="author" content="Nikita Silchenko">
+        <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'bootstrap/css/bootstrap.css' %}">
+        <link rel="shortcut icon" type="image/png" href="{% static 'images/favicon.png' %}">
+    </head>
+    <body>
+        {% block body %}
+        {% endblock %}
+    </body>
+    <div id="pagination">
+        {% block pagination %}
+        {% endblock %}
+    </div>
+    <nav>
+        {% block nav %}
+        {% endblock %}
+    </nav>
+</html>

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}The home page{% endblock %}
+{% block description %}The home page{% endblock %}
+{% block body %}
+  <header class="index_welcome">
+    <h1 id="welcome">Добро пожаловать на сайт обзора фильмов</h1>
+    <div id="description">
+      <p>Здесь у вас будет возможность посмотреть список лучших фильмов и их детальное опсание.</p>
+      <p>Все что вы хотели узнать про лучшее кино!</p>
+    </div>
+    <img src="http://pink.ua/images/2013/08/2221.jpg" id="welcome_img" width="250" height="150">
+  </header>
+{% endblock %}
+
+{% block nav %}
+    <h4>Опции:</h4>
+     <ul class="list-group">
+      <li class="list-group-item"><a href="{% url "films_list" %}">Перейти на список фильмов</a></li>
+      <li class="list-group-item">><a href="{% url "about" %}">About</a></li>
+    </ul>
+{% endblock %}
